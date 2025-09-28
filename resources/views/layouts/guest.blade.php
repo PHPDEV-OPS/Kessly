@@ -19,6 +19,7 @@
             <div>
                 <a href="/" wire:navigate>
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <h1>Kessly SCM</h1>
                 </a>
             </div>
 
