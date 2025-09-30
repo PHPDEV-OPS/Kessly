@@ -45,7 +45,7 @@ class Products extends Component
                 Rule::unique('products', 'name')->ignore($this->productId),
             ],
             'description' => ['nullable', 'string'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => ['nullable', 'exists:categories,id'],
             'supplier_id' => ['nullable', 'exists:suppliers,id'],
             'stock' => ['required', 'integer', 'min:0'],
             'price' => ['required', 'numeric', 'min:0'],

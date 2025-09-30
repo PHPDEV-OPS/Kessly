@@ -28,7 +28,7 @@
                     type="text"
                     placeholder="Search products..."
                     class="w-full sm:w-64 pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    wire:model.debounce.300ms="search"
+                    wire:model.live.debounce.300ms="search"
                 />
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model="perPage">
+            <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="perPage">
                 <option value="10">10 per page</option>
                 <option value="25">25 per page</option>
                 <option value="50">50 per page</option>
@@ -145,12 +145,19 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $product->category?->name ?? '—' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $product->supplier?->name ?? '—' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                    @if($product->stock === 0) bg-red-100 text-red-800
-                                    @elseif($product->stock <= 5) bg-yellow-100 text-yellow-800
-                                    @else bg-green-100 text-green-800 @endif">
-                                    {{ $product->stock }}
-                                </span>
+                                @if($product->stock === 0)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        {{ $product->stock }}
+                                    </span>
+                                @elseif($product->stock <= 5)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        {{ $product->stock }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        {{ $product->stock }}
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">$ {{ number_format($product->price, 2) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -227,8 +234,8 @@
                                             <input
                                                 type="text"
                                                 id="name"
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('name') border-red-300 @enderror"
-                                                wire:model.defer="name"
+                                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('name') ? 'border-red-300' : 'border-gray-300' }}"
+                                                wire:model="name"
                                                 placeholder="Enter product name"
                                             />
                                             @error('name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -241,8 +248,8 @@
                                                 <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
                                                 <select
                                                     id="category_id"
-                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('category_id') border-red-300 @enderror"
-                                                    wire:model.defer="category_id"
+                                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('category_id') ? 'border-red-300' : 'border-gray-300' }}"
+                                                    wire:model="category_id"
                                                 >
                                                     <option value="">Select category</option>
                                                     @foreach ($categories as $cat)
@@ -257,8 +264,8 @@
                                                 <label for="supplier_id" class="block text-sm font-medium text-gray-700">Supplier</label>
                                                 <select
                                                     id="supplier_id"
-                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('supplier_id') border-red-300 @enderror"
-                                                    wire:model.defer="supplier_id"
+                                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('supplier_id') ? 'border-red-300' : 'border-gray-300' }}"
+                                                    wire:model="supplier_id"
                                                 >
                                                     <option value="">No supplier</option>
                                                     @foreach ($suppliers as $sup)
@@ -278,8 +285,8 @@
                                                     type="number"
                                                     id="stock"
                                                     min="0"
-                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('stock') border-red-300 @enderror"
-                                                    wire:model.defer="stock"
+                                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('stock') ? 'border-red-300' : 'border-gray-300' }}"
+                                                    wire:model="stock"
                                                     placeholder="0"
                                                 />
                                                 @error('stock') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -297,8 +304,8 @@
                                                         id="price"
                                                         step="0.01"
                                                         min="0"
-                                                        class="pl-7 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('price') border-red-300 @enderror"
-                                                        wire:model.defer="price"
+                                                        class="pl-7 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('price') ? 'border-red-300' : 'border-gray-300' }}"
+                                                        wire:model="price"
                                                         placeholder="0.00"
                                                     />
                                                 </div>
@@ -312,8 +319,8 @@
                                             <textarea
                                                 id="description"
                                                 rows="3"
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('description') border-red-300 @enderror"
-                                                wire:model.defer="description"
+                                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('description') ? 'border-red-300' : 'border-gray-300' }}"
+                                                wire:model="description"
                                                 placeholder="Enter product description (optional)"
                                             ></textarea>
                                             @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
