@@ -7,4 +7,6 @@ new #[Layout('components.layouts.app')] class extends Component {
     //
 }; ?>
 
-<livewire:dashboard />
+<div>
+    <livewire:dashboard />
+</div>

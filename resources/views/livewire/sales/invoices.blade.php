@@ -1,9 +1,11 @@
-<div class="space-y-6">
+<div>
+    @if (session()->has('status'))
+        <div class="space-y-6">
     @if (session()->has('status'))
         <div class="p-3 rounded bg-green-100 text-green-800">{{ session('status') }}</div>
     @endif
 
-    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div class="mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <h2 class="text-xl font-semibold">Invoices</h2>
 
         <div class="flex gap-2 items-center w-full md:w-auto">
@@ -18,7 +20,7 @@
         </div>
     </div>
 
-    <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <div class="mt-3 overflow-x-auto bg-white rounded-lg shadow">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>

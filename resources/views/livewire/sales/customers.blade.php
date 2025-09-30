@@ -3,7 +3,7 @@
         <div class="p-3 rounded bg-green-100 text-green-800">{{ session('status') }}</div>
     @endif
 
-    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <h2 class="text-xl font-semibold">Customers</h2>
 
         <div class="flex gap-2 items-center w-full md:w-auto">
@@ -58,7 +58,7 @@
     </div>
 
     @if ($showForm)
-        <div class="bg-white rounded-lg shadow p-6">
+            <div class="mt-3 bg-white shadow rounded-lg">
             <h3 class="text-lg font-semibold mb-4">{{ $customerId ? 'Edit Customer' : 'New Customer' }}</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

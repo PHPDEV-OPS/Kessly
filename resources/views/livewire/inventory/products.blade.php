@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div>
     <!-- Status Message -->
     @if (session()->has('status'))
         <div class="p-4 rounded-lg bg-green-50 border border-green-200">
@@ -16,7 +16,7 @@
     @endif
 
     <!-- Header and Controls -->
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">Products</h2>
             <p class="mt-1 text-sm text-gray-600">Manage your product inventory</p>
