@@ -14,11 +14,17 @@ return new class extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('location')->nullable();
-            $table->string('manager')->nullable();
-            $table->string('contact_number')->nullable();
-            $table->string('email')->nullable();
+            $table->string('code', 10)->unique();
+            $table->text('address');
+            $table->string('city');
+            $table->string('state');
+            $table->string('postal_code', 20);
+            $table->string('phone');
+            $table->string('email');
+            $table->unsignedBigInteger('manager_id')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->date('established_date');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

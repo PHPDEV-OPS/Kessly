@@ -1,7 +1,5 @@
 <div>
     @if (session()->has('status'))
-        <div class="space-y-6">
-    @if (session()->has('status'))
         <div class="p-3 rounded bg-green-100 text-green-800">{{ session('status') }}</div>
     @endif
 

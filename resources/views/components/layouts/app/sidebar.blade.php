@@ -4,11 +4,11 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <flux:sidebar sticky stashable class="w-64 border-e border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-xl sidebar-modern">
+        <flux:sidebar sticky stashable class="w-64 border-e border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-xl sidebar-modern flex flex-col">
             <flux:sidebar.toggle class="lg:hidden text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" icon="x-mark" />
 
-            <!-- Logo/Brand Section -->
-            <div class="px-4 py-6 sidebar-brand bg-blue-600 dark:bg-blue-700">
+            <!-- Logo/Brand Section - Sticky Header -->
+            <div class="sticky top-0 z-10 px-4 py-6 sidebar-brand bg-blue-600 dark:bg-blue-700 shadow-md">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse" wire:navigate>
                     <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-lg">
                         <span class="text-blue-600 font-bold text-sm">K</span>
@@ -20,8 +20,8 @@
                 </a>
             </div>
 
-            <!-- Main Navigation -->
-            <div class="px-4 py-4">
+            <!-- Main Navigation - Scrollable Content -->
+            <div class="flex-1 overflow-y-auto px-4 py-4">
                 <flux:navlist variant="outline" class="space-y-2">
                     <!-- Business Management Section -->
                     <div class="mb-6">
@@ -69,6 +69,58 @@
                         </div>
                     </div>
 
+                    <!-- HR & Operations Section -->
+                    <div class="mb-6">
+                        <h6 class="section-header px-3 mb-3 text-gray-500 dark:text-gray-400">HR & Operations</h6>
+                        <div class="space-y-1">
+                            <flux:navlist.item
+                                icon="user-group"
+                                :href="route('hr')"
+                                :current="request()->routeIs('hr*')"
+                                wire:navigate
+                                class="nav-item-modern text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-300 px-3 py-2"
+                            >
+                                Human Resources
+                            </flux:navlist.item>
+
+                            <flux:navlist.item
+                                icon="building-office-2"
+                                :href="route('branches')"
+                                :current="request()->routeIs('branches*')"
+                                wire:navigate
+                                class="nav-item-modern text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-300 px-3 py-2"
+                            >
+                                Branches
+                            </flux:navlist.item>
+                        </div>
+                    </div>
+
+                    <!-- Finance & Analytics Section -->
+                    <div class="mb-6">
+                        <h6 class="section-header px-3 mb-3 text-gray-500 dark:text-gray-400">Finance & Analytics</h6>
+                        <div class="space-y-1">
+                            <flux:navlist.item
+                                icon="currency-dollar"
+                                :href="route('finance')"
+                                :current="request()->routeIs('finance*')"
+                                wire:navigate
+                                class="nav-item-modern text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-300 px-3 py-2"
+                            >
+                                Finance
+                            </flux:navlist.item>
+
+                            <flux:navlist.item
+                                icon="presentation-chart-line"
+                                :href="route('analytics')"
+                                :current="request()->routeIs('analytics*')"
+                                wire:navigate
+                                class="nav-item-modern text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-300 px-3 py-2"
+                            >
+                                Analytics
+                            </flux:navlist.item>
+                        </div>
+                    </div>
+
                     <!-- Settings Section -->
                     <div class="mb-6">
                         <h6 class="section-header px-3 mb-3 text-gray-500 dark:text-gray-400">Account</h6>
@@ -87,33 +139,10 @@
                 </flux:navlist>
             </div>
 
-            <flux:spacer />
-
-            <!-- Resources Section -->
-            <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-                <flux:navlist variant="outline" class="space-y-1">
-                    <flux:navlist.item
-                        icon="folder-git-2"
-                        href="https://github.com/themesberg/volt-laravel-dashboard"
-                        target="_blank"
-                        class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-                    >
-                        Inspired by Volt
-                    </flux:navlist.item>
-
-                    <flux:navlist.item
-                        icon="book-open-text"
-                        href="https://laravel.com/docs"
-                        target="_blank"
-                        class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-                    >
-                        Laravel Docs
-                    </flux:navlist.item>
-                </flux:navlist>
             </div>
 
-            <!-- User Profile Section -->
-            <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+            <!-- User Profile Section - Sticky Bottom -->
+            <div class="sticky bottom-0 bg-white dark:bg-gray-900 px-4 py-4 border-t border-gray-200 dark:border-gray-700 shadow-md">
                 <flux:dropdown class="w-full" position="top" align="start">
                     <div class="user-profile-card flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-all duration-300 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                         <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">

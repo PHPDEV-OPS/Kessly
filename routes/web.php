@@ -13,6 +13,18 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('/reports', 'pages/reports')->name('reports');
     Volt::route('/settings', 'pages/settings')->name('settings');
     Volt::route('/profile', 'pages/profile')->name('profile');
+    
+    // HR Module Routes
+    Volt::route('/hr', 'pages/hr')->name('hr');
+    
+    // Branches Module Routes
+    Volt::route('/branches', 'pages/branches')->name('branches');
+    
+    // Finance Module Routes
+    Volt::route('/finance', 'pages/finance')->name('finance');
+    
+    // Analytics Module Routes
+    Volt::route('/analytics', 'pages/analytics')->name('analytics');
 });
 
 
