@@ -1,6 +1,6 @@
-<div class="space-y-6">
+<div class="space-y-2">
     <!-- Page Header with Gradient Background -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-4 sm:p-6 text-white shadow-2xl">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-4 sm:p-5 text-white shadow-2xl">
         <!-- Background Pattern -->
         <div class="absolute inset-0 bg-black bg-opacity-10"></div>
         <div class="absolute -top-4 -right-4 h-32 w-32 rounded-full bg-white bg-opacity-10"></div>

@@ -24,7 +24,7 @@ class Dashboard extends Component
                 ->limit(5)
                 ->get();
         } catch (\Exception $e) {
-            // If order_items table doesn't exist, return products ordered by stock (popular assumption)
+            // If order_items table doesn't exist, return products ordered by stock 
             return Product::orderBy('stock', 'desc')
                 ->limit(5)
                 ->get()

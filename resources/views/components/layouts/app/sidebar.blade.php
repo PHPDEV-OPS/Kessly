@@ -7,8 +7,8 @@
         <flux:sidebar sticky stashable class="w-64 border-e border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-xl sidebar-modern flex flex-col">
             <flux:sidebar.toggle class="lg:hidden text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" icon="x-mark" />
 
-            <!-- Logo/Brand Section - Sticky Header -->
-            <div class="sticky top-0 z-10 px-4 py-6 sidebar-brand bg-blue-600 dark:bg-blue-700 shadow-md">
+            <!-- Logo/Brand Section -->
+            <div class="px-4 py-4 sidebar-brand bg-blue-600 dark:bg-blue-700 border-b border-blue-500 dark:border-blue-600">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse" wire:navigate>
                     <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-lg">
                         <span class="text-blue-600 font-bold text-sm">K</span>
@@ -21,7 +21,7 @@
             </div>
 
             <!-- Main Navigation - Scrollable Content -->
-            <div class="flex-1 overflow-y-auto px-4 py-4">
+            <div class="flex-1 overflow-y-auto px-4 py-3">
                 <flux:navlist variant="outline" class="space-y-2">
                     <!-- Business Management Section -->
                     <div class="mb-6">
@@ -141,8 +141,8 @@
 
             </div>
 
-            <!-- User Profile Section - Sticky Bottom -->
-            <div class="sticky bottom-0 bg-white dark:bg-gray-900 px-4 py-4 border-t border-gray-200 dark:border-gray-700 shadow-md">
+            <!-- User Profile Section -->
+            <div class="bg-white dark:bg-gray-900 px-4 py-3 border-t border-gray-200 dark:border-gray-700 mt-auto">
                 <div class="relative" x-data="{ open: false }">
                     <!-- Profile Button -->
                     <button 
@@ -237,7 +237,7 @@
                 <!-- Mobile Header -->
                 <!-- Mobile Header -->
                 <!-- Mobile Header -->
-        <flux:header class="lg:hidden mobile-header-modern z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+        <flux:header class="lg:hidden mobile-header-modern h-14 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
             <flux:sidebar.toggle class="lg:hidden text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" icon="bars-2" inset="left" />
 
             <div class="flex items-center space-x-3">
@@ -302,7 +302,7 @@
         <!-- Main Content Area -->
         <main class="lg:ml-64 transition-all duration-300 ease-in-out">
             <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-                <div class="p-4 sm:p-6 lg:p-8">
+                <div class="p-2 sm:p-4 main-content-wrapper">
                     {{ $slot }}
                 </div>
             </div>
