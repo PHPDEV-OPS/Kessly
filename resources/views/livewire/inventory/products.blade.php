@@ -128,11 +128,15 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                            </svg>
-                                        </div>
+                                        @if($product->image)
+                                            <img class="h-10 w-10 rounded-lg object-cover" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                                        @else
+                                            <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                                </svg>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
@@ -324,6 +328,37 @@
                                                 placeholder="Enter product description (optional)"
                                             ></textarea>
                                             @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                                        </div>
+
+                                        <!-- Image Upload -->
+                                        <div>
+                                            <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                                            <div class="mt-1 flex items-center space-x-4">
+                                                <div class="flex-shrink-0">
+                                                    @if($image)
+                                                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ $image->temporaryUrl() }}" alt="Preview">
+                                                    @elseif($productId && ($product = \App\Models\Product::find($productId)) && $product->image)
+                                                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ asset('storage/' . $product->image) }}" alt="Current">
+                                                    @else
+                                                        <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center">
+                                                            <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                            </svg>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="flex-1">
+                                                    <input
+                                                        type="file"
+                                                        id="image"
+                                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                        wire:model="image"
+                                                        accept="image/*"
+                                                    />
+                                                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
+                                                    @error('image') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

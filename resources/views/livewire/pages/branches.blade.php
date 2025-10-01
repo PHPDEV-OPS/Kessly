@@ -17,7 +17,7 @@ new #[Layout('components.layouts.app')] class extends Component {
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Branch Management</h1>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage Kessly's branch operations and inventory</p>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage branch operations and inventory</p>
         </div>
     </div>
 

@@ -7,11 +7,12 @@ use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class Products extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     // Listing controls
     public string $search = '';
@@ -23,6 +24,7 @@ class Products extends Component
     public ?int $productId = null;
     public string $name = '';
     public ?string $description = '';
+    public $image;
     public ?int $category_id = null;
     public ?int $supplier_id = null;
     public int $stock = 0;
@@ -45,6 +47,7 @@ class Products extends Component
                 Rule::unique('products', 'name')->ignore($this->productId),
             ],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:2048'],
             'category_id' => ['nullable', 'exists:categories,id'],
             'supplier_id' => ['nullable', 'exists:suppliers,id'],
             'stock' => ['required', 'integer', 'min:0'],
@@ -81,6 +84,7 @@ class Products extends Component
         $this->productId = $product->id;
         $this->name = $product->name;
         $this->description = (string)($product->description ?? '');
+        $this->image = null; // Reset file upload field
         $this->category_id = $product->category_id;
         $this->supplier_id = $product->supplier_id;
         $this->stock = (int)$product->stock;
@@ -101,6 +105,11 @@ class Products extends Component
             'stock' => $this->stock,
             'price' => $this->price,
         ];
+
+        // Handle image upload
+        if ($this->image) {
+            $data['image'] = $this->image->store('products', 'public');
+        }
 
         if ($this->productId) {
             Product::whereKey($this->productId)->update($data);
@@ -130,7 +139,7 @@ class Products extends Component
     protected function resetForm(): void
     {
         $this->reset([
-            'productId', 'name', 'description', 'category_id', 'supplier_id', 'stock', 'price'
+            'productId', 'name', 'description', 'image', 'category_id', 'supplier_id', 'stock', 'price'
         ]);
         $this->stock = 0;
         $this->price = 0.0;

@@ -23,6 +23,9 @@ Route::middleware(['auth'])->group(function () {
     // Finance Module Routes
     Volt::route('/finance', 'pages/finance')->name('finance');
     
+    // Customers Module Routes
+    Volt::route('/customers', 'pages/customers')->name('customers');
+    
     // Analytics Module Routes
     Volt::route('/analytics', 'pages/analytics')->name('analytics');
 });
