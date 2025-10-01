@@ -278,14 +278,16 @@ new class extends Component {
     }
 }; ?>
 
-<div class="space-y-6">
-    <!-- Header -->
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Customer Management</h1>
-            <p class="text-gray-600 dark:text-gray-400">Manage your customer relationships and data</p>
-        </div>
-
+<div>
+    <!-- Page Navigation -->
+    <x-page-navigation 
+        title="Customer Management" 
+        description="Manage your customer relationships and data"
+        :breadcrumbs="[
+            ['title' => 'Customers']
+        ]"
+    >
+        <!-- Quick Actions in Navigation -->
         <div class="flex gap-2">
             <button wire:click="$set('showAnalytics', true)"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
@@ -309,7 +311,9 @@ new class extends Component {
                 Add Customer
             </button>
         </div>
-    </div>
+    </x-page-navigation>
+
+    <div class="p-4 sm:p-6 space-y-6">
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -473,7 +477,7 @@ new class extends Component {
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @forelse($customers as $customer)
+                            @forelse($this->customers as $customer)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <td class="px-4 py-4">
                                         <div class="flex items-center">
@@ -569,9 +573,9 @@ new class extends Component {
                 </div>
 
                 <!-- Pagination -->
-                @if($customers->hasPages())
+                @if($this->customers->hasPages())
                     <div class="mt-4">
-                        {{ $customers->links() }}
+                        {{ $this->customers->links() }}
                     </div>
                 @endif
             @endif
@@ -1053,4 +1057,5 @@ new class extends Component {
             {{ session('message') }}
         </div>
     @endif
+    </div>
 </div>
