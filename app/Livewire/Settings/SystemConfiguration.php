@@ -63,7 +63,7 @@ class SystemConfiguration extends Component
         // Localization Settings
         $this->timezone = Setting::get('timezone', config('app.timezone'));
         $this->locale = Setting::get('locale', config('app.locale'));
-        $this->currency = Setting::get('currency', 'USD');
+        $this->currency = Setting::get('currency', 'KES');
         $this->date_format = Setting::get('date_format', 'Y-m-d');
         $this->time_format = Setting::get('time_format', 'H:i:s');
         $this->decimal_separator = Setting::get('decimal_separator', '.');
