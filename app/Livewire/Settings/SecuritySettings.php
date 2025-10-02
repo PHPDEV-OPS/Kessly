@@ -86,8 +86,8 @@ class SecuritySettings extends Component
         $this->email_verification_required = Setting::get('security.email_verification_required', true);
         $this->ip_whitelist_enabled = Setting::get('security.ip_whitelist_enabled', false);
         $this->allowed_ips = Setting::get('security.allowed_ips', '');
-        $this->login_notification_enabled = Setting::get('security.login_notification_enabled', true);
-        $this->suspicious_activity_detection = Setting::get('security.suspicious_activity_detection', true);
+        $this->login_notification_enabled = Setting::get('security.login_notification_enabled', false);
+        $this->suspicious_activity_detection = Setting::get('security.suspicious_activity_detection', false);
         
         // Account Lockout
         $this->account_lockout_enabled = Setting::get('security.account_lockout_enabled', true);

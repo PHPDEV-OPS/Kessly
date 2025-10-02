@@ -46,19 +46,19 @@ class CompanyProfile extends Component
     public function mount(): void
     {
         $data = Setting::get('company.profile', []);
-        $this->company_name = (string)($data['name'] ?? '');
-        $this->company_email = $data['email'] ?? null;
-        $this->company_phone = $data['phone'] ?? null;
-        $this->company_website = $data['website'] ?? null;
+        $this->company_name = (string)($data['name'] ?? 'Kessly Wine Distribution');
+        $this->company_email = $data['email'] ?? 'info@kessly.com';
+        $this->company_phone = $data['phone'] ?? '+254 700 000 000';
+        $this->company_website = $data['website'] ?? 'https://kessly.com';
         $this->company_address = $data['address'] ?? null;
         $this->company_city = $data['city'] ?? null;
         $this->company_state = $data['state'] ?? null;
         $this->company_postal_code = $data['postal_code'] ?? null;
-        $this->company_country = $data['country'] ?? null;
+        $this->company_country = $data['country'] ?? 'Kenya';
         $this->tax_number = $data['tax_number'] ?? null;
         $this->registration_number = $data['registration_number'] ?? null;
         $this->vat_number = $data['vat_number'] ?? null;
-        $this->industry = $data['industry'] ?? null;
+        $this->industry = $data['industry'] ?? 'wine_distribution';
         $this->company_size = $data['company_size'] ?? null;
         $this->founded_year = $data['founded_year'] ?? null;
         $this->company_logo = $data['logo'] ?? null;
@@ -98,7 +98,7 @@ class CompanyProfile extends Component
         ];
     }
 
-    public function save(): void
+    public function save()
     {
         $this->validate();
 
@@ -138,37 +138,20 @@ class CompanyProfile extends Component
         $this->logo = null;
 
         session()->flash('message', 'Company profile saved successfully');
-    }
 
-    public function getIndustries()
+        // Note: Logo will be visible on next page load due to static Blade components
+    }    public function getIndustries()
     {
         return [
-            'technology' => 'Technology',
-            'healthcare' => 'Healthcare',
-            'finance' => 'Finance',
-            'retail' => 'Retail',
-            'manufacturing' => 'Manufacturing',
-            'education' => 'Education',
-            'real_estate' => 'Real Estate',
-            'hospitality' => 'Hospitality',
-            'construction' => 'Construction',
-            'transportation' => 'Transportation',
-            'agriculture' => 'Agriculture',
-            'consulting' => 'Consulting',
-            'media' => 'Media & Entertainment',
-            'energy' => 'Energy',
-            'other' => 'Other',
+            'wine_distribution' => 'Wine Distribution & Sales',
         ];
     }
 
     public function getCompanySizes()
     {
         return [
-            'startup' => 'Startup (1-10 employees)',
-            'small' => 'Small (11-50 employees)',
-            'medium' => 'Medium (51-200 employees)',
-            'large' => 'Large (201-1000 employees)',
-            'enterprise' => 'Enterprise (1000+ employees)',
+            'small' => 'Small Business (1-20 employees)',
+            'medium' => 'Medium Business (21-100 employees)',
         ];
     }
 

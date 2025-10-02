@@ -42,7 +42,7 @@ new class extends Component {
     public bool $showImport = false;
     public bool $showAnalytics = false;
     public string $activeTab = 'list';
-    public ?int $selectedCustomer = null;
+    public ?int $selectedCustomerId = null;
 
     // Notes
     public bool $showNotesModal = false;
@@ -204,7 +204,7 @@ new class extends Component {
 
     public function viewCustomer($id)
     {
-        $this->selectedCustomer = $id;
+        $this->selectedCustomerId = $id;
         $this->activeTab = 'details';
     }
 
@@ -217,7 +217,7 @@ new class extends Component {
         ]);
 
         CustomerNote::create([
-            'customer_id' => $this->selectedCustomer,
+            'customer_id' => $this->selectedCustomerId,
             'user_id' => auth()->id(),
             'note_type' => $this->noteType,
             'subject' => $this->noteSubject,
@@ -274,7 +274,16 @@ new class extends Component {
 
     public function getSelectedCustomerProperty()
     {
-        return $this->selectedCustomer ? Customer::with('customerNotes.user')->find($this->selectedCustomer) : null;
+        return $this->selectedCustomerId ? Customer::with('customerNotes.user')->find($this->selectedCustomerId) : null;
+    }
+
+    public function with(): array
+    {
+        return [
+            'customers' => $this->customers,
+            'customerStats' => $this->customerStats,
+            'selectedCustomer' => $this->selectedCustomer,
+        ];
     }
 }; ?>
 

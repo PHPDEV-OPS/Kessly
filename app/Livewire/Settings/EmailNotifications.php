@@ -171,8 +171,14 @@ class EmailNotifications extends Component
 
     public function testEmail()
     {
+        $this->validate(['admin_email' => 'required|email']);
+        
         try {
-            // Send test email logic here
+            \Mail::raw('This is a test email from your Kessly Wine Distribution system. If you received this message, your email configuration is working correctly.', function ($message) {
+                $message->to($this->admin_email)
+                       ->subject('Test Email - Kessly System Configuration');
+            });
+            
             session()->flash('message', 'Test email sent successfully to ' . $this->admin_email);
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to send test email: ' . $e->getMessage());
@@ -182,11 +188,8 @@ class EmailNotifications extends Component
     public function getMailers()
     {
         return [
-            'smtp' => 'SMTP',
-            'sendmail' => 'Sendmail',
-            'mailgun' => 'Mailgun',
-            'ses' => 'Amazon SES',
-            'log' => 'Log (Development)',
+            'smtp' => 'SMTP (Email Server)',
+            'log' => 'Log (Development Only)',
         ];
     }
 

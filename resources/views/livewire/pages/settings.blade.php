@@ -12,8 +12,6 @@ new #[Layout('components.layouts.app')] class extends Component {
     }
 }; ?>
 
-}; ?>
-
 <div>
     <!-- Page Navigation -->
     <x-page-navigation title="Settings" description="Configure your system preferences" :breadcrumbs="[
@@ -122,6 +120,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                             Business Rules
                         </div>
                     </button>
+
+
                 </nav>
             </div>
 
@@ -136,29 +136,13 @@ new #[Layout('components.layouts.app')] class extends Component {
                 @elseif($activeTab === 'system')
                     <livewire:settings.system-configuration />
                 @elseif($activeTab === 'company')
-                    <div class="text-center py-8">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Company Profile Settings</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mt-2">Company profile management is being enhanced.
-                            Please use the existing profile settings for now.</p>
-                    </div>
+                    <livewire:settings.company-profile />
                 @elseif($activeTab === 'security')
-                    <div class="text-center py-8">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Security Settings</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mt-2">Advanced security settings are being configured.
-                            Basic security is handled through the password tab.</p>
-                    </div>
+                    <livewire:settings.security-settings />
                 @elseif($activeTab === 'email')
-                    <div class="text-center py-8">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Email & Notifications</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mt-2">Email configuration panel is being enhanced for
-                            better usability.</p>
-                    </div>
+                    <livewire:settings.email-notifications />
                 @elseif($activeTab === 'business')
-                    <div class="text-center py-8">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Business Rules</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mt-2">Business logic configuration is being optimized for
-                            your operations.</p>
-                    </div>
+                    <livewire:settings.business-rules />
                 @endif
             </div>
         </div>

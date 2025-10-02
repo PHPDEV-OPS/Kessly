@@ -98,26 +98,26 @@ class BusinessRules extends Component
     public function loadSettings()
     {
         // Financial Settings
-        $this->default_currency = Setting::get('business.default_currency', 'USD');
-        $this->tax_rate = Setting::get('business.tax_rate', 10.0);
+        $this->default_currency = Setting::get('business.default_currency', 'KES');
+        $this->tax_rate = Setting::get('business.tax_rate', 16.0);
         $this->tax_name = Setting::get('business.tax_name', 'VAT');
         $this->tax_number = Setting::get('business.tax_number', '');
-        $this->invoice_prefix = Setting::get('business.invoice_prefix', 'INV');
+        $this->invoice_prefix = Setting::get('business.invoice_prefix', 'KWINE');
         $this->invoice_start_number = Setting::get('business.invoice_start_number', 1000);
-        $this->invoice_terms = Setting::get('business.invoice_terms', 'Payment due within 30 days');
+        $this->invoice_terms = Setting::get('business.invoice_terms', 'Payment due within 30 days of delivery');
         $this->payment_terms_days = Setting::get('business.payment_terms_days', 30);
         
         // Order Management
-        $this->order_prefix = Setting::get('business.order_prefix', 'ORD');
+        $this->order_prefix = Setting::get('business.order_prefix', 'WO');
         $this->order_start_number = Setting::get('business.order_start_number', 1000);
         $this->auto_order_approval = Setting::get('business.auto_order_approval', false);
         $this->order_expiry_days = Setting::get('business.order_expiry_days', 30);
-        $this->minimum_order_amount = Setting::get('business.minimum_order_amount', 0);
+        $this->minimum_order_amount = Setting::get('business.minimum_order_amount', 5000);
         $this->allow_backorders = Setting::get('business.allow_backorders', true);
         $this->stock_reservation_minutes = Setting::get('business.stock_reservation_minutes', 30);
         
         // Inventory Settings
-        $this->low_stock_threshold = Setting::get('business.low_stock_threshold', 10);
+        $this->low_stock_threshold = Setting::get('business.low_stock_threshold', 5);
         $this->out_of_stock_threshold = Setting::get('business.out_of_stock_threshold', 0);
         $this->auto_reorder_enabled = Setting::get('business.auto_reorder_enabled', false);
         $this->reorder_point_days = Setting::get('business.reorder_point_days', 7);
@@ -125,15 +125,15 @@ class BusinessRules extends Component
         $this->allow_negative_stock = Setting::get('business.allow_negative_stock', false);
         
         // Customer Settings
-        $this->customer_prefix = Setting::get('business.customer_prefix', 'CUS');
+        $this->customer_prefix = Setting::get('business.customer_prefix', 'KC');
         $this->customer_start_number = Setting::get('business.customer_start_number', 1000);
         $this->require_customer_approval = Setting::get('business.require_customer_approval', false);
-        $this->customer_credit_limit = Setting::get('business.customer_credit_limit', 1000);
-        $this->loyalty_program_enabled = Setting::get('business.loyalty_program_enabled', false);
-        $this->loyalty_points_rate = Setting::get('business.loyalty_points_rate', 1.0);
+        $this->customer_credit_limit = Setting::get('business.customer_credit_limit', 50000);
+        $this->loyalty_program_enabled = Setting::get('business.loyalty_program_enabled', true);
+        $this->loyalty_points_rate = Setting::get('business.loyalty_points_rate', 2.0);
         
         // Employee Settings
-        $this->employee_prefix = Setting::get('business.employee_prefix', 'EMP');
+        $this->employee_prefix = Setting::get('business.employee_prefix', 'KE');
         $this->employee_start_number = Setting::get('business.employee_start_number', 1000);
         $this->default_work_hours_per_day = Setting::get('business.default_work_hours_per_day', 8);
         $this->default_work_days_per_week = Setting::get('business.default_work_days_per_week', 5);
@@ -147,8 +147,8 @@ class BusinessRules extends Component
         $this->branch_stock_sync = Setting::get('business.branch_stock_sync', false);
         
         // Reporting
-        $this->fiscal_year_start = Setting::get('business.fiscal_year_start', 1);
-        $this->reporting_currency = Setting::get('business.reporting_currency', 'USD');
+        $this->fiscal_year_start = Setting::get('business.fiscal_year_start', 7); // July for Kenya
+        $this->reporting_currency = Setting::get('business.reporting_currency', 'KES');
         $this->decimal_places = Setting::get('business.decimal_places', 2);
         $this->show_zero_amounts = Setting::get('business.show_zero_amounts', false);
     }
@@ -222,16 +222,8 @@ class BusinessRules extends Component
     public function getCurrencies()
     {
         return [
+            'KES' => 'Kenyan Shilling (KSh)',
             'USD' => 'US Dollar ($)',
-            'EUR' => 'Euro (€)',
-            'GBP' => 'British Pound (£)',
-            'JPY' => 'Japanese Yen (¥)',
-            'CAD' => 'Canadian Dollar (C$)',
-            'AUD' => 'Australian Dollar (A$)',
-            'CHF' => 'Swiss Franc (CHF)',
-            'CNY' => 'Chinese Yuan (¥)',
-            'INR' => 'Indian Rupee (₹)',
-            'BRL' => 'Brazilian Real (R$)',
         ];
     }
 
@@ -239,9 +231,7 @@ class BusinessRules extends Component
     {
         return [
             'fifo' => 'First In, First Out (FIFO)',
-            'lifo' => 'Last In, First Out (LIFO)',
             'weighted_average' => 'Weighted Average',
-            'specific_identification' => 'Specific Identification',
         ];
     }
 

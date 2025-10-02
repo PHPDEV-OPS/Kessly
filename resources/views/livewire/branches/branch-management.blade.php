@@ -5,6 +5,12 @@
         </div>
     @endif
 
+    @if (session()->has('error'))
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
@@ -116,8 +122,12 @@
                     <div class="mt-4 flex justify-end space-x-2">
                         <button wire:click="edit({{ $branch->id }})" class="text-blue-600 hover:text-blue-900 text-sm font-medium">Edit</button>
                         <button wire:click="delete({{ $branch->id }})" 
+                                wire:loading.attr="disabled"
                                 onclick="return confirm('Are you sure you want to delete this branch?')"
-                                class="text-red-600 hover:text-red-900 text-sm font-medium">Delete</button>
+                                class="text-red-600 hover:text-red-900 text-sm font-medium disabled:opacity-50">
+                            <span wire:loading.remove wire:target="delete({{ $branch->id }})">Delete</span>
+                            <span wire:loading wire:target="delete({{ $branch->id }})">Deleting...</span>
+                        </button>
                     </div>
                 </div>
             </div>

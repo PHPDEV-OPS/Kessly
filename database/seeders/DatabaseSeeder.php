@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->command->info('🚀 Starting database seeding...');
+        $this->command->info('Starting database seeding...');
         
         // Create admin user first
         if (!User::where('email', 'admin@kessly.com')->exists()) {
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
 
         // Create additional users
         $existingUserCount = User::count();
-        $usersToCreate = max(0, 17 - $existingUserCount); // Target 17 total users
+        $usersToCreate = max(0, 17 - $existingUserCount);
         if ($usersToCreate > 0) {
             User::factory($usersToCreate)->create();
             $this->command->info("✅ Created {$usersToCreate} additional users");
@@ -66,9 +66,9 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class, // depends on customers
         ]);
 
-        $this->command->info('🎉 Database seeding completed successfully!');
+        $this->command->info('Database seeding completed successfully!');
         $this->command->info('');
-        $this->command->info('📊 Summary of seeded data:');
+        $this->command->info('Summary of seeded data:');
         $this->command->info('- Users: ' . \App\Models\User::count());
         $this->command->info('- Roles: ' . \App\Models\Role::count());
         $this->command->info('- Categories: ' . \App\Models\Category::count());

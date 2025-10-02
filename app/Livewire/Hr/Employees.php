@@ -41,7 +41,7 @@ class Employees extends Component
     public $notes = '';
 
     protected $rules = [
-        'employee_id' => 'required|string|max:255|unique:employees,employee_id',
+        'employee_id' => 'required|string|max:255',
         'user_id' => 'required|exists:users,id',
         'branch_id' => 'required|exists:branches,id',
         'department_name' => 'required|string|max:255',
@@ -55,6 +55,14 @@ class Employees extends Component
         'emergency_contact' => 'nullable|string|max:255',
         'emergency_phone' => 'nullable|string|max:255',
         'notes' => 'nullable|string',
+    ];
+
+    protected $messages = [
+        'employee_id.unique' => 'This employee ID is already taken.',
+        'user_id.unique' => 'This user is already assigned to another employee.',
+        'user_id.exists' => 'Selected user does not exist.',
+        'branch_id.exists' => 'Selected branch does not exist.',
+        'manager_id.exists' => 'Selected manager does not exist.',
     ];
 
     public function updatingSearch()
@@ -109,9 +117,22 @@ class Employees extends Component
         $rules = $this->rules;
         
         if ($this->editing) {
-            $rules['employee_id'] = 'required|string|max:255|unique:employees,employee_id,' . $this->employeeId;
-            $rules['user_id'] = 'required|exists:users,id|unique:employees,user_id,' . $this->employeeId;
+            // Get current employee to check what's actually changing
+            $currentEmployee = Employee::findOrFail($this->employeeId);
+            
+            // Always validate employee_id uniqueness excluding current record
+            $rules['employee_id'] = 'required|string|max:255|unique:employees,employee_id,' . $this->employeeId . ',id';
+            
+            // Only validate user_id uniqueness if it's actually changing
+            if ($currentEmployee->user_id != $this->user_id) {
+                $rules['user_id'] = 'required|exists:users,id|unique:employees,user_id';
+            } else {
+                // If user_id is not changing, just validate existence
+                $rules['user_id'] = 'required|exists:users,id';
+            }
         } else {
+            // For new records, ensure both employee_id and user_id are unique
+            $rules['employee_id'] = 'required|string|max:255|unique:employees,employee_id';
             $rules['user_id'] = 'required|exists:users,id|unique:employees,user_id';
         }
 
@@ -144,6 +165,7 @@ class Employees extends Component
 
         $this->resetForm();
         $this->showModal = false;
+        $this->resetPage();
     }
 
     public function delete($employeeId)
@@ -199,7 +221,22 @@ class Employees extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
-        $users = User::whereDoesntHave('employee')->get();
+        // Get available users - if editing, include current employee's user
+        $users = User::whereDoesntHave('employee', function($query) {
+            if ($this->editing && $this->employeeId) {
+                $query->where('id', '!=', $this->employeeId);
+            }
+        })->get();
+        
+        // If editing, also include the current employee's user to maintain assignment
+        if ($this->editing && $this->employeeId) {
+            $currentEmployee = Employee::findOrFail($this->employeeId);
+            $currentUser = $currentEmployee->user;
+            if ($currentUser && !$users->contains('id', $currentUser->id)) {
+                $users->prepend($currentUser);
+            }
+        }
+        
         $branches = Branch::active()->get();
         $managers = Employee::with('user')->managers()->active()->get();
         $departments = Employee::distinct('department')->pluck('department')->filter();

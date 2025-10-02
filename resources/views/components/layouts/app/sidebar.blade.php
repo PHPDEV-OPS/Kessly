@@ -10,12 +10,11 @@
             <!-- Logo/Brand Section -->
             <div class="px-4 py-4 sidebar-brand bg-blue-600 dark:bg-blue-700 border-b border-blue-500 dark:border-blue-600">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse" wire:navigate>
-                    <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-lg">
-                        <span class="text-blue-600 font-bold text-sm">K</span>
+                    <div class="w-12 h-12 flex items-center justify-center">
+                        <x-application-logo class="w-full h-full" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-lg font-bold text-white">Kessly</span>
-                        <span class="text-xs text-blue-100">SCM System</span>
+                        <span class="text-lg font-bold text-white">Kessly SCM</span>
                     </div>
                 </a>
             </div>
@@ -244,17 +243,14 @@
         </flux:sidebar>
 
         <!-- Mobile Header -->
-                <!-- Mobile Header -->
-                <!-- Mobile Header -->
-                <!-- Mobile Header -->
         <flux:header class="lg:hidden mobile-header-modern h-14 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
             <flux:sidebar.toggle class="lg:hidden text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" icon="bars-2" inset="left" />
 
             <div class="flex items-center space-x-3">
-                <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center shadow-lg">
-                    <span class="text-white font-bold text-xs">K</span>
+                <div class="w-8 h-8 flex items-center justify-center">
+                    <x-application-logo class="w-full h-full" />
                 </div>
-                <span class="text-gray-900 dark:text-white font-semibold">Kessly</span>
+                <span class="text-gray-900 dark:text-white font-semibold">Kessly SCM</span>
             </div>
 
             <flux:spacer />
@@ -319,18 +315,5 @@
         </main>
 
         @fluxScripts
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.store('flux', {
-                    appearance: Alpine.$persist(
-                        window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-                    ).as('flux-appearance'),
-
-                    setAppearance(appearance) {
-                        this.appearance = appearance;
-                    }
-                });
-            });
-        </script>
     </body>
 </html>

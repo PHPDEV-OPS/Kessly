@@ -5,6 +5,7 @@ namespace App\Livewire\Branches;
 use App\Models\Branch;
 use App\Models\Employee;
 use App\Models\BranchInventory;
+use App\Models\Order;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -136,8 +137,34 @@ class BranchManagement extends Component
 
     public function delete($branchId)
     {
-        Branch::findOrFail($branchId)->delete();
-        session()->flash('message', 'Branch deleted successfully.');
+        try {
+            $branch = Branch::findOrFail($branchId);
+            
+            // Check if branch can be safely deleted
+            $deleteCheck = $this->canDeleteBranch($branchId);
+            
+            if (!$deleteCheck['canDelete']) {
+                $constraintsList = implode(', ', $deleteCheck['constraints']);
+                session()->flash('error', "Cannot delete branch '{$branch->name}'. It has associated: {$constraintsList}. Please remove or reassign these items first.");
+                return;
+            }
+            
+            $branch->delete();
+            session()->flash('message', "Branch '{$branch->name}' deleted successfully.");
+            
+            // Reset pagination if we're on a page that might not have records after deletion
+            $this->resetPage();
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Handle foreign key constraint violations
+            if ($e->getCode() === '23000') {
+                session()->flash('error', 'Cannot delete this branch because it has associated records. Please remove all associated employees, orders, and inventory first.');
+            } else {
+                session()->flash('error', 'An error occurred while deleting the branch. Please try again.');
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'An unexpected error occurred. Please try again.');
+        }
     }
 
     public function resetForm()
@@ -162,6 +189,37 @@ class BranchManagement extends Component
     {
         $this->showModal = false;
         $this->resetForm();
+    }
+
+    /**
+     * Check if branch can be safely deleted
+     */
+    private function canDeleteBranch($branchId)
+    {
+        $constraints = [];
+        
+        // Check for employees
+        $employeeCount = Employee::where('branch_id', $branchId)->count();
+        if ($employeeCount > 0) {
+            $constraints[] = "{$employeeCount} employee(s)";
+        }
+        
+        // Check for orders
+        $orderCount = Order::where('branch_id', $branchId)->count();
+        if ($orderCount > 0) {
+            $constraints[] = "{$orderCount} order(s)";
+        }
+        
+        // Check for branch inventory
+        $inventoryCount = BranchInventory::where('branch_id', $branchId)->count();
+        if ($inventoryCount > 0) {
+            $constraints[] = "{$inventoryCount} inventory item(s)";
+        }
+        
+        return [
+            'canDelete' => empty($constraints),
+            'constraints' => $constraints
+        ];
     }
 
     public function render()

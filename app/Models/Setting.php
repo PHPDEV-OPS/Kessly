@@ -24,4 +24,29 @@ class Setting extends Model
     {
         static::updateOrCreate(['key' => $key], ['value' => $value]);
     }
+
+    /**
+     * Get the company logo URL with fallback to default
+     */
+    public static function getCompanyLogo(): string
+    {
+        $profile = static::get('company.profile', []);
+        $logoPath = $profile['logo'] ?? null;
+        
+        if ($logoPath && file_exists(storage_path('app/public/' . $logoPath))) {
+            return asset('storage/' . $logoPath);
+        }
+        
+        // Return null to indicate no logo available - let components handle the fallback
+        return '';
+    }
+
+    /**
+     * Get company name with fallback
+     */
+    public static function getCompanyName(): string
+    {
+        $profile = static::get('company.profile', []);
+        return $profile['name'] ?? 'Kessly';
+    }
 }
