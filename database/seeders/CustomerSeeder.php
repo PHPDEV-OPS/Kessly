@@ -14,16 +14,16 @@ class CustomerSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create VIP customers
+        // Create VIP wine collectors and premium customers
         $vipCustomers = Customer::factory()->vip()->count(5)->create();
 
-        // Create business customers
-        Customer::factory()->business()->active()->count(25)->create();
+        // Create business wine customers (restaurants, hotels, wine bars)
+        Customer::factory()->business()->count(25)->create();
 
-        // Create individual customers
-        Customer::factory()->individual()->active()->count(40)->create();
+        // Create individual wine enthusiasts
+        Customer::factory()->individual()->count(40)->create();
 
-        // Create some prospects
+        // Create wine business prospects
         Customer::factory()->prospect()->count(15)->create();
 
         // Create some inactive customers

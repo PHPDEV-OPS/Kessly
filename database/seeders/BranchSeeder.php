@@ -13,7 +13,7 @@ class BranchSeeder extends Seeder
     public function run(): void
     {
         // Create headquarters first (check if exists)
-        if (!Branch::where('name', 'Headquarters')->exists()) {
+        if (!Branch::where('code', 'HQ01')->exists()) {
             Branch::factory()->headquarters()->create();
         }
 

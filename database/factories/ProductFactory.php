@@ -21,37 +21,84 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $productNames = [
-            // Electronics
-            'Wireless Bluetooth Headphones', 'Smart Phone Case', 'USB-C Cable', 'Portable Power Bank', 'LED Monitor',
-            'Wireless Mouse', 'Mechanical Keyboard', 'Gaming Laptop', 'Tablet Stand', 'Phone Charger',
+        $wines = [
+            // Red Wines
+            ['name' => 'Cabernet Sauvignon Reserve', 'type' => 'Red Wine', 'origin' => 'Bordeaux, France', 'year' => '2019'],
+            ['name' => 'Merlot Classic', 'type' => 'Red Wine', 'origin' => 'Tuscany, Italy', 'year' => '2020'],
+            ['name' => 'Shiraz Premium', 'type' => 'Red Wine', 'origin' => 'Barossa Valley, Australia', 'year' => '2018'],
+            ['name' => 'Pinot Noir Vintage', 'type' => 'Red Wine', 'origin' => 'Burgundy, France', 'year' => '2019'],
+            ['name' => 'Sangiovese Estate', 'type' => 'Red Wine', 'origin' => 'Chianti, Italy', 'year' => '2020'],
             
-            // Clothing
-            'Cotton T-Shirt', 'Denim Jeans', 'Running Shoes', 'Baseball Cap', 'Leather Wallet',
-            'Winter Jacket', 'Cotton Hoodie', 'Sports Socks', 'Casual Sneakers', 'Canvas Backpack',
+            // White Wines
+            ['name' => 'Sauvignon Blanc Crisp', 'type' => 'White Wine', 'origin' => 'Marlborough, New Zealand', 'year' => '2021'],
+            ['name' => 'Chardonnay Reserve', 'type' => 'White Wine', 'origin' => 'Burgundy, France', 'year' => '2020'],
+            ['name' => 'Riesling Dry', 'type' => 'White Wine', 'origin' => 'Mosel, Germany', 'year' => '2021'],
+            ['name' => 'Gewürztraminer', 'type' => 'White Wine', 'origin' => 'Alsace, France', 'year' => '2020'],
+            ['name' => 'Pinot Grigio Fresh', 'type' => 'White Wine', 'origin' => 'Alto Adige, Italy', 'year' => '2021'],
             
-            // Home & Garden
-            'Coffee Maker', 'Kitchen Knife Set', 'Garden Hose', 'Plant Pot', 'LED Light Bulb',
-            'Vacuum Cleaner', 'Blender', 'Dining Chair', 'Throw Pillow', 'Wall Clock',
+            // Rosé Wines
+            ['name' => 'Provence Rosé', 'type' => 'Rosé Wine', 'origin' => 'Provence, France', 'year' => '2021'],
+            ['name' => 'Rosé de Sangiovese', 'type' => 'Rosé Wine', 'origin' => 'Tuscany, Italy', 'year' => '2021'],
             
-            // Sports & Outdoors
-            'Yoga Mat', 'Water Bottle', 'Tennis Racket', 'Basketball', 'Camping Tent',
-            'Hiking Boots', 'Fitness Tracker', 'Gym Bag', 'Resistance Bands', 'Bicycle Helmet',
+            // Sparkling Wines
+            ['name' => 'Champagne Brut', 'type' => 'Sparkling Wine', 'origin' => 'Champagne, France', 'year' => '2018'],
+            ['name' => 'Prosecco Extra Dry', 'type' => 'Sparkling Wine', 'origin' => 'Veneto, Italy', 'year' => '2021'],
+            ['name' => 'Cava Reserva', 'type' => 'Sparkling Wine', 'origin' => 'Catalonia, Spain', 'year' => '2019'],
             
-            // Office Supplies
-            'Notebook', 'Ballpoint Pen', 'Stapler', 'Paper Clips', 'Desk Organizer',
-            'Filing Cabinet', 'Office Chair', 'Desk Lamp', 'Whiteboard', 'Calculator',
+            // Local & Accessories
+            ['name' => 'Kenyan Highland Red', 'type' => 'Local Wines', 'origin' => 'Naivasha, Kenya', 'year' => '2020'],
+            ['name' => 'Rift Valley White', 'type' => 'Local Wines', 'origin' => 'Nakuru, Kenya', 'year' => '2021'],
+            ['name' => 'Wine Decanter Crystal', 'type' => 'Wine Accessories', 'origin' => 'Czech Republic', 'year' => null],
+            ['name' => 'Bordeaux Wine Glasses Set', 'type' => 'Wine Accessories', 'origin' => 'France', 'year' => null],
+            ['name' => 'Wine Aerator Premium', 'type' => 'Wine Accessories', 'origin' => 'Italy', 'year' => null],
         ];
 
-        $name = $this->faker->randomElement($productNames);
-        $price = $this->faker->randomFloat(2, 5, 500);
+        $wine = $this->faker->randomElement($wines);
+        
+        // Wine pricing in KES (Kenyan Shillings)
+        $priceRanges = [
+            'Local Wines' => [800, 3000],
+            'Red Wine' => [1500, 15000],
+            'White Wine' => [1200, 12000],
+            'Rosé Wine' => [1800, 8000],
+            'Sparkling Wine' => [2500, 25000],
+            'Fortified Wine' => [2000, 20000],
+            'Dessert Wine' => [3000, 30000],
+            'Wine Accessories' => [500, 5000],
+            'Premium Collection' => [10000, 100000],
+            'Vintage Wines' => [15000, 200000],
+        ];
+        
+        $range = $priceRanges[$wine['type']] ?? [1000, 10000];
+        $price = $this->faker->randomFloat(2, $range[0], $range[1]);
+        
+        $name = $wine['name'];
+        if ($wine['year']) {
+            $name .= ' ' . $wine['year'];
+        }
+        
+        $descriptions = [
+            "A premium wine with exceptional character and depth. Perfect for special occasions and fine dining.",
+            "This wine offers a perfect balance of flavors with hints of fruit and subtle oak undertones.",
+            "An elegant wine with a smooth finish, ideal for both casual and formal dining experiences.",
+            "Rich and full-bodied with complex flavors that develop beautifully with proper aeration.",
+            "A crisp and refreshing wine with bright acidity and delicate floral notes.",
+            "This vintage showcases the best of its terroir with exceptional aging potential.",
+        ];
+        
+        $wineDescription = $this->faker->randomElement($descriptions);
+        if ($wine['year']) {
+            $wineDescription .= " Vintage " . $wine['year'] . " from " . $wine['origin'] . ".";
+        } else {
+            $wineDescription .= " Crafted in " . $wine['origin'] . ".";
+        }
         
         return [
             'name' => $name,
-            'description' => $this->faker->paragraph(2),
+            'description' => $wineDescription,
             'category_id' => null, // Will be set by seeder
             'supplier_id' => null, // Will be set by seeder
-            'stock' => $this->faker->numberBetween(0, 100),
+            'stock' => $this->faker->numberBetween(0, 500),
             'price' => $price,
         ];
     }
@@ -93,25 +140,25 @@ class ProductFactory extends Factory
     }
 
     /**
-     * Create an expensive product.
+     * Create an expensive wine (Premium/Vintage in KES).
      */
     public function expensive(): static
     {
         return $this->state(function (array $attributes) {
             return [
-                'price' => $this->faker->randomFloat(2, 200, 2000),
+                'price' => $this->faker->randomFloat(2, 25000, 200000), // Premium wines in KES
             ];
         });
     }
 
     /**
-     * Create a cheap product.
+     * Create an affordable wine (Entry-level in KES).
      */
     public function cheap(): static
     {
         return $this->state(function (array $attributes) {
             return [
-                'price' => $this->faker->randomFloat(2, 1, 25),
+                'price' => $this->faker->randomFloat(2, 500, 2000), // Entry-level wines in KES
             ];
         });
     }

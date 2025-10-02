@@ -37,10 +37,21 @@ class EmployeeSeeder extends Seeder
             $userIndex++;
         }
 
-        // Create sales representatives
-        for ($i = 0; $i < 15; $i++) {
+        // Create wine sales representatives
+        for ($i = 0; $i < 12; $i++) {
             Employee::factory()
                 ->salesRep()
+                ->create([
+                    'branch_id' => $branches->random()->id,
+                    'user_id' => $users->get($userIndex % $users->count())->id,
+                ]);
+            $userIndex++;
+        }
+
+        // Create sommeliers for wine expertise
+        for ($i = 0; $i < 3; $i++) {
+            Employee::factory()
+                ->sommelier()
                 ->create([
                     'branch_id' => $branches->random()->id,
                     'user_id' => $users->get($userIndex % $users->count())->id,

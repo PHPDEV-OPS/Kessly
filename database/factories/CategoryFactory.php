@@ -19,22 +19,22 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $categories = [
-            'Electronics',
-            'Clothing & Fashion', 
-            'Home & Garden',
-            'Sports & Outdoors',
-            'Books & Media',
-            'Health & Beauty',
-            'Automotive',
-            'Toys & Games',
-            'Office Supplies',
-            'Food & Beverages',
-            'Furniture',
-            'Tools & Hardware',
+        $wineCategories = [
+            'Red Wine',
+            'White Wine',
+            'Rosé Wine',
+            'Sparkling Wine',
+            'Fortified Wine',
+            'Dessert Wine',
+            'Premium Collection',
+            'Vintage Wines',
+            'Local Wines',
+            'Imported Wines',
+            'Wine Accessories',
+            'Gift Sets'
         ];
 
-        $categoryName = $this->faker->randomElement($categories);
+        $categoryName = $this->faker->randomElement($wineCategories);
 
         return [
             'name' => $categoryName,

@@ -21,31 +21,51 @@ class EmployeeFactory extends Factory
      */
     public function definition(): array
     {
-        $departments = [
-            'Sales', 'Marketing', 'Human Resources', 'Finance', 'Operations',
-            'IT', 'Customer Service', 'Warehouse', 'Management', 'Administration'
+        $wineDepartments = [
+            'Wine Sales', 'Wine Procurement', 'Inventory Management', 'Customer Relations', 'Logistics',
+            'Quality Control', 'Marketing', 'Finance', 'Human Resources', 'Operations'
         ];
 
-        $positions = [
-            'Manager', 'Assistant Manager', 'Supervisor', 'Specialist', 'Coordinator',
-            'Analyst', 'Representative', 'Executive', 'Administrator', 'Clerk'
+        $winePositions = [
+            'Wine Sales Manager', 'Wine Consultant', 'Sommelier', 'Procurement Specialist', 'Inventory Coordinator',
+            'Customer Relations Executive', 'Logistics Coordinator', 'Quality Control Analyst', 'Marketing Executive',
+            'Store Manager', 'Sales Representative', 'Warehouse Supervisor', 'Delivery Coordinator'
+        ];
+
+        $kenyanNames = [
+            'John Mwangi', 'Grace Wanjiku', 'David Kiprotich', 'Mary Njeri', 'Samuel Ochieng',
+            'Faith Akinyi', 'Peter Kamau', 'Lucy Wambui', 'James Kipkorir', 'Catherine Nyambura',
+            'Joseph Macharia', 'Agnes Wairimu', 'Daniel Rotich', 'Jane Wanjiru', 'Francis Otieno',
+            'Eunice Muthoni', 'Michael Kibet', 'Sarah Wangari', 'Patrick Mbugua', 'Mercy Achieng'
+        ];
+
+        $kenyanAreas = [
+            'Westlands, Nairobi', 'Karen, Nairobi', 'Lavington, Nairobi', 'Kileleshwa, Nairobi',
+            'Runda, Nairobi', 'Muthaiga, Nairobi', 'South B, Nairobi', 'South C, Nairobi',
+            'Nyali, Mombasa', 'Milimani, Nakuru', 'Pioneer, Eldoret', 'Migosi, Kisumu'
         ];
 
         return [
-            'employee_id' => 'EMP-' . $this->faker->unique()->numerify('####'),
+            'employee_id' => 'KWD-' . $this->faker->unique()->numerify('####'), // Kessly Wine Distribution
             'user_id' => null, // Will be set by seeder
             'branch_id' => Branch::factory(),
-            'department' => $this->faker->randomElement($departments),
-            'position' => $this->faker->randomElement($positions),
+            'department' => $this->faker->randomElement($wineDepartments),
+            'position' => $this->faker->randomElement($winePositions),
             'hire_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
-            'salary' => $this->faker->randomFloat(2, 30000, 150000),
+            'salary' => $this->faker->randomFloat(2, 25000, 200000), // KES salaries
             'employment_status' => $this->faker->randomElement(['active', 'inactive', 'terminated']),
             'manager_id' => null, // Will be set later for hierarchy
-            'phone' => $this->faker->phoneNumber(),
-            'address' => $this->faker->address(),
-            'emergency_contact' => $this->faker->name(),
-            'emergency_phone' => $this->faker->phoneNumber(),
-            'notes' => $this->faker->optional(0.3)->paragraph(),
+            'phone' => $this->faker->numerify('+254 7## ### ###'),
+            'address' => $this->faker->randomElement($kenyanAreas),
+            'emergency_contact' => $this->faker->randomElement($kenyanNames),
+            'emergency_phone' => $this->faker->numerify('+254 7## ### ###'),
+            'notes' => $this->faker->optional(0.4)->randomElement([
+                'Certified wine specialist with extensive knowledge of international wines',
+                'Experienced in wine procurement and supplier relationship management',
+                'Strong customer service skills with wine pairing expertise',
+                'Logistics coordinator with knowledge of wine storage requirements',
+                'Quality control specialist ensuring proper wine handling and storage'
+            ]),
         ];
     }
 
@@ -63,31 +83,47 @@ class EmployeeFactory extends Factory
     }
 
     /**
-     * Create a manager.
+     * Create a wine manager.
      */
     public function manager(): static
     {
         return $this->state(function (array $attributes) {
             return [
-                'position' => 'Manager',
-                'department' => $this->faker->randomElement(['Sales', 'Operations', 'Finance', 'HR']),
-                'salary' => $this->faker->randomFloat(2, 60000, 120000),
+                'position' => $this->faker->randomElement(['Wine Sales Manager', 'Store Manager', 'Operations Manager']),
+                'department' => $this->faker->randomElement(['Wine Sales', 'Operations', 'Wine Procurement']),
+                'salary' => $this->faker->randomFloat(2, 80000, 200000), // KES
                 'employment_status' => 'active',
             ];
         });
     }
 
     /**
-     * Create a sales representative.
+     * Create a wine sales representative.
      */
     public function salesRep(): static
     {
         return $this->state(function (array $attributes) {
             return [
-                'department' => 'Sales',
-                'position' => 'Sales Representative',
-                'salary' => $this->faker->randomFloat(2, 35000, 75000),
+                'department' => 'Wine Sales',
+                'position' => $this->faker->randomElement(['Wine Sales Representative', 'Wine Consultant']),
+                'salary' => $this->faker->randomFloat(2, 35000, 80000), // KES
                 'employment_status' => 'active',
+            ];
+        });
+    }
+
+    /**
+     * Create a sommelier.
+     */
+    public function sommelier(): static
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'department' => 'Wine Sales',
+                'position' => 'Sommelier',
+                'salary' => $this->faker->randomFloat(2, 60000, 120000), // KES
+                'employment_status' => 'active',
+                'notes' => 'Certified sommelier with expertise in wine tasting and pairing recommendations',
             ];
         });
     }
