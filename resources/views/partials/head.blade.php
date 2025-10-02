@@ -14,14 +14,16 @@
 @fluxAppearance
 
 <script>
-    // Fix sticky sidebar layout spacing issues
+    // Fix sticky sidebar layout spacing issues and mobile responsiveness
     document.addEventListener('DOMContentLoaded', function() {
         fixLayoutSpacing();
+        setupMobileSidebar();
     });
 
     // Also run on Livewire navigation
     document.addEventListener('livewire:navigated', function() {
         fixLayoutSpacing();
+        setupMobileSidebar();
     });
 
     function fixLayoutSpacing() {
@@ -29,23 +31,63 @@
         const mainElements = document.querySelectorAll('main, [flux\\:main], .main-content-wrapper, .main-content');
         mainElements.forEach(element => {
             element.style.marginTop = '0';
-            element.style.paddingTop = '0';
             element.style.top = '0';
         });
 
-        // Fix body grid layout
+        // Fix body layout
         document.body.style.marginTop = '0';
-        document.body.style.paddingTop = '0';
         
-        // Ensure sidebar doesn't push content down
-        const sidebar = document.querySelector('[flux\\:sidebar], flux\\:sidebar');
-        if (sidebar) {
-            sidebar.style.position = 'sticky';
-            sidebar.style.top = '0';
-            sidebar.style.alignSelf = 'start';
+        // Ensure sidebar positioning on desktop
+        if (window.innerWidth >= 1024) {
+            const sidebar = document.querySelector('[flux\\:sidebar], flux\\:sidebar');
+            if (sidebar) {
+                sidebar.style.position = 'sticky';
+                sidebar.style.top = '0';
+                sidebar.style.alignSelf = 'start';
+            }
         }
-
-        // Reset scroll position
-        window.scrollTo(0, 0);
     }
+
+    function setupMobileSidebar() {
+        if (window.innerWidth < 1024) {
+            const sidebar = document.querySelector('[flux\\:sidebar], flux\\:sidebar');
+            
+            if (sidebar) {
+                // Close sidebar when clicking backdrop
+                sidebar.addEventListener('click', function(e) {
+                    // Check if click is on the backdrop (pseudo-element area)
+                    const rect = sidebar.getBoundingClientRect();
+                    if (e.clientX > rect.right) {
+                        // Click is outside sidebar, close it
+                        const toggleButton = document.querySelector('flux\\:sidebar\\.toggle[icon="x-mark"], [icon="x-mark"]');
+                        if (toggleButton) {
+                            toggleButton.click();
+                        }
+                    }
+                });
+
+                // Close sidebar when navigation occurs
+                sidebar.querySelectorAll('a[wire\\:navigate]').forEach(link => {
+                    link.addEventListener('click', function() {
+                        setTimeout(() => {
+                            const toggleButton = document.querySelector('flux\\:sidebar\\.toggle[icon="x-mark"], [icon="x-mark"]');
+                            if (toggleButton && window.innerWidth < 1024) {
+                                toggleButton.click();
+                            }
+                        }, 100);
+                    });
+                });
+            }
+        }
+    }
+
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            fixLayoutSpacing();
+            setupMobileSidebar();
+        }, 250);
+    });
 </script>

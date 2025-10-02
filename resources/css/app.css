@@ -197,6 +197,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    position: relative;
 }
 
 /* Desktop Layout: Sidebar on left, content on right */
@@ -210,7 +211,6 @@ body {
         height: 100vh !important;
         max-height: 100vh !important;
         width: 256px !important;
-        /* 16rem = w-64 */
         flex-shrink: 0;
         overflow-y: auto;
         z-index: 30;
@@ -223,36 +223,94 @@ body {
         width: calc(100% - 256px);
         overflow-x: hidden;
     }
+
+    /* Hide mobile header on desktop */
+    flux\:header,
+    [flux\:header] {
+        display: none !important;
+    }
 }
 
-/* Mobile Layout: Sidebar overlays */
+/* Mobile Layout: Sidebar overlays with backdrop */
 @media (max-width: 1023px) {
     body {
         display: block;
+        padding-top: 56px;
+        /* Space for fixed mobile header */
     }
 
+    /* Mobile Header - Fixed at top */
+    flux\:header,
+    [flux\:header] {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 56px !important;
+        z-index: 45 !important;
+        background: white !important;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .dark flux\:header,
+    .dark [flux\:header] {
+        background: #1f2937 !important;
+        border-bottom: 1px solid #374151;
+    }
+
+    /* Sidebar - Hidden by default, slides in when opened */
     flux\:sidebar,
     [flux\:sidebar] {
         position: fixed !important;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 256px;
-        z-index: 50;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        height: 100vh !important;
+        width: 256px !important;
+        max-width: 80vw !important;
+        z-index: 60 !important;
         transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: none;
     }
 
-    flux\:sidebar.stashed-false,
-    [flux\:sidebar].stashed-false {
+    /* Sidebar open state */
+    flux\:sidebar:not([data-stashed]),
+    [flux\:sidebar]:not([data-stashed]) {
         transform: translateX(0);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
     }
 
+    /* Backdrop overlay when sidebar is open */
+    flux\:sidebar:not([data-stashed])::before,
+    [flux\:sidebar]:not([data-stashed])::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 256px;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Main content */
     main {
-        width: 100%;
+        width: 100% !important;
         margin-left: 0 !important;
-        padding-top: 56px;
-        /* Account for mobile header */
+        min-height: calc(100vh - 56px);
+        overflow-x: hidden;
     }
 }
 
@@ -261,23 +319,13 @@ main,
 [flux\:main],
 .main-content-wrapper {
     margin-top: 0 !important;
-    padding-top: 0 !important;
     align-self: start;
 }
 
-/* Mobile header positioning */
-flux\:header,
-[flux\:header] {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-}
-
-@media (min-width: 1024px) {
-
-    flux\:header,
-    [flux\:header] {
-        display: none !important;
+/* Page navigation sticky positioning - account for mobile header */
+@media (max-width: 1023px) {
+    .main-content-wrapper>div>div:first-child {
+        top: 0 !important;
     }
 }
 

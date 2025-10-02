@@ -14,18 +14,18 @@ class CategorySeeder extends Seeder
     {
         // Create predefined categories
         $categories = [
-            'Electronics',
-            'Clothing & Fashion',
-            'Home & Garden', 
-            'Sports & Outdoors',
-            'Books & Media',
-            'Health & Beauty',
-            'Automotive',
-            'Toys & Games',
-            'Office Supplies',
-            'Food & Beverages',
-            'Furniture',
-            'Tools & Hardware',
+            'Red Wine',
+            'White Wine',
+            'Rose Wine', 
+            'Sparkling Wine',
+            'Dessert Wine',
+            'Fortified Wine',
+            'Beer',
+            'Spirits',
+            'Cocktails',
+            'Non-Alcoholic Beverages',
+            'Whiskey',
+            'Cognac',
         ];
 
         foreach ($categories as $categoryName) {
