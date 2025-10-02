@@ -5,7 +5,7 @@
     'breadcrumbs' => []
 ])
 
-<div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+<div class="sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
     <div class="px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-between">
             <!-- Left Section: Navigation & Title -->
