@@ -126,7 +126,7 @@ new class extends Component {
         $this->tax_id = $customer->tax_id;
         $this->customer_type = $customer->customer_type;
         $this->status = $customer->status;
-        $this->credit_limit = $customer->credit_limit;
+        $this->credit_limit = (float) ($customer->credit_limit ?? 0.0);
         $this->payment_terms = $customer->payment_terms;
         $this->notes = $customer->notes;
         $this->tags = $customer->tags ?? [];
