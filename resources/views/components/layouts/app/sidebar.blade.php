@@ -306,9 +306,9 @@
         </flux:header>
 
         <!-- Main Content Area -->
-        <main class="lg:ml-64 transition-all duration-300 ease-in-out">
+        <main class="flex-1 transition-all duration-300 ease-in-out">
             <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-                <div class="p-2 sm:p-4 main-content-wrapper">
+                <div class="p-4 sm:p-6 lg:p-8 main-content-wrapper">
                     {{ $slot }}
                 </div>
             </div>

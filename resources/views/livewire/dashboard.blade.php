@@ -39,7 +39,7 @@
                     Refresh
                 </button>
                 <a 
-                    href="/inventory" 
+                    href="{{ route('inventory') }}" 
                     wire:navigate
                     class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-all duration-200 text-sm font-medium"
                 >
@@ -49,7 +49,7 @@
                     Manage Inventory
                 </a>
                 <a 
-                    href="/customers" 
+                    href="{{ route('customers') }}" 
                     wire:navigate
                     class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-all duration-200 text-sm font-medium"
                 >
@@ -397,7 +397,7 @@
                         </svg>
                         Recent Orders
                     </h2>
-                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200">View all →</a>
+                    <a href="{{ route('sales') }}" wire:navigate class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200">View all →</a>
                 </div>
             </div>
             <div class="p-6">
@@ -443,7 +443,7 @@
                         </svg>
                         Recent Invoices
                     </h2>
-                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200">View all →</a>
+                    <a href="{{ route('sales') }}" wire:navigate class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200">View all →</a>
                 </div>
             </div>
             <div class="p-6">
@@ -497,7 +497,7 @@
                             <p class="text-sm text-gray-600 dark:text-gray-400">{{ $analytics['low_stock_count'] }} products need restocking</p>
                         </div>
                     </div>
-                    <a href="#" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                    <a href="{{ route('inventory') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                         </svg>
