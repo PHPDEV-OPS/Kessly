@@ -23,7 +23,7 @@ Write-Host ""
 Write-Host "✅ Database seeding completed!" -ForegroundColor Green
 Write-Host ""
 Write-Host "🔑 Admin Login Credentials:" -ForegroundColor Magenta
-Write-Host "Email: admin@kessly.com" -ForegroundColor White
+Write-Host "Email: admin@kessly.co.ke" -ForegroundColor White
 Write-Host "Password: password" -ForegroundColor White
 Write-Host ""
 Write-Host "📊 Your database now contains sample data for:" -ForegroundColor Blue
