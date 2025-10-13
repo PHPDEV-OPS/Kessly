@@ -8,10 +8,19 @@
             <div class="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex">
                 <div class="absolute inset-0 bg-neutral-900"></div>
                 <a href="{{ route('home') }}" class="relative z-20 flex items-center text-lg font-medium" wire:navigate>
-                    <span class="flex h-10 w-10 items-center justify-center rounded-md">
-                        <x-app-logo-icon class="me-2 h-7 fill-current text-white" />
+                    @php
+                        $companyLogo = \App\Models\Setting::getCompanyLogo();
+                        $companyName = \App\Models\Setting::getCompanyName();
+                    @endphp
+                    
+                    <span class="flex h-10 w-10 items-center justify-center rounded-md {{ $companyLogo ? 'bg-white' : '' }}">
+                        @if($companyLogo)
+                            <img src="{{ $companyLogo }}" alt="{{ $companyName }} Logo" class="h-8 w-8 object-contain rounded me-2">
+                        @else
+                            <x-app-logo-icon class="me-2 h-7 fill-current text-white" />
+                        @endif
                     </span>
-                    {{ config('app.name', 'Laravel') }}
+                    {{ $companyName }}
                 </a>
 
                 @php

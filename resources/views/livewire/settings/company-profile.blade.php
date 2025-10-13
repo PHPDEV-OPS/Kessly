@@ -14,6 +14,12 @@
             </div>
         @endif
 
+        @if (session()->has('error'))
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form wire:submit="save">
             <!-- Basic Information -->
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
@@ -202,9 +208,66 @@
                                 <flux:description>Upload a logo for your company (max 2MB)</flux:description>
                                 <flux:error name="logo" />
                                 
+                                <!-- Current Logo -->
                                 @if ($company_logo)
-                                    <div class="mt-2">
-                                        <img src="{{ asset('storage/' . $company_logo) }}" alt="Current Logo" class="h-16 w-auto">
+                                    <div class="mt-3">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Logo:</p>
+                                        <div class="flex items-center gap-3">
+                                            <img src="{{ asset('storage/' . $company_logo) }}" alt="Current Logo" class="h-16 w-auto border rounded-lg shadow-sm">
+                                            <flux:button variant="danger" size="sm" wire:click="removeLogo" type="button">
+                                                Remove Logo
+                                            </flux:button>
+                                        </div>
+                                    </div>
+                                @endif
+                                
+                                <!-- Preview New Logo -->
+                                @if ($logo)
+                                    <div class="mt-3">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Logo Preview:</p>
+                                        <div class="flex items-center gap-3">
+                                            <img src="{{ $logo->temporaryUrl() }}" alt="Logo Preview" class="h-16 w-auto border rounded-lg shadow-sm">
+                                            <flux:button variant="outline" size="sm" wire:click="clearLogoUpload" type="button">
+                                                Clear
+                                            </flux:button>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">This logo will be saved when you submit the form</p>
+                                    </div>
+                                @endif
+                            </flux:field>
+                        </div>
+
+                        <div>
+                            <flux:field>
+                                <flux:label>Login Background Image</flux:label>
+                                <flux:input wire:model="background_image" type="file" accept="image/*" />
+                                <flux:description>Upload a background image for login pages (max 5MB)</flux:description>
+                                <flux:error name="background_image" />
+                                
+                                <!-- Current Background Image -->
+                                @if ($company_background_image)
+                                    <div class="mt-3">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Background Image:</p>
+                                        <div class="flex items-center gap-3">
+                                            <img src="{{ asset('storage/' . $company_background_image) }}" alt="Current Background" class="h-24 w-32 object-cover rounded-lg border shadow-sm">
+                                            <flux:button variant="danger" size="sm" wire:click="removeBackgroundImage" type="button">
+                                                Remove Background
+                                            </flux:button>
+                                        </div>
+                                    </div>
+                                @endif
+                                
+                                <!-- Preview New Background Image -->
+                                @if ($background_image)
+                                    <div class="mt-3">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Background Preview:</p>
+                                        <div class="flex items-center gap-3">
+                                            <img src="{{ $background_image->temporaryUrl() }}" alt="Background Preview" class="h-24 w-32 object-cover rounded-lg border shadow-sm">
+                                            <flux:button variant="outline" size="sm" wire:click="clearBackgroundImageUpload" type="button">
+                                                Clear
+                                            </flux:button>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">This background will be saved when you submit the form</p>
                                     </div>
                                 @endif
                             </flux:field>

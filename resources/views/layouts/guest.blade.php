@@ -14,17 +14,36 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
+        @php
+            $backgroundImage = \App\Models\Setting::getCompanyBackgroundImage();
+        @endphp
+        
         <style>
             .login-background {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                @if($backgroundImage)
+                    background: linear-gradient(rgba(102, 126, 234, 0.7), rgba(118, 75, 162, 0.7)), url('{{ $backgroundImage }}');
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                @else
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                @endif
                 background-attachment: fixed;
             }
             
             .glass-effect {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                @if($backgroundImage)
+                    background: rgba(255, 255, 255, 0.98);
+                    backdrop-filter: blur(25px);
+                    -webkit-backdrop-filter: blur(25px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                @else
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                @endif
             }
             
             .floating-animation {

@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Responsive helpers and variables */
+:root {
+    --flux-header-height: 56px;
+    /* default mobile header height */
+    --flux-sidebar-width: 256px;
+    --container-max-width: 1200px;
+}
+
+/* Fluid container */
+.container-fluid {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Responsive images */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Tables: make scrollable on narrow screens */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Responsive grid utilities */
+.grid-stack {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .grid-stack {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-stack {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 /* Custom styles for enhanced UI */
 @layer components {
     .btn-primary {
@@ -235,7 +285,7 @@ body {
 @media (max-width: 1023px) {
     body {
         display: block;
-        padding-top: 56px;
+        padding-top: var(--flux-header-height);
         /* Space for fixed mobile header */
     }
 
@@ -247,7 +297,8 @@ body {
         left: 0 !important;
         right: 0 !important;
         height: 56px !important;
-        z-index: 45 !important;
+        /* Header must sit above the sidebar/backdrop */
+        z-index: 90 !important;
         background: white !important;
         border-bottom: 1px solid #e5e7eb;
     }
@@ -261,17 +312,31 @@ body {
     /* Sidebar - Hidden by default, slides in when opened */
     flux\:sidebar,
     [flux\:sidebar] {
+        /* Ensure the sidebar is an overlay on mobile (force fixed instead of sticky) */
         position: fixed !important;
-        top: 0 !important;
+        /* place below the mobile header to avoid overlap */
+        top: var(--flux-header-height) !important;
         left: 0 !important;
         bottom: 0 !important;
-        height: 100vh !important;
-        width: 256px !important;
-        max-width: 80vw !important;
-        z-index: 60 !important;
+        height: calc(100vh - var(--flux-header-height)) !important;
+        width: var(--flux-sidebar-width) !important;
+        max-width: min(80vw, var(--flux-sidebar-width)) !important;
+        /* Sidebar should be above the main content but under header */
+        z-index: 80 !important;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: none;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Force overlay behavior even if inline styles exist (helps override sticky set by JS) */
+    flux\:sidebar[style*="position: sticky"],
+    [flux\:sidebar][style*="position: sticky"] {
+        position: fixed !important;
+        top: var(--flux-header-height) !important;
+        height: calc(100dvh - var(--flux-header-height)) !important;
+        transform: translateX(-100%) !important;
     }
 
     /* Sidebar open state */
@@ -286,13 +351,34 @@ body {
     [flux\:sidebar]:not([data-stashed])::before {
         content: '';
         position: fixed;
-        top: 0;
-        left: 256px;
+        top: var(--flux-header-height);
+        left: var(--flux-sidebar-width);
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
         z-index: -1;
         animation: fadeIn 0.3s ease-in-out;
+    }
+
+    /* Optional backdrop element styling if created by JS */
+    #flux-mobile-backdrop {
+        position: fixed;
+        top: var(--flux-header-height);
+        left: var(--flux-sidebar-width);
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        /* Backdrop must be below the sidebar but above main content */
+        z-index: 75;
+        display: none;
+    }
+
+    /* Ensure main content sits below backdrop */
+    main,
+    .main-content-wrapper,
+    .min-h-screen {
+        z-index: 0;
+        position: relative;
     }
 
     @keyframes fadeIn {

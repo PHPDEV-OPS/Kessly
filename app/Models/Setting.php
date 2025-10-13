@@ -42,6 +42,22 @@ class Setting extends Model
     }
 
     /**
+     * Get the company background image URL with fallback
+     */
+    public static function getCompanyBackgroundImage(): string
+    {
+        $profile = static::get('company.profile', []);
+        $backgroundImagePath = $profile['background_image'] ?? null;
+        
+        if ($backgroundImagePath && file_exists(storage_path('app/public/' . $backgroundImagePath))) {
+            return asset('storage/' . $backgroundImagePath);
+        }
+        
+        // Return empty string to indicate no background image available
+        return '';
+    }
+
+    /**
      * Get company name with fallback
      */
     public static function getCompanyName(): string

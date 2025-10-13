@@ -52,11 +52,20 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="glass-effect rounded-2xl shadow-2xl p-8 pulse-glow">
             <!-- Logo and Brand -->
             <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg mb-4">
-                    <span class="text-white font-bold text-2xl">K</span>
+                @php
+                    $companyLogo = \App\Models\Setting::getCompanyLogo();
+                    $companyName = \App\Models\Setting::getCompanyName();
+                @endphp
+                
+                <div class="inline-flex items-center justify-center w-16 h-16 {{ $companyLogo ? 'bg-white' : 'bg-gradient-to-br from-blue-500 to-purple-600' }} rounded-xl shadow-lg mb-4">
+                    @if($companyLogo)
+                        <img src="{{ $companyLogo }}" alt="{{ $companyName }} Logo" class="w-12 h-12 object-contain rounded-lg">
+                    @else
+                        <span class="text-white font-bold text-2xl">{{ substr($companyName, 0, 1) }}</span>
+                    @endif
                 </div>
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-                <p class="text-gray-600">Sign in to your Kessly SCM account</p>
+                <p class="text-gray-600">Sign in to your {{ $companyName }} account</p>
             </div>
 
             <!-- Session Status -->
@@ -208,7 +217,7 @@ new #[Layout('layouts.guest')] class extends Component
         <!-- Footer -->
         <div class="mt-8 text-center">
             <p class="text-xs text-white opacity-75">
-                © {{ date('Y') }} Kessly SCM. All rights reserved.
+                © {{ date('Y') }} {{ \App\Models\Setting::getCompanyName() }}. All rights reserved.
             </p>
         </div>
     </div>
