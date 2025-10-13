@@ -138,5 +138,5 @@ This project is licensed under the MIT License.
 
 ## About
 
-Kessly is developed and maintained by PHPDEV-OPS and members for IBL 
+Kessly is developed and maintained by PHPDEV-OPS, Lynne-kyalo and motenarobi for IBL 
 *Empowering wine distribution businesses through technology.*
