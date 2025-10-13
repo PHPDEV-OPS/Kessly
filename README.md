@@ -1,4 +1,4 @@
-# Kessly: Supply Chain Management System for Wine Distribution
+# Kessly: Supply Chain Management System for Wine Distribution for IBL
 
 Kessly is a robust and modern Supply Chain Management System tailored for wine distributor companies. It streamlines operations from inventory and sales to HR and analytics, helping businesses optimize their workflows and scale efficiently.
 
@@ -138,5 +138,5 @@ This project is licensed under the MIT License.
 
 ## About
 
-Kessly is developed and maintained by PHPDEV-OPS.  
+Kessly is developed and maintained by PHPDEV-OPS, Lynne-kyalo and motenarobi for IBL 
 *Empowering wine distribution businesses through technology.*
