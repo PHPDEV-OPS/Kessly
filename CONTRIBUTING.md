@@ -10,9 +10,9 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 
 ### Prerequisites
 
-- PHP 8.2 or higher
+- PHP 8.4 or higher
 - Composer
-- Node.js 22 or higher
+- Node.js 20 LTS or higher
 - npm
 
 ### Development Setup
