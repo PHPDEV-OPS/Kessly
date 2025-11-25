@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/PHPDEV-OPS/Kessly/discussions
+    about: Ask questions and discuss with the community
+  - name: Security Vulnerabilities
+    url: https://github.com/PHPDEV-OPS/Kessly/security/advisories/new
+    about: Report security vulnerabilities privately

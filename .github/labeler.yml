@@ -1,0 +1,76 @@
+# Configuration for the labeler workflow
+# Labels are applied based on the files changed in a PR
+
+# PHP/Laravel source code
+php:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'app/**/*.php'
+      - 'config/**/*.php'
+      - 'database/**/*.php'
+      - 'routes/**/*.php'
+
+# Livewire components
+livewire:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'app/Livewire/**/*'
+      - 'resources/views/livewire/**/*'
+
+# Frontend/UI changes
+frontend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'resources/views/**/*'
+      - 'resources/js/**/*'
+      - 'resources/css/**/*'
+      - 'tailwind.config.js'
+      - 'vite.config.js'
+      - 'postcss.config.js'
+
+# Database changes
+database:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'database/migrations/**/*'
+      - 'database/seeders/**/*'
+      - 'database/factories/**/*'
+
+# Test changes
+tests:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'tests/**/*'
+      - 'phpunit.xml'
+
+# Documentation changes
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'README.md'
+      - 'docs/**/*'
+      - '*.md'
+
+# Configuration changes
+configuration:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'config/**/*'
+      - '.env.example'
+      - 'composer.json'
+      - 'package.json'
+
+# CI/CD changes
+ci-cd:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
+
+# Dependencies
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'composer.json'
+      - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
