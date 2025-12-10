@@ -14,5 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
+            if ($request->is('livewire/*') && $request->method() === 'GET') {
+                return redirect()->back();
+            }
+        });
     })->create();

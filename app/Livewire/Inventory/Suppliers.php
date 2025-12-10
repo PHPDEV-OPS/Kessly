@@ -119,6 +119,40 @@ class Suppliers extends Component
         $this->showForm = false;
     }
 
+    public function export()
+    {
+        $query = Supplier::query()
+            ->when($this->search !== '', function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('contact_email', 'like', '%' . $this->search . '%')
+                  ->orWhere('phone', 'like', '%' . $this->search . '%');
+            });
+
+        $allowed = ['name', 'contact_email', 'created_at'];
+        $field = in_array($this->sortField, $allowed, true) ? $this->sortField : 'name';
+        $direction = $this->sortDirection === 'desc' ? 'desc' : 'asc';
+
+        $suppliers = $query->orderBy($field, $direction)->get();
+
+        $csv = "Name,Email,Phone,Address,Notes\n";
+        foreach ($suppliers as $supplier) {
+            $csv .= sprintf(
+                "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+                str_replace('"', '""', $supplier->name),
+                str_replace('"', '""', $supplier->contact_email),
+                str_replace('"', '""', $supplier->phone ?? ''),
+                str_replace('"', '""', $supplier->address ?? ''),
+                str_replace('"', '""', $supplier->notes ?? '')
+            );
+        }
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, 'suppliers-' . now()->format('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
+    }
+
     protected function resetForm(): void
     {
         $this->reset(['supplierId', 'name', 'contact_email', 'phone', 'address', 'notes']);

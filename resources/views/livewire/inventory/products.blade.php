@@ -1,384 +1,350 @@
 <div>
     <!-- Status Message -->
     @if (session()->has('status'))
-        <div class="p-4 rounded-lg bg-green-50 border border-green-200">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-green-800">{{ session('status') }}</p>
-                </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="ri-checkbox-circle-line ri-20px me-2"></i>
+                <span>{{ session('status') }}</span>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
-    <!-- Header and Controls -->
-    <div class="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-900">Products</h2>
-            <p class="mt-1 text-sm text-gray-600">Manage your product inventory</p>
-        </div>
-
-        <div class="flex gap-3 items-center">
-            <div class="relative">
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    class="w-full sm:w-64 pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    wire:model.live.debounce.300ms="search"
-                />
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Search</label>
+                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search by name, SKU, description..." class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Category</label>
+                    <select wire:model.live="categoryFilter" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Per Page</label>
+                    <select wire:model.live="perPage" class="form-select">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button type="button" class="btn btn-label-secondary" wire:click="export">
+                        <i class="ri-download-line me-1"></i>
+                        Export
+                    </button>
+                    <button type="button" class="btn btn-primary" wire:click="create">
+                        <i class="ri-add-line me-1"></i>
+                        Add Product
+                    </button>
                 </div>
             </div>
-
-            <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="perPage">
-                <option value="10">10 per page</option>
-                <option value="25">25 per page</option>
-                <option value="50">50 per page</option>
-                <option value="100">100 per page</option>
-            </select>
-
-            <button
-                type="button"
-                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                wire:click="create"
-            >
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Add Product
-            </button>
         </div>
     </div>
 
-    <!-- Table -->
-    <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <button type="button" class="flex items-center gap-1 hover:text-gray-700" wire:click="sortBy('name')">
+    <!-- Products Table -->
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>
+                            <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 d-flex align-items-center gap-1" wire:click="sortBy('name')">
                                 Product
                                 @if ($sortField === 'name')
-                                    <span class="text-blue-600">
-                                        @if ($sortDirection === 'asc')
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                            </svg>
-                                        @else
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        @endif
-                                    </span>
+                                    <i class="ri-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}-s-line text-primary"></i>
                                 @endif
                             </button>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <button type="button" class="flex items-center gap-1 hover:text-gray-700" wire:click="sortBy('stock')">
+                        <th>Category</th>
+                        <th>Supplier</th>
+                        <th>
+                            <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 d-flex align-items-center gap-1" wire:click="sortBy('stock')">
                                 Stock
                                 @if ($sortField === 'stock')
-                                    <span class="text-blue-600">
-                                        @if ($sortDirection === 'asc')
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                            </svg>
-                                        @else
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        @endif
-                                    </span>
+                                    <i class="ri-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}-s-line text-primary"></i>
                                 @endif
                             </button>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <button type="button" class="flex items-center gap-1 hover:text-gray-700" wire:click="sortBy('price')">
+                        <th>
+                            <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 d-flex align-items-center gap-1" wire:click="sortBy('price')">
                                 Price
                                 @if ($sortField === 'price')
-                                    <span class="text-blue-600">
-                                        @if ($sortDirection === 'asc')
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                            </svg>
-                                        @else
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        @endif
-                                    </span>
+                                    <i class="ri-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}-s-line text-primary"></i>
                                 @endif
                             </button>
                         </th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody>
                     @forelse ($products as $product)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10">
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-3">
                                         @if($product->image)
-                                            <img class="h-10 w-10 rounded-lg object-cover" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="rounded">
                                         @else
-                                            <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                                                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                                </svg>
-                                            </div>
+                                            <span class="avatar-initial rounded bg-label-secondary">
+                                                <i class="ri-product-hunt-line ri-20px"></i>
+                                            </span>
                                         @endif
                                     </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
+                                    <div>
+                                        <h6 class="mb-0">{{ $product->name }}</h6>
                                         @if ($product->description)
-                                            <div class="text-sm text-gray-500">{{ \Illuminate\Support\Str::limit($product->description, 60) }}</div>
+                                            <small class="text-muted">{{ \Illuminate\Support\Str::limit($product->description, 50) }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $product->category?->name ?? '—' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $product->supplier?->name ?? '—' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td>{{ $product->category?->name ?? '—' }}</td>
+                            <td>{{ $product->supplier?->name ?? '—' }}</td>
+                            <td>
                                 @if($product->stock === 0)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        {{ $product->stock }}
-                                    </span>
+                                    <span class="badge bg-label-danger">{{ $product->stock }}</span>
                                 @elseif($product->stock <= 5)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                        {{ $product->stock }}
-                                    </span>
+                                    <span class="badge bg-label-warning">{{ $product->stock }}</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        {{ $product->stock }}
-                                    </span>
+                                    <span class="badge bg-label-success">{{ $product->stock }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">$ {{ number_format($product->price, 2) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end space-x-2">
-                                    <button type="button" class="text-blue-600 hover:text-blue-900 p-1 rounded" wire:click="edit({{ $product->id }})" title="Edit">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                        </svg>
+                            <td class="fw-medium">${{ number_format($product->price, 2) }}</td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-1">
+                                    <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="edit({{ $product->id }})" title="Edit">
+                                        <i class="ri-edit-line ri-20px"></i>
                                     </button>
-                                    <button type="button" class="text-red-600 hover:text-red-900 p-1 rounded" wire:click="delete({{ $product->id }})" onclick="return confirm('Are you sure you want to delete this product?')" title="Delete">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
+                                    <button type="button" class="btn btn-sm btn-icon btn-text-danger rounded-pill" wire:click="delete({{ $product->id }})" onclick="return confirm('Are you sure you want to delete this product?')" title="Delete">
+                                        <i class="ri-delete-bin-line ri-20px"></i>
                                     </button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center">
-                                    <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                                    </svg>
-                                    <h3 class="text-sm font-medium text-gray-900 mb-1">No products found</h3>
-                                    <p class="text-sm text-gray-500">Get started by adding your first product.</p>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="avatar avatar-xl mb-3">
+                                        <span class="avatar-initial rounded bg-label-secondary">
+                                            <i class="ri-shopping-bag-3-line ri-48px"></i>
+                                        </span>
+                                    </div>
+                                    <h6 class="mb-1">No products found</h6>
+                                    <p class="text-muted small mb-0">Get started by adding your first product.</p>
                                 </div>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
+    </div>
 
-        <!-- Pagination -->
-        @if($products->hasPages())
-            <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-                {{ $products->links() }}
+    <!-- Pagination and Stats -->
+    <div class="card-footer border-top">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <small class="text-muted">
+                        <i class="ri-information-line me-1"></i>
+                        Showing {{ $products->firstItem() ?? 0 }} to {{ $products->lastItem() ?? 0 }} of {{ $products->total() }} products
+                    </small>
+                </div>
+                @if($products->hasPages())
+                    <nav aria-label="Product pagination">
+                        {{ $products->links('pagination::bootstrap-5') }}
+                    </nav>
+                @endif
             </div>
-        @endif
+    </div>
+    
+    <style>
+        .pagination {
+            margin: 0;
+            gap: 0.25rem;
+            }
+            .pagination .page-link {
+                border-radius: 0.375rem;
+                border: 1px solid #ddd;
+                color: #697a8d;
+                padding: 0.375rem 0.75rem;
+                margin: 0 2px;
+                font-size: 0.9375rem;
+                transition: all 0.2s;
+            }
+            .pagination .page-link svg {
+                display: none;
+            }
+            .pagination .page-link:hover {
+                background-color: #f5f5f9;
+                border-color: #7367f0;
+                color: #7367f0;
+            }
+            .pagination .page-item.active .page-link {
+                background-color: #7367f0;
+                border-color: #7367f0;
+                color: #fff;
+            }
+            .pagination .page-item.disabled .page-link {
+                background-color: #f5f5f9;
+                border-color: #ddd;
+                color: #c7cdd4;
+                cursor: not-allowed;
+            }
+        </style>
     </div>
 
     <!-- Create/Edit Form Modal -->
     @if ($showForm)
-        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <!-- Background overlay -->
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" wire:click="cancel"></div>
-
-                <!-- Modal panel -->
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="modal-backdrop fade show" style="z-index: 1050;"></div>
+        <div class="modal fade show d-block" tabindex="-1" style="z-index: 1055; position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
                     <form wire:submit.prevent="save">
-                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <div class="sm:flex sm:items-start">
-                                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                                    @if($productId)
-                                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                        </svg>
-                                    @else
-                                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                        </svg>
-                                    @endif
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="ri-{{ $productId ? 'edit' : 'add' }}-line me-2"></i>
+                                {{ $productId ? 'Edit Product' : 'Add New Product' }}
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="cancel" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <!-- Name -->
+                                <div class="col-12">
+                                    <label for="name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        class="form-control @error('name') is-invalid @enderror"
+                                        wire:model="name"
+                                        placeholder="Enter product name"
+                                    />
+                                    @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                        {{ $productId ? 'Edit Product' : 'Add New Product' }}
-                                    </h3>
-                                    <div class="mt-4 space-y-4">
-                                        <!-- Name -->
-                                        <div>
-                                            <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+
+                                <!-- Category and Supplier -->
+                                <div class="col-md-6">
+                                    <label for="category_id" class="form-label">Category</label>
+                                    <select
+                                        id="category_id"
+                                        class="form-select @error('category_id') is-invalid @enderror"
+                                        wire:model="category_id"
+                                    >
+                                        <option value="">Select category</option>
+                                        @foreach ($categories as $cat)
+                                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="supplier_id" class="form-label">Supplier</label>
+                                    <select
+                                        id="supplier_id"
+                                        class="form-select @error('supplier_id') is-invalid @enderror"
+                                        wire:model="supplier_id"
+                                    >
+                                        <option value="">No supplier</option>
+                                        @foreach ($suppliers as $sup)
+                                            <option value="{{ $sup->id }}">{{ $sup->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('supplier_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+
+                                <!-- Stock and Price -->
+                                <div class="col-md-6">
+                                    <label for="stock" class="form-label">Stock Quantity <span class="text-danger">*</span></label>
+                                    <input
+                                        type="number"
+                                        id="stock"
+                                        min="0"
+                                        class="form-control @error('stock') is-invalid @enderror"
+                                        wire:model="stock"
+                                        placeholder="0"
+                                    />
+                                    @error('stock') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input
+                                            type="number"
+                                            id="price"
+                                            step="0.01"
+                                            min="0"
+                                            class="form-control @error('price') is-invalid @enderror"
+                                            wire:model="price"
+                                            placeholder="0.00"
+                                        />
+                                        @error('price') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea
+                                        id="description"
+                                        rows="3"
+                                        class="form-control @error('description') is-invalid @enderror"
+                                        wire:model="description"
+                                        placeholder="Enter product description (optional)"
+                                    ></textarea>
+                                    @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+
+                                <!-- Image Upload -->
+                                <div class="col-12">
+                                    <label for="image" class="form-label">Product Image</label>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="flex-shrink-0">
+                                            @if($image)
+                                                <img class="rounded" style="width: 80px; height: 80px; object-fit: cover;" src="{{ $image->temporaryUrl() }}" alt="Preview">
+                                            @elseif($productId && ($product = \App\Models\Product::find($productId)) && $product->image)
+                                                <img class="rounded" style="width: 80px; height: 80px; object-fit: cover;" src="{{ asset('storage/' . $product->image) }}" alt="Current">
+                                            @else
+                                                <div class="avatar avatar-xl">
+                                                    <span class="avatar-initial rounded bg-label-secondary">
+                                                        <i class="ri-image-line ri-36px"></i>
+                                                    </span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow-1">
                                             <input
-                                                type="text"
-                                                id="name"
-                                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('name') ? 'border-red-300' : 'border-gray-300' }}"
-                                                wire:model="name"
-                                                placeholder="Enter product name"
+                                                type="file"
+                                                id="image"
+                                                class="form-control @error('image') is-invalid @enderror"
+                                                wire:model="image"
+                                                accept="image/*"
                                             />
-                                            @error('name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                        </div>
-
-                                        <!-- Category and Supplier Row -->
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <!-- Category -->
-                                            <div>
-                                                <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
-                                                <select
-                                                    id="category_id"
-                                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('category_id') ? 'border-red-300' : 'border-gray-300' }}"
-                                                    wire:model="category_id"
-                                                >
-                                                    <option value="">Select category</option>
-                                                    @foreach ($categories as $cat)
-                                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('category_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                            </div>
-
-                                            <!-- Supplier -->
-                                            <div>
-                                                <label for="supplier_id" class="block text-sm font-medium text-gray-700">Supplier</label>
-                                                <select
-                                                    id="supplier_id"
-                                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('supplier_id') ? 'border-red-300' : 'border-gray-300' }}"
-                                                    wire:model="supplier_id"
-                                                >
-                                                    <option value="">No supplier</option>
-                                                    @foreach ($suppliers as $sup)
-                                                        <option value="{{ $sup->id }}">{{ $sup->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('supplier_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                            </div>
-                                        </div>
-
-                                        <!-- Stock and Price Row -->
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <!-- Stock -->
-                                            <div>
-                                                <label for="stock" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
-                                                <input
-                                                    type="number"
-                                                    id="stock"
-                                                    min="0"
-                                                    class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('stock') ? 'border-red-300' : 'border-gray-300' }}"
-                                                    wire:model="stock"
-                                                    placeholder="0"
-                                                />
-                                                @error('stock') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                            </div>
-
-                                            <!-- Price -->
-                                            <div>
-                                                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                                                <div class="relative mt-1 rounded-md shadow-sm">
-                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <span class="text-gray-500 sm:text-sm">$</span>
-                                                    </div>
-                                                    <input
-                                                        type="number"
-                                                        id="price"
-                                                        step="0.01"
-                                                        min="0"
-                                                        class="pl-7 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('price') ? 'border-red-300' : 'border-gray-300' }}"
-                                                        wire:model="price"
-                                                        placeholder="0.00"
-                                                    />
-                                                </div>
-                                                @error('price') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                            </div>
-                                        </div>
-
-                                        <!-- Description -->
-                                        <div>
-                                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                            <textarea
-                                                id="description"
-                                                rows="3"
-                                                class="mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ $errors->has('description') ? 'border-red-300' : 'border-gray-300' }}"
-                                                wire:model="description"
-                                                placeholder="Enter product description (optional)"
-                                            ></textarea>
-                                            @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                        </div>
-
-                                        <!-- Image Upload -->
-                                        <div>
-                                            <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                                            <div class="mt-1 flex items-center space-x-4">
-                                                <div class="flex-shrink-0">
-                                                    @if($image)
-                                                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ $image->temporaryUrl() }}" alt="Preview">
-                                                    @elseif($productId && ($product = \App\Models\Product::find($productId)) && $product->image)
-                                                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ asset('storage/' . $product->image) }}" alt="Current">
-                                                    @else
-                                                        <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center">
-                                                            <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                            </svg>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <div class="flex-1">
-                                                    <input
-                                                        type="file"
-                                                        id="image"
-                                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                                        wire:model="image"
-                                                        accept="image/*"
-                                                    />
-                                                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
-                                                    @error('image') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                                </div>
-                                            </div>
+                                            <small class="text-muted">PNG, JPG, GIF up to 2MB</small>
+                                            @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Modal Footer -->
-                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button
-                                type="submit"
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                            >
-                                {{ $productId ? 'Update Product' : 'Create Product' }}
-                            </button>
-                            <button
-                                type="button"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                wire:click="cancel"
-                            >
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-label-secondary" wire:click="cancel">
                                 Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ri-save-line me-1"></i>
+                                {{ $productId ? 'Update Product' : 'Create Product' }}
                             </button>
                         </div>
                     </form>

@@ -1,5 +1,19 @@
 import './bootstrap';
 
+/*
+  Import Materio assets
+*/
+import.meta.glob([
+  '../assets/img/**',
+  '../assets/vendor/fonts/**'
+]);
+
+// Import helpers globally
+import '../assets/vendor/js/helpers.js';
+
+// Materio Template JS (will be loaded via Vite)
+// Core scripts loaded via layout blade templates
+
 // Enhanced user experience features
 document.addEventListener('DOMContentLoaded', function () {
     // Auto-hide alerts after 5 seconds
@@ -20,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
             submitButtons.forEach(button => {
                 button.disabled = true;
-                button.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
+                button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
             });
         });
     });
@@ -60,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'Escape') {
             const modals = document.querySelectorAll('[role="dialog"]');
             modals.forEach(modal => {
-                const closeButton = modal.querySelector('[wire:click*="cancel"], [data-dismiss]');
+                const closeButton = modal.querySelector('[wire:click*="cancel"], [data-bs-dismiss]');
                 if (closeButton) {
                     closeButton.click();
                 }
@@ -80,52 +94,50 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Livewire hooks for enhanced UX
-document.addEventListener('livewire:loading', () => {
-    // Add loading class to body
+document.addEventListener('livewire:init', () => {
+    // Livewire is initialized
+});
+
+document.addEventListener('livewire:navigating', () => {
     document.body.classList.add('livewire-loading');
 });
 
-document.addEventListener('livewire:loaded', () => {
-    // Remove loading class from body
+document.addEventListener('livewire:navigated', () => {
     document.body.classList.remove('livewire-loading');
 });
 
-// Toast notifications for better feedback
+// Bootstrap Toast notifications for better feedback
 window.showToast = function (message, type = 'success') {
+    const toastContainer = document.getElementById('toast-container') || createToastContainer();
+    
     const toast = document.createElement('div');
-    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
-
-    const colors = {
-        success: 'bg-green-500 text-white',
-        error: 'bg-red-500 text-white',
-        warning: 'bg-yellow-500 text-white',
-        info: 'bg-blue-500 text-white'
-    };
-
-    toast.classList.add(...colors[type].split(' '));
+    toast.className = `toast align-items-center text-white bg-${type} border-0`;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    
     toast.innerHTML = `
-        <div class="flex items-center">
-            <div class="flex-1">${message}</div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     `;
 
-    document.body.appendChild(toast);
+    toastContainer.appendChild(toast);
+    
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
 
-    // Animate in
-    setTimeout(() => {
-        toast.classList.remove('translate-x-full');
-    }, 100);
-
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        toast.classList.add('translate-x-full');
-        setTimeout(() => {
-            toast.remove();
-        }, 300);
-    }, 5000);
+    toast.addEventListener('hidden.bs.toast', function () {
+        toast.remove();
+    });
 };
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container position-fixed top-0 end-0 p-3';
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+    return container;
+}

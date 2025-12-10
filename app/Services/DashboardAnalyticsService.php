@@ -18,8 +18,8 @@ class DashboardAnalyticsService
      */
     public function getAnalytics(): array
     {
-        // Cache analytics
-        return cache()->remember('dashboard_analytics', now()->addMinutes(5), function () {
+        // Cache analytics for 30 minutes instead of 5
+        return cache()->remember('dashboard_analytics', now()->addMinutes(30), function () {
             try {
                 return [
                     'total_products' => $this->getTotalProducts(),

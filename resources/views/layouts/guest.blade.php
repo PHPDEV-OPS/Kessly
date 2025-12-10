@@ -1,71 +1,189 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light-style layout-wide customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('assets') }}/" data-template="vertical-menu-template" data-style="light" data-bs-theme="light">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        
+        <meta name="description" content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
+        <meta name="keywords" content="{{ config('variables.templateKeyword') ? config('variables.templateKeyword') : '' }}">
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
+        <!-- Icons -->
+        <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/fontawesome.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/tabler-icons.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/flag-icons.css') }}" />
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
+
+        <!-- Core CSS -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        @php
-            $backgroundImage = \App\Models\Setting::getCompanyBackgroundImage();
-        @endphp
+        <!-- Page CSS -->
+        <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
+
+        @livewireStyles
         
         <style>
-            .login-background {
-                @if($backgroundImage)
-                    background: linear-gradient(rgba(102, 126, 234, 0.7), rgba(118, 75, 162, 0.7)), url('{{ $backgroundImage }}');
-                    background-size: cover;
-                    background-position: center;
-                    background-repeat: no-repeat;
-                @else
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                @endif
-                background-attachment: fixed;
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #fff;
             }
-            
-            .glass-effect {
-                @if($backgroundImage)
-                    background: rgba(255, 255, 255, 0.98);
-                    backdrop-filter: blur(25px);
-                    -webkit-backdrop-filter: blur(25px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-                @else
-                    background: rgba(255, 255, 255, 0.95);
-                    backdrop-filter: blur(20px);
-                    -webkit-backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                @endif
+            .authentication-bg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                overflow: hidden;
             }
-            
-            .floating-animation {
-                animation: float 6s ease-in-out infinite;
+            .authentication-bg-mask {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: auto;
+                object-fit: cover;
             }
-            
-            @keyframes float {
-                0%, 100% { transform: translateY(0px) rotate(0deg); }
-                50% { transform: translateY(-20px) rotate(3deg); }
+            .authentication-image-tree {
+                position: absolute;
+                bottom: 4rem;
+                left: 3rem;
+                width: auto;
+                height: 200px;
+                object-fit: contain;
             }
-            
-            .pulse-glow {
-                animation: pulse-glow 2s ease-in-out infinite alternate;
+            .authentication-image-object-left {
+                position: absolute;
+                bottom: 6%;
+                left: 4%;
+                width: auto;
+                height: 150px;
+                object-fit: contain;
             }
-            
-            @keyframes pulse-glow {
-                from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-                to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+            .authentication-image-object-right {
+                position: absolute;
+                bottom: 7%;
+                right: 4%;
+                width: auto;
+                height: 150px;
+                object-fit: contain;
+            }
+            .authentication-wrapper {
+                position: relative;
+                z-index: 1;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1.5rem;
+            }
+            .authentication-wrapper.authentication-basic {
+                align-items: center;
+                justify-content: center;
+            }
+            .authentication-inner {
+                width: 100%;
+                max-width: 460px;
+                margin: 0 auto;
+            }
+            .authentication-inner .card {
+                box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+                border: none;
+                border-radius: 0.5rem;
+            }
+            .app-brand-link {
+                text-decoration: none;
+                color: inherit;
+            }
+            .form-floating-outline .form-control {
+                border: 1px solid #d9dee3;
+                border-radius: 0.375rem;
+                background-color: #fff;
+            }
+            .form-floating-outline .form-control:focus {
+                border-color: #696cff;
+                box-shadow: 0 0 0 0.125rem rgba(105, 108, 255, 0.25);
+            }
+            .form-floating-outline .form-control ~ label {
+                color: #a8aaae;
+                transform: translateY(0.75rem) translateX(1rem) scale(1);
+                transition: all 0.2s ease-in-out;
+            }
+            .form-floating-outline .form-control:focus ~ label,
+            .form-floating-outline .form-control:not(:placeholder-shown) ~ label {
+                transform: translateY(-0.5rem) translateX(0.75rem) scale(0.85);
+                color: #696cff;
+            }
+            .input-group-text {
+                border-left: none;
+                background-color: #fff;
+            }
+            .input-group .form-control:focus + .input-group-text {
+                border-color: #696cff;
+            }
+            .btn-primary {
+                background-color: #696cff;
+                border-color: #696cff;
+            }
+            .btn-primary:hover {
+                background-color: #5a5fc7;
+                border-color: #5a5fc7;
+            }
+            @media (min-width: 768px) {
+                .authentication-wrapper {
+                    padding: 3rem;
+                }
+                .authentication-inner {
+                    max-width: 500px;
+                }
+            }
+            @media (max-width: 991.98px) {
+                .authentication-image-tree,
+                .authentication-image-object-left,
+                .authentication-image-object-right,
+                .authentication-bg-mask {
+                    display: none !important;
+                }
             }
         </style>
     </head>
-    <body class="font-sans antialiased">
+    <body>
         {{ $slot }}
+        
+        @livewireScripts
+
+        <script>
+            // Password toggle functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const passwordToggle = document.querySelector('.form-password-toggle .input-group-text');
+                const passwordInput = document.getElementById('password');
+                const eyeIcon = passwordToggle ? passwordToggle.querySelector('i') : null;
+
+                if (passwordToggle && passwordInput && eyeIcon) {
+                    passwordToggle.addEventListener('click', function() {
+                        if (passwordInput.type === 'password') {
+                            passwordInput.type = 'text';
+                            eyeIcon.classList.remove('ri-eye-off-line');
+                            eyeIcon.classList.add('ri-eye-line');
+                        } else {
+                            passwordInput.type = 'password';
+                            eyeIcon.classList.remove('ri-eye-line');
+                            eyeIcon.classList.add('ri-eye-off-line');
+                        }
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

@@ -1,0 +1,59 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboard",
+      "icon": "menu-icon icon-base ri ri-home-smile-line",
+      "slug": "dashboard"
+    },
+    {
+      "name": "Inventory",
+      "icon": "menu-icon icon-base ri ri-stack-line",
+      "slug": "inventory",
+      "url": "/inventory"
+    },
+    {
+      "name": "Customers",
+      "icon": "menu-icon icon-base ri ri-user-line",
+      "slug": "customers",
+      "url": "/customers"
+    },
+    {
+      "name": "Human Resources",
+      "icon": "menu-icon icon-base ri ri-team-line",
+      "slug": "hr",
+      "url": "/hr"
+    },
+    {
+      "name": "Finance",
+      "icon": "menu-icon icon-base ri ri-money-dollar-circle-line",
+      "slug": "finance",
+      "url": "/finance"
+    },
+    {
+      "name": "Performance & Analytics",
+      "icon": "menu-icon icon-base ri ri-bar-chart-box-line",
+      "slug": ["analytics", "reports"],
+      "submenu": [
+        {
+          "name": "Analytics",
+          "icon": "menu-icon icon-base ri ri-line-chart-line",
+          "slug": "analytics",
+          "url": "/analytics"
+        },
+        {
+          "name": "Reports",
+          "icon": "menu-icon icon-base ri ri-file-list-line",
+          "slug": "reports",
+          "url": "/reports"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "icon": "menu-icon icon-base ri ri-settings-line",
+      "slug": "settings",
+      "url": "/settings"
+    }
+  ]
+}

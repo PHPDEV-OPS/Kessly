@@ -111,6 +111,21 @@ class Roles extends Component
         $this->showForm = false;
     }
 
+    public function togglePermission(string $permission): void
+    {
+        $current = $this->permissions ? array_map('trim', explode(',', $this->permissions)) : [];
+        
+        if (in_array($permission, $current)) {
+            // Remove permission
+            $current = array_filter($current, fn($p) => $p !== $permission);
+        } else {
+            // Add permission
+            $current[] = $permission;
+        }
+        
+        $this->permissions = implode(', ', array_filter($current));
+    }
+
     protected function resetForm(): void
     {
         $this->reset(['roleId', 'name', 'description', 'permissions']);

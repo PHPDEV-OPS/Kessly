@@ -69,37 +69,79 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <form wire:submit="resetPassword">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+<div class="authentication-wrapper authentication-basic">
+    <div class="authentication-inner">
+        <!-- Reset Password -->
+        <div class="card">
+            <div class="card-body p-5">
+                <!-- Logo -->
+                <div class="app-brand justify-content-center mb-5">
+                    <a href="{{ route('login') }}" class="app-brand-link gap-2" wire:navigate>
+                        <span class="app-brand-logo demo">{!! \App\Helpers\Helper::getAppBrandLogo() !!}</span>
+                        <span class="app-brand-text demo text-heading fw-bold">{{ config('app.name') }}</span>
+                    </a>
+                </div>
+                <!-- /Logo -->
+                
+                <h4 class="mb-1">Reset Password 🔐</h4>
+                <p class="mb-5">Enter your new password below</p>
+
+                <form wire:submit="resetPassword" class="mb-3">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" 
+                               wire:model="email" 
+                               class="form-control @error('email') is-invalid @enderror" 
+                               id="email" 
+                               placeholder="your.email@company.com" 
+                               autofocus 
+                               required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 form-password-toggle">
+                        <label class="form-label" for="password">New Password</label>
+                        <div class="input-group input-group-merge">
+                            <input type="password" 
+                                   wire:model="password" 
+                                   id="password" 
+                                   class="form-control @error('password') is-invalid @enderror" 
+                                   placeholder="Create a strong password" 
+                                   required 
+                                   aria-describedby="password" />
+                            <span class="input-group-text cursor-pointer"><i class="ri-eye-off-line"></i></span>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-password-toggle">
+                        <label class="form-label" for="password_confirmation">Confirm New Password</label>
+                        <div class="input-group input-group-merge">
+                            <input type="password" 
+                                   wire:model="password_confirmation" 
+                                   id="password_confirmation" 
+                                   class="form-control" 
+                                   placeholder="Confirm your password" 
+                                   required />
+                            <span class="input-group-text cursor-pointer"><i class="ri-eye-off-line"></i></span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary d-grid w-100">Reset Password</button>
+                </form>
+
+                <div class="text-center">
+                    <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center" wire:navigate>
+                        <i class="ri-arrow-left-s-line scaleX-n1-rtl me-1"></i>
+                        Back to login
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                          type="password"
-                          name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
+        <!-- /Reset Password -->
+    </div>
 </div>

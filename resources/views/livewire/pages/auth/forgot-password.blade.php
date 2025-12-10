@@ -17,9 +17,9 @@ new #[Layout('layouts.guest')] class extends Component
             'email' => ['required', 'string', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
+        // Will send the password reset link to the user. Once we have attempted
+        // to send the link, will examine the response then see the message we
+        // need to show to the user. Finally send out a proper response.
         $status = Password::sendResetLink(
             $this->only('email')
         );
@@ -36,26 +36,56 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+<div class="authentication-wrapper authentication-basic">
+    <div class="authentication-inner">
+        <!-- Forgot Password -->
+        <div class="card">
+            <div class="card-body p-5">
+                <!-- Logo -->
+                <div class="app-brand justify-content-center mb-5">
+                    <a href="{{ route('login') }}" class="app-brand-link gap-2" wire:navigate>
+                        <span class="app-brand-logo demo">{!! \App\Helpers\Helper::getAppBrandLogo() !!}</span>
+                        <span class="app-brand-text demo text-heading fw-bold">{{ config('app.name') }}</span>
+                    </a>
+                </div>
+                <!-- /Logo -->
+                
+                <h4 class="mb-1">Forgot Password? 🔒</h4>
+                <p class="mb-5">Enter your email and we'll send you instructions to reset your password</p>
+
+                <!-- Session Status -->
+                @if (session('status'))
+                    <div class="alert alert-success mb-3" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form wire:submit="sendPasswordResetLink" class="mb-3">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" 
+                               wire:model="email" 
+                               class="form-control @error('email') is-invalid @enderror" 
+                               id="email" 
+                               placeholder="your.email@company.com" 
+                               autofocus 
+                               required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary d-grid w-100">Send Reset Link</button>
+                </form>
+
+                <div class="text-center">
+                    <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center" wire:navigate>
+                        <i class="ri-arrow-left-s-line scaleX-n1-rtl me-1"></i>
+                        Back to login
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Forgot Password -->
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form wire:submit="sendPasswordResetLink">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
 </div>

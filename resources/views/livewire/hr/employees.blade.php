@@ -1,243 +1,399 @@
 <div>
     @if (session()->has('message'))
-        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
     <!-- Search and Filter Section -->
-    <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border">
-        <div class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
-                <input type="text" wire:model.live="search" placeholder="Search employees..." 
-                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-            </div>
-            <div class="flex gap-2">
-                <select wire:model.live="department" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white">
-                    <option value="">All Departments</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept }}">{{ $dept }}</option>
-                    @endforeach
-                </select>
-                <select wire:model.live="employment_status" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white">
-                    <option value="">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="terminated">Terminated</option>
-                </select>
-                <button wire:click="create" type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Add Employee
-                </button>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <input type="text" wire:model.live="search" placeholder="Search employees..." class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <select wire:model.live="department" class="form-select">
+                        <option value="">All Departments</option>
+                        @foreach($departments as $dept)
+                            <option value="{{ $dept }}">{{ $dept }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select wire:model.live="employment_status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="terminated">Terminated</option>
+                    </select>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button wire:click.prevent="create" type="button" class="btn btn-primary">
+                        <i class="ri-add-line me-1"></i>
+                        Add Employee
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Employees Table -->
-    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        <button type="button" class="flex items-center gap-1" wire:click="sortBy('employee_id')">
-                            Employee ID
-                            @if ($sortField === 'employee_id')
-                                <span>@if ($sortDirection === 'asc') ↑ @else ↓ @endif</span>
-                            @endif
-                        </button>
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Employee</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Department</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Position</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Branch</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                @forelse($employees as $employee)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                            {{ $employee->employee_id }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium">
-                                    {{ $employee->user ? strtoupper(substr($employee->user->name, 0, 2)) : 'N/A' }}
-                                </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $employee->user ? $employee->user->name : 'N/A' }}
-                                    </div>
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $employee->user ? $employee->user->email : 'N/A' }}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $employee->department }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $employee->position }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                            {{ $employee->branch ? $employee->branch->name : 'N/A' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                                {{ $employee->employment_status === 'active' ? 'bg-green-100 text-green-800' : 
-                                   ($employee->employment_status === 'inactive' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
-                                {{ ucfirst($employee->employment_status) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <button wire:click="edit({{ $employee->id }})" class="text-blue-600 hover:text-blue-900">Edit</button>
-                                <button wire:click="delete({{ $employee->id }})" 
-                                        onclick="return confirm('Are you sure you want to delete this employee?')"
-                                        class="text-red-600 hover:text-red-900">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                            No employees found.
-                        </td>
+                        <th>
+                            <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-muted" wire:click="sortBy('employee_id')">
+                                Employee ID
+                                @if ($sortField === 'employee_id')
+                                    <i class="ri-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-s-line"></i>
+                                @endif
+                            </button>
+                        </th>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>Position</th>
+                        <th>Branch</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($employees as $employee)
+                        <tr>
+                            <td class="fw-medium">{{ $employee->employee_id }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-3">
+                                        <span class="avatar-initial rounded-circle bg-label-primary">
+                                            {{ $employee->user ? strtoupper(substr($employee->user->name, 0, 2)) : 'NA' }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="fw-medium">{{ $employee->user ? $employee->user->name : 'N/A' }}</div>
+                                        <small class="text-muted">{{ $employee->user ? $employee->user->email : 'N/A' }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $employee->department }}</td>
+                            <td>{{ $employee->position }}</td>
+                            <td>{{ $employee->branch ? $employee->branch->name : 'N/A' }}</td>
+                            <td>
+                                <span class="badge bg-label-{{ $employee->employment_status === 'active' ? 'success' : ($employee->employment_status === 'inactive' ? 'warning' : 'danger') }}">
+                                    {{ ucfirst($employee->employment_status) }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <button wire:click.prevent="view({{ $employee->id }})" class="btn btn-sm btn-icon btn-label-info" title="View Details">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                    <button wire:click.prevent="edit({{ $employee->id }})" class="btn btn-sm btn-icon btn-label-primary" title="Edit">
+                                        <i class="ri-edit-line"></i>
+                                    </button>
+                                    <button wire:click.prevent="delete({{ $employee->id }})" 
+                                            onclick="return confirm('Are you sure you want to delete this employee?')"
+                                            class="btn btn-sm btn-icon btn-label-danger" title="Delete">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No employees found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        @if($employees->hasPages())
+            <div class="card-footer border-top">
+                {{ $employees->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 
-    <!-- Pagination -->
-    <div class="mt-4">
-        {{ $employees->links() }}
-    </div>
+    <style>
+        .pagination .page-link svg {
+            display: none;
+        }
+        .pagination .page-link {
+            padding: 0.375rem 0.75rem;
+        }
+    </style>
 
     <!-- Modal for Add/Edit Employee -->
     @if($showModal)
-        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white dark:bg-gray-800">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                        {{ $editing ? 'Edit Employee' : 'Add New Employee' }}
-                    </h3>
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" wire:click.self="closeModal">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" wire:click.stop>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="ri-{{ $editing ? 'edit' : 'add' }}-line me-2"></i>
+                            {{ $editing ? 'Edit Employee' : 'Add New Employee' }}
+                        </h5>
+                        <button type="button" class="btn-close" wire:click.prevent="closeModal"></button>
+                    </div>
                     
-                    <form wire:submit="save">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Employee ID</label>
-                                <input type="text" wire:model="employee_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('employee_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                    <form wire:submit.prevent="save">
+                        <div class="modal-body">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Employee ID</label>
+                                    <input type="text" wire:model="employee_id" class="form-control @error('employee_id') is-invalid @enderror">
+                                    @error('employee_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">User</label>
-                                <select wire:model="user_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                    <option value="">Select User</option>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                                    @endforeach
-                                </select>
-                                @error('user_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">User</label>
+                                    <select wire:model="user_id" class="form-select @error('user_id') is-invalid @enderror">
+                                        <option value="">Select User</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Branch</label>
-                                <select wire:model="branch_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                    <option value="">Select Branch</option>
-                                    @foreach($branches as $branch)
-                                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('branch_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Branch</label>
+                                    <select wire:model="branch_id" class="form-select @error('branch_id') is-invalid @enderror">
+                                        <option value="">Select Branch</option>
+                                        @foreach($branches as $branch)
+                                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('branch_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
-                                <input type="text" wire:model="department_name" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('department_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Department</label>
+                                    <input type="text" wire:model="department_name" class="form-control @error('department_name') is-invalid @enderror">
+                                    @error('department_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Position</label>
-                                <input type="text" wire:model="position" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('position') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Position</label>
+                                    <input type="text" wire:model="position" class="form-control @error('position') is-invalid @enderror">
+                                    @error('position') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Hire Date</label>
-                                <input type="date" wire:model="hire_date" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('hire_date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Hire Date</label>
+                                    <input type="date" wire:model="hire_date" class="form-control @error('hire_date') is-invalid @enderror">
+                                    @error('hire_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
-                                <input type="number" step="0.01" wire:model="salary" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('salary') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Salary</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" wire:model="salary" class="form-control @error('salary') is-invalid @enderror">
+                                        @error('salary') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                                <select wire:model="status" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="terminated">Terminated</option>
-                                </select>
-                                @error('status') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Status</label>
+                                    <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="terminated">Terminated</option>
+                                    </select>
+                                    @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Manager</label>
-                                <select wire:model="manager_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                    <option value="">Select Manager (Optional)</option>
-                                    @foreach($managers as $manager)
-                                        <option value="{{ $manager->id }}">{{ $manager->user ? $manager->user->name : 'N/A' }} - {{ $manager->position }}</option>
-                                    @endforeach
-                                </select>
-                                @error('manager_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-medium">Manager</label>
+                                    <select wire:model="manager_id" class="form-select @error('manager_id') is-invalid @enderror">
+                                        <option value="">Select Manager (Optional)</option>
+                                        @foreach($managers as $manager)
+                                            <option value="{{ $manager->id }}">{{ $manager->user ? $manager->user->name : 'N/A' }} - {{ $manager->position }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('manager_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
-                                <input type="text" wire:model="phone" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Phone</label>
+                                    <input type="text" wire:model="phone" class="form-control @error('phone') is-invalid @enderror">
+                                    @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Emergency Contact</label>
-                                <input type="text" wire:model="emergency_contact" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('emergency_contact') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Emergency Contact</label>
+                                    <input type="text" wire:model="emergency_contact" class="form-control @error('emergency_contact') is-invalid @enderror">
+                                    @error('emergency_contact') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Emergency Phone</label>
-                                <input type="text" wire:model="emergency_phone" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                @error('emergency_phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Emergency Phone</label>
+                                    <input type="text" wire:model="emergency_phone" class="form-control @error('emergency_phone') is-invalid @enderror">
+                                    @error('emergency_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
-                                <textarea wire:model="address" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
-                                @error('address') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-medium">Address</label>
+                                    <textarea wire:model="address" rows="2" class="form-control @error('address') is-invalid @enderror"></textarea>
+                                    @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes</label>
-                                <textarea wire:model="notes" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
-                                @error('notes') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                <div class="col-12">
+                                    <label class="form-label fw-medium">Notes</label>
+                                    <textarea wire:model="notes" rows="2" class="form-control @error('notes') is-invalid @enderror"></textarea>
+                                    @error('notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex justify-end space-x-2 mt-6">
-                            <button type="button" wire:click="closeModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <div class="modal-footer">
+                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary">
+                                <i class="ri-close-line me-1"></i>
                                 Cancel
                             </button>
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ri-save-line me-1"></i>
                                 {{ $editing ? 'Update' : 'Create' }} Employee
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- View Employee Modal -->
+    @if($showViewModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" wire:click.self="closeViewModal">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" wire:click.stop>
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="ri-user-line me-2"></i>
+                            Employee Details
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" wire:click.prevent="closeViewModal"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        @if($viewEmployee)
+                            <div class="row g-4">
+                                <!-- Employee Header -->
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center p-3 bg-light rounded">
+                                        <div class="avatar avatar-lg me-3">
+                                            <span class="avatar-initial rounded-circle bg-primary text-white fs-4">
+                                                {{ $viewEmployee->user ? strtoupper(substr($viewEmployee->user->name, 0, 2)) : 'NA' }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">{{ $viewEmployee->user ? $viewEmployee->user->name : 'N/A' }}</h5>
+                                            <p class="mb-0 text-muted">{{ $viewEmployee->position }}</p>
+                                            <span class="badge bg-label-{{ $viewEmployee->employment_status === 'active' ? 'success' : ($viewEmployee->employment_status === 'inactive' ? 'warning' : 'danger') }} mt-1">
+                                                {{ ucfirst($viewEmployee->employment_status) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Basic Information -->
+                                <div class="col-12">
+                                    <h6 class="mb-3 fw-bold"><i class="ri-information-line me-2"></i>Basic Information</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Employee ID</small>
+                                            <strong>{{ $viewEmployee->employee_id }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Email</small>
+                                            <strong>{{ $viewEmployee->user ? $viewEmployee->user->email : 'N/A' }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Department</small>
+                                            <strong>{{ $viewEmployee->department }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Branch</small>
+                                            <strong>{{ $viewEmployee->branch ? $viewEmployee->branch->name : 'N/A' }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Phone</small>
+                                            <strong>{{ $viewEmployee->phone ?: 'N/A' }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Hire Date</small>
+                                            <strong>{{ $viewEmployee->hire_date ? \Carbon\Carbon::parse($viewEmployee->hire_date)->format('M d, Y') : 'N/A' }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Employment Details -->
+                                <div class="col-12">
+                                    <h6 class="mb-3 fw-bold"><i class="ri-briefcase-line me-2"></i>Employment Details</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong>{{ $viewEmployee->salary ? '$' . number_format($viewEmployee->salary, 2) : 'N/A' }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Manager</small>
+                                            <strong>{{ $viewEmployee->manager && $viewEmployee->manager->user ? $viewEmployee->manager->user->name : 'N/A' }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Emergency Contact -->
+                                <div class="col-12">
+                                    <h6 class="mb-3 fw-bold"><i class="ri-phone-line me-2"></i>Emergency Contact</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Contact Name</small>
+                                            <strong>{{ $viewEmployee->emergency_contact ?: 'N/A' }}</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Contact Phone</small>
+                                            <strong>{{ $viewEmployee->emergency_phone ?: 'N/A' }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Address -->
+                                @if($viewEmployee->address)
+                                    <div class="col-12">
+                                        <h6 class="mb-3 fw-bold"><i class="ri-map-pin-line me-2"></i>Address</h6>
+                                        <p class="mb-0">{{ $viewEmployee->address }}</p>
+                                    </div>
+                                @endif
+
+                                <!-- Notes -->
+                                @if($viewEmployee->notes)
+                                    <div class="col-12">
+                                        <h6 class="mb-3 fw-bold"><i class="ri-file-text-line me-2"></i>Notes</h6>
+                                        <p class="mb-0">{{ $viewEmployee->notes }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" wire:click.prevent="closeViewModal" class="btn btn-label-secondary">
+                            <i class="ri-close-line me-1"></i>
+                            Close
+                        </button>
+                        <button type="button" wire:click.prevent="editFromView" class="btn btn-primary">
+                            <i class="ri-edit-line me-1"></i>
+                            Edit Employee
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

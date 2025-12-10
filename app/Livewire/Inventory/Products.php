@@ -16,6 +16,7 @@ class Products extends Component
 
     // Listing controls
     public string $search = '';
+    public string $categoryFilter = '';
     public string $sortField = 'name';
     public string $sortDirection = 'asc';
     public int $perPage = 10;
@@ -56,6 +57,16 @@ class Products extends Component
     }
 
     public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedCategoryFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
     {
         $this->resetPage();
     }
@@ -136,6 +147,43 @@ class Products extends Component
         $this->showForm = false;
     }
 
+    public function export()
+    {
+        $query = Product::query()
+            ->with(['category', 'supplier'])
+            ->when($this->search !== '', function ($q) {
+                $q->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('description', 'like', '%' . $this->search . '%');
+                });
+            });
+
+        $allowedSorts = ['name', 'stock', 'price', 'created_at'];
+        $sortField = in_array($this->sortField, $allowedSorts, true) ? $this->sortField : 'name';
+        $sortDirection = $this->sortDirection === 'desc' ? 'desc' : 'asc';
+
+        $products = $query->orderBy($sortField, $sortDirection)->get();
+
+        $csv = "Name,Description,Category,Supplier,Stock,Price\n";
+        foreach ($products as $product) {
+            $csv .= sprintf(
+                "\"%s\",\"%s\",\"%s\",\"%s\",%d,%.2f\n",
+                str_replace('"', '""', $product->name),
+                str_replace('"', '""', $product->description ?? ''),
+                str_replace('"', '""', $product->category?->name ?? ''),
+                str_replace('"', '""', $product->supplier?->name ?? ''),
+                $product->stock,
+                $product->price
+            );
+        }
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, 'products-' . now()->format('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
+    }
+
     protected function resetForm(): void
     {
         $this->reset([
@@ -156,6 +204,9 @@ class Products extends Component
                     $q->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('description', 'like', '%' . $this->search . '%');
                 });
+            })
+            ->when($this->categoryFilter !== '', function ($q) {
+                $q->where('category_id', $this->categoryFilter);
             });
 
         // Validate allowed sort fields to avoid SQL injection via query string

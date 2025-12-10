@@ -15,6 +15,7 @@ class Orders extends Component
 
     // Listing controls
     public string $search = '';
+    public string $statusFilter = '';
     public string $sortField = 'order_date';
     public string $sortDirection = 'desc';
     public int $perPage = 10;
@@ -28,6 +29,8 @@ class Orders extends Component
 
     // UI state
     public bool $showForm = false;
+    public bool $showView = false;
+    public ?Order $viewingOrder = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -53,6 +56,16 @@ class Orders extends Component
         $this->resetPage();
     }
 
+    public function updatedStatusFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->resetPage();
+    }
+
     public function sortBy(string $field): void
     {
         if ($this->sortField === $field) {
@@ -70,6 +83,23 @@ class Orders extends Component
         $this->order_number = $this->generateOrderNumber();
         $this->order_date = now()->toDateString();
         $this->showForm = true;
+    }
+
+    public function view(int $id): void
+    {
+        $this->viewingOrder = Order::with('customer')->findOrFail($id);
+        $this->showView = true;
+    }
+
+    public function closeView(): void
+    {
+        $this->showView = false;
+        $this->viewingOrder = null;
+    }
+
+    public function print(int $id): void
+    {
+        $this->dispatch('print-order', orderId: $id);
     }
 
     public function edit(int $id): void
@@ -117,6 +147,41 @@ class Orders extends Component
     {
         $this->resetForm();
         $this->showForm = false;
+    }
+
+    public function export()
+    {
+        $query = Order::query()
+            ->with('customer')
+            ->when($this->search !== '', function ($q) {
+                $q->where(function ($q) {
+                    $q->where('order_number', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('customer', function ($q) {
+                          $q->where('name', 'like', '%' . $this->search . '%');
+                      });
+                });
+            });
+
+        $allowed = ['order_number', 'order_date', 'total_amount', 'created_at'];
+        $field = in_array($this->sortField, $allowed, true) ? $this->sortField : 'order_date';
+        $direction = $this->sortDirection === 'desc' ? 'desc' : 'asc';
+
+        $orders = $query->orderBy($field, $direction)->get();
+
+        $csv = "Order Number,Customer,Order Date,Total Amount\n";
+        foreach ($orders as $order) {
+            $csv .= '"' . str_replace('"', '""', $order->order_number) . '",';
+            $csv .= '"' . str_replace('"', '""', $order->customer?->name ?? '') . '",';
+            $csv .= '"' . ($order->order_date ? $order->order_date->format('Y-m-d') : '') . '",';
+            $csv .= '"' . number_format($order->total_amount, 2) . '"';
+            $csv .= "\n";
+        }
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, 'orders-' . now()->format('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
     protected function resetForm(): void

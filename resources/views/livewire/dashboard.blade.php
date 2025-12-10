@@ -1,269 +1,159 @@
-<div class="space-y-2">
-    <!-- Page Header with Gradient Background -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-4 sm:p-5 text-white shadow-2xl">
-        <!-- Background Pattern -->
-        <div class="absolute inset-0 bg-black bg-opacity-10"></div>
-        <div class="absolute -top-4 -right-4 h-32 w-32 rounded-full bg-white bg-opacity-10"></div>
-        <div class="absolute -bottom-8 -left-8 h-40 w-40 rounded-full bg-white bg-opacity-10"></div>
-        
-        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
-            <div class="mb-4 md:mb-0">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Welcome back!</h1>
-                <p class="mt-1 text-blue-100">Here's what's happening with your business today.</p>
-                <div class="mt-4 flex items-center space-x-4 text-sm text-blue-100">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        {{ now()->format('l, F j, Y') }}
-                    </div>
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        {{ now()->format('g:i A') }}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="flex flex-wrap gap-2">
-                <button 
-                    wire:click="refreshAnalytics"
-                    class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-all duration-200 text-sm font-medium group"
-                    title="Refresh dashboard data"
-                >
-                    <svg class="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    Refresh
-                </button>
-                <a 
-                    href="{{ route('inventory') }}" 
-                    wire:navigate
-                    class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-all duration-200 text-sm font-medium"
-                >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Manage Inventory
-                </a>
-                <a 
-                    href="{{ route('customers') }}" 
-                    wire:navigate
-                    class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-all duration-200 text-sm font-medium"
-                >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                    Manage Customers
-                </a>
-            </div>
-        </div>
+<div>
+    <!-- Action Buttons -->
+    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mb-4">
+        <button 
+            wire:click="refreshAnalytics"
+            class="btn btn-sm btn-label-secondary"
+            title="Refresh dashboard data"
+        >
+            <i class="ri-refresh-line me-1"></i>
+            <span class="d-none d-sm-inline">Refresh</span>
+        </button>
+        <a 
+            href="{{ route('inventory') }}" 
+            wire:navigate
+            class="btn btn-sm btn-primary"
+        >
+            <i class="ri-stack-line me-1"></i>
+            <span class="d-none d-sm-inline">Manage </span>Inventory
+        </a>
     </div>
 
-    <!-- KPI Cards with Modern Design -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- KPI Cards -->
+    <div class="row g-4 mb-4">
         <!-- Total Products Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent"></div>
-            <div class="relative p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center mb-2">
-                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                                    Total
-                                </span>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="avatar avatar-md">
+                            <div class="avatar-initial bg-label-primary rounded">
+                                <i class="ri-stack-line ri-24px"></i>
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Products</dt>
-                            <dd class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ $analytics['total_products'] }}</dd>
-                        </div>
-                        @if($analytics['out_of_stock_count'] > 0)
-                            <div class="mt-2 text-xs text-orange-600 dark:text-orange-400">
-                                {{ $analytics['out_of_stock_count'] }} out of stock
-                            </div>
-                        @endif
+                        <span class="badge bg-label-primary">Total</span>
                     </div>
+                    <h5 class="mb-1">{{ number_format($analytics['total_products']) }}</h5>
+                    <p class="mb-2 text-muted">Products</p>
+                    @if($analytics['out_of_stock_count'] > 0)
+                        <small class="text-warning">{{ $analytics['out_of_stock_count'] }} out of stock</small>
+                    @else
+                        <small class="text-success">All in stock</small>
+                    @endif
                 </div>
             </div>
         </div>
 
         <!-- Revenue Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border border-emerald-200 dark:border-emerald-800 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-transparent"></div>
-            <div class="relative p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center mb-2">
-                            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
-                                    30 Days
-                                </span>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="avatar avatar-md">
+                            <div class="avatar-initial bg-label-success rounded">
+                                <i class="ri-money-dollar-circle-line ri-24px"></i>
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Revenue</dt>
-                            <dd class="text-3xl font-bold text-gray-900 dark:text-gray-100">${{ number_format($analytics['revenue_30_days'], 0) }}</dd>
-                        </div>
-                        <div class="mt-2 text-xs text-emerald-600 dark:text-emerald-400">
-                            Today: ${{ number_format($analytics['revenue_today'], 2) }}
-                        </div>
+                        <span class="badge bg-label-success">30 Days</span>
                     </div>
+                    <h5 class="mb-1">${{ number_format($analytics['revenue_30_days'], 0) }}</h5>
+                    <p class="mb-2 text-muted">Revenue</p>
+                    <small class="text-success">Today: ${{ number_format($analytics['revenue_today'], 2) }}</small>
                 </div>
             </div>
         </div>
 
         <!-- Orders Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-800 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent"></div>
-            <div class="relative p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center mb-2">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                                    Total
-                                </span>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="avatar avatar-md">
+                            <div class="avatar-initial bg-label-info rounded">
+                                <i class="ri-shopping-cart-line ri-24px"></i>
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Orders</dt>
-                            <dd class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ $analytics['total_orders'] }}</dd>
-                        </div>
-                        <div class="mt-2 text-xs text-purple-600 dark:text-purple-400">
-                            Today: {{ $analytics['orders_today'] }} orders
-                        </div>
+                        <span class="badge bg-label-info">Total</span>
                     </div>
+                    <h5 class="mb-1">{{ number_format($analytics['total_orders']) }}</h5>
+                    <p class="mb-2 text-muted">Orders</p>
+                    <small class="text-info">Today: {{ $analytics['orders_today'] }} orders</small>
                 </div>
             </div>
         </div>
 
         <!-- Stock Alert Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border border-orange-200 dark:border-orange-800 hover:shadow-xl hover:shadow-orange-500/20 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-gradient-to-br from-orange-600/10 to-transparent"></div>
-            <div class="relative p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center mb-2">
-                            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                @if($analytics['low_stock_count'] > 0)
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 animate-pulse">
-                                        Alert
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                        Good
-                                    </span>
-                                @endif
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="avatar avatar-md">
+                            <div class="avatar-initial bg-label-warning rounded">
+                                <i class="ri-alert-line ri-24px"></i>
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock</dt>
-                            <dd class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ $analytics['low_stock_count'] }}</dd>
-                        </div>
-                        <div class="mt-2 text-xs text-orange-600 dark:text-orange-400">
-                            {{ $analytics['out_of_stock_count'] }} out of stock
-                        </div>
+                        @if($analytics['low_stock_count'] > 0)
+                            <span class="badge bg-label-danger">Alert</span>
+                        @else
+                            <span class="badge bg-label-success">Good</span>
+                        @endif
                     </div>
+                    <h5 class="mb-1">{{ $analytics['low_stock_count'] }}</h5>
+                    <p class="mb-2 text-muted">Low Stock</p>
+                    <small class="text-warning">{{ $analytics['out_of_stock_count'] }} out of stock</small>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Secondary Metrics -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <!-- Customers Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900 dark:to-indigo-800 rounded-xl flex items-center justify-center">
-                                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Customers</p>
-                                <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $analytics['total_customers'] }}</p>
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-lg me-3">
+                            <div class="avatar-initial bg-label-primary rounded">
+                                <i class="ri-user-line ri-26px"></i>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500 dark:text-gray-400">Active accounts</span>
-                            <span class="text-indigo-600 dark:text-indigo-400 font-medium">{{ $analytics['total_customers'] }}</span>
+                        <div>
+                            <p class="mb-0 text-muted">Total Customers</p>
+                            <h4 class="mb-0">{{ number_format($analytics['total_customers']) }}</h4>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Categories Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-xl flex items-center justify-center">
-                                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Categories</p>
-                                <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $analytics['total_categories'] }}</p>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-lg me-3">
+                            <div class="avatar-initial bg-label-success rounded">
+                                <i class="ri-folder-line ri-26px"></i>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500 dark:text-gray-400">Product groups</span>
-                            <span class="text-green-600 dark:text-green-400 font-medium">{{ $analytics['total_categories'] }}</span>
+                        <div>
+                            <p class="mb-0 text-muted">Categories</p>
+                            <h4 class="mb-0">{{ number_format($analytics['total_categories']) }}</h4>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Suppliers Card -->
-        <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-pink-100 to-pink-200 dark:from-pink-900 dark:to-pink-800 rounded-xl flex items-center justify-center">
-                                <svg class="w-6 h-6 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Suppliers</p>
-                                <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $analytics['total_suppliers'] }}</p>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-lg me-3">
+                            <div class="avatar-initial bg-label-info rounded">
+                                <i class="ri-building-line ri-26px"></i>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500 dark:text-gray-400">Partners</span>
-                            <span class="text-pink-600 dark:text-pink-400 font-medium">{{ $analytics['total_suppliers'] }}</span>
+                        <div>
+                            <p class="mb-0 text-muted">Suppliers</p>
+                            <h4 class="mb-0">{{ number_format($analytics['total_suppliers']) }}</h4>
                         </div>
                     </div>
                 </div>
@@ -271,285 +161,521 @@
         </div>
     </div>
 
-    <!-- Analytics & Activity Section -->
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <!-- Revenue Chart Placeholder -->
-        <div class="lg:col-span-2">
-            <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 00-2 2h2a2 2 0 002-2V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v10z"></path>
-                            </svg>
-                            Revenue Overview
-                        </h2>
-                        <div class="flex items-center space-x-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                                Last 6 months
-                            </span>
+    <!-- Charts and Activity -->
+    <div class="row g-4 mb-4">
+        <!-- Revenue Overview Chart -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-1">Revenue Overview</h5>
+                        <p class="card-subtitle mb-0 text-muted">Monthly revenue trend</p>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1" type="button" id="revenueChartDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="ri-more-2-line ri-20px"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="revenueChartDropdown">
+                            <a class="dropdown-item" href="javascript:void(0);">Last 6 Months</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+                            <a class="dropdown-item" href="javascript:void(0);">All Time</a>
                         </div>
                     </div>
                 </div>
-                <div class="p-6">
-                    <!-- Simple Chart Representation -->
-                    <div class="space-y-4">
-                        @if($analytics['monthly_revenue_trend']->count() > 0)
-                            <div class="grid grid-cols-6 gap-2 h-32">
-                                @foreach($analytics['monthly_revenue_trend'] as $month)
-                                    @php
-                                        $maxRevenue = $analytics['monthly_revenue_trend']->max('total');
-                                        $height = $maxRevenue > 0 ? ($month->total / $maxRevenue) * 100 : 10;
-                                    @endphp
-                                    <div class="flex flex-col justify-end">
-                                        <div class="bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-500 hover:from-blue-600 hover:to-blue-500" style="height: {{ $height }}%"></div>
-                                        <div class="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">{{ Carbon\Carbon::parse($month->month)->format('M') }}</div>
-                                        <div class="text-xs text-center text-gray-600 dark:text-gray-300 font-medium">${{ number_format($month->total, 0) }}</div>
+                <div class="card-body">
+                    @if($analytics['monthly_revenue_trend']->count() > 0)
+                        <!-- ApexCharts Container -->
+                        <div id="revenueChart" style="min-height: 280px;"></div>
+                        
+                        <!-- Revenue Summary Cards -->
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        <span class="avatar-initial rounded bg-label-success">
+                                            <i class="ri-money-dollar-circle-line ri-24px"></i>
+                                        </span>
                                     </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="flex items-center justify-center h-32">
-                                <div class="text-center text-gray-500 dark:text-gray-400">
-                                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 00-2 2h2a2 2 0 002-2V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v10z"></path>
-                                    </svg>
-                                    <p>No revenue data available</p>
+                                    <div>
+                                        <p class="mb-0 text-muted small">Today</p>
+                                        <h5 class="mb-0">${{ number_format($analytics['revenue_today'], 0) }}</h5>
+                                        <small class="text-success">
+                                            <i class="ri-arrow-up-line"></i> Active
+                                            <span class="badge rounded-pill bg-label-success ms-1 pulse-badge">Live</span>
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
-                    </div>
-                    
-                    <!-- Revenue Summary -->
-                    <div class="mt-6 grid grid-cols-3 gap-4">
-                        <div class="text-center p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-xl">
-                            <div class="text-sm font-medium text-emerald-600 dark:text-emerald-400">Today</div>
-                            <div class="text-xl font-bold text-gray-900 dark:text-gray-100">${{ number_format($analytics['revenue_today'], 0) }}</div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class="ri-calendar-line ri-24px"></i>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 text-muted small">7 Days</p>
+                                        <h5 class="mb-0">${{ number_format($analytics['revenue_7_days'], 0) }}</h5>
+                                        <small class="text-primary"><i class="ri-arrow-up-line"></i> Trending</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        <span class="avatar-initial rounded bg-label-info">
+                                            <i class="ri-calendar-2-line ri-24px"></i>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 text-muted small">30 Days</p>
+                                        <h5 class="mb-0">${{ number_format($analytics['revenue_30_days'], 0) }}</h5>
+                                        <small class="text-info"><i class="ri-line-chart-line"></i> Growing</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
-                            <div class="text-sm font-medium text-blue-600 dark:text-blue-400">7 Days</div>
-                            <div class="text-xl font-bold text-gray-900 dark:text-gray-100">${{ number_format($analytics['revenue_7_days'], 0) }}</div>
+
+                        <script>
+                            let revenueChart = null;
+
+                            function initRevenueChart() {
+                                const revenueData = @json($analytics['monthly_revenue_trend']->pluck('total')->toArray());
+                                const revenueMonths = @json($analytics['monthly_revenue_trend']->map(function($item) {
+                                    return \Carbon\Carbon::parse($item->month)->format('M Y');
+                                })->toArray());
+
+                                const revenueChartEl = document.querySelector('#revenueChart');
+
+                                if (revenueChartEl && typeof ApexCharts !== 'undefined') {
+                                    // Destroy existing chart if it exists
+                                    if (revenueChart) {
+                                        revenueChart.destroy();
+                                    }
+
+                                    const revenueChartConfig = {
+                                        chart: {
+                                            type: 'area',
+                                            height: 280,
+                                            parentHeightOffset: 0,
+                                            toolbar: {
+                                                show: false
+                                            },
+                                            sparkline: {
+                                                enabled: false
+                                            },
+                                            animations: {
+                                                enabled: true,
+                                                easing: 'easeinout',
+                                                speed: 800,
+                                                animateGradually: {
+                                                    enabled: true,
+                                                    delay: 150
+                                                },
+                                                dynamicAnimation: {
+                                                    enabled: true,
+                                                    speed: 350
+                                                }
+                                            }
+                                        },
+                                        series: [{
+                                            name: 'Revenue',
+                                            data: revenueData
+                                        }],
+                                        colors: ['#7367F0'],
+                                        fill: {
+                                            type: 'gradient',
+                                            gradient: {
+                                                shade: 'light',
+                                                type: 'vertical',
+                                                shadeIntensity: 0.4,
+                                                gradientToColors: ['#9055FD'],
+                                                inverseColors: false,
+                                                opacityFrom: 0.7,
+                                                opacityTo: 0.2,
+                                                stops: [0, 90, 100]
+                                            }
+                                        },
+                                        stroke: {
+                                            curve: 'smooth',
+                                            width: 3
+                                        },
+                                        dataLabels: {
+                                            enabled: false
+                                        },
+                                        series: [{
+                                            name: 'Revenue',
+                                            data: revenueData
+                                        }],
+                                        colors: ['#7367F0'],
+                                        xaxis: {
+                                            categories: revenueMonths,
+                                            axisBorder: {
+                                                show: false
+                                            },
+                                            axisTicks: {
+                                                show: false
+                                            },
+                                            labels: {
+                                                style: {
+                                                    fontSize: '12px',
+                                                    colors: '#a1acb8'
+                                                }
+                                            }
+                                        },
+                                        yaxis: {
+                                            labels: {
+                                                formatter: function (val) {
+                                                    return "$" + val.toLocaleString();
+                                                },
+                                                style: {
+                                                    fontSize: '12px',
+                                                    colors: '#a1acb8'
+                                                }
+                                            }
+                                        },
+                                        grid: {
+                                            show: true,
+                                            borderColor: '#f1f1f1',
+                                            strokeDashArray: 4,
+                                            padding: {
+                                                top: 0,
+                                                right: 10,
+                                                bottom: 0,
+                                                left: 10
+                                            }
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                            shared: true,
+                                            followCursor: true,
+                                            intersect: false,
+                                            theme: 'light',
+                                            style: {
+                                                fontSize: '12px'
+                                            },
+                                            y: {
+                                                formatter: function (val) {
+                                                    return "$" + val.toLocaleString();
+                                                }
+                                            },
+                                            marker: {
+                                                show: true
+                                            }
+                                        },
+                                        markers: {
+                                            size: 6,
+                                            colors: ['#fff'],
+                                            strokeColors: ['#7367F0'],
+                                            strokeWidth: 3,
+                                            hover: {
+                                                size: 8
+                                            }
+                                        }
+                                    };
+
+                                    revenueChart = new ApexCharts(revenueChartEl, revenueChartConfig);
+                                    revenueChart.render();
+                                }
+                            }
+
+                            // Initialize chart on page load and Livewire navigation
+                            function initializeCharts() {
+                                if (typeof ApexCharts !== 'undefined') {
+                                    initRevenueChart();
+                                } else {
+                                    // Retry after a short delay if ApexCharts is not loaded yet
+                                    setTimeout(initializeCharts, 100);
+                                }
+                            }
+
+                            document.addEventListener('DOMContentLoaded', initializeCharts);
+                            document.addEventListener('livewire:navigated', initializeCharts);
+                        </script>
+                    @else
+                        <div class="text-center py-5">
+                            <div class="avatar avatar-xl mx-auto mb-3">
+                                <span class="avatar-initial rounded bg-label-secondary">
+                                    <i class="ri-bar-chart-box-line ri-36px"></i>
+                                </span>
+                            </div>
+                            <h6 class="mb-1">No revenue data available</h6>
+                            <p class="text-muted small mb-0">Start making sales to see revenue trends</p>
                         </div>
-                        <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
-                            <div class="text-sm font-medium text-purple-600 dark:text-purple-400">30 Days</div>
-                            <div class="text-xl font-bold text-gray-900 dark:text-gray-100">${{ number_format($analytics['revenue_30_days'], 0) }}</div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
 
         <!-- Top Selling Products -->
-        <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                    Top Products
-                </h2>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    @forelse($analytics['top_selling_products'] as $index => $product)
-                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <div class="flex-shrink-0">
-                                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
-                                    {{ $index == 0 ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $index == 1 ? 'bg-gray-100 text-gray-800' : '' }}
-                                    {{ $index == 2 ? 'bg-orange-100 text-orange-800' : '' }}
-                                    {{ $index > 2 ? 'bg-blue-100 text-blue-800' : '' }}">
-                                    {{ $index + 1 }}
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-1">Top Products</h5>
+                        <p class="card-subtitle mb-0 text-muted">Best sellers this month</p>
+                    </div>
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-warning">
+                            <i class="ri-trophy-line ri-20px"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        @forelse($analytics['top_selling_products'] as $index => $product)
+                            @php
+                                $maxRevenue = $analytics['top_selling_products']->max(function($p) {
+                                    return ($p->price ?? 0) * ($p->total_sold ?? 0);
+                                });
+                                $productRevenue = ($product->price ?? 0) * ($product->total_sold ?? 0);
+                                $percentage = $maxRevenue > 0 ? ($productRevenue / $maxRevenue) * 100 : 0;
+                            @endphp
+                            <li class="mb-3 pb-3 {{ !$loop->last ? 'border-bottom' : '' }} product-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="avatar avatar-sm me-3">
+                                        @if($index == 0)
+                                            <span class="avatar-initial rounded bg-label-warning">
+                                                <i class="ri-medal-line ri-20px"></i>
+                                            </span>
+                                        @elseif($index == 1)
+                                            <span class="avatar-initial rounded bg-label-info">
+                                                <i class="ri-award-line ri-20px"></i>
+                                            </span>
+                                        @elseif($index == 2)
+                                            <span class="avatar-initial rounded bg-label-secondary">
+                                                <i class="ri-star-line ri-20px"></i>
+                                            </span>
+                                        @else
+                                            <span class="avatar-initial rounded bg-label-primary">
+                                                {{ $index + 1 }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">{{ Str::limit($product->name ?? 'Unknown Product', 25) }}</h6>
+                                        <small class="text-muted">
+                                            <i class="ri-shopping-cart-line me-1"></i>{{ $product->total_sold ?? 0 }} sold
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <h6 class="mb-0">${{ number_format($product->price ?? 0, 2) }}</h6>
+                                        @if($product->total_sold ?? 0 > 0)
+                                            <small class="text-success">
+                                                <i class="ri-arrow-up-line"></i>
+                                                ${{ number_format($productRevenue, 0) }}
+                                            </small>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ $product->name ?? 'Unknown Product' }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Sold: {{ $product->total_sold ?? 0 }}</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                    ${{ number_format($product->price ?? 0, 2) }}
-                                </span>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center text-gray-500 dark:text-gray-400 py-4">
-                            <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                            </svg>
-                            <p class="text-sm">No sales data available</p>
-                        </div>
-                    @endforelse
+                                <!-- Animated progress bar -->
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar 
+                                        @if($index == 0) bg-warning
+                                        @elseif($index == 1) bg-info
+                                        @elseif($index == 2) bg-secondary
+                                        @else bg-primary
+                                        @endif" 
+                                        role="progressbar" 
+                                        style="width: {{ $percentage }}%; transition: width 1s ease-in-out;" 
+                                        aria-valuenow="{{ $percentage }}" 
+                                        aria-valuemin="0" 
+                                        aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="text-center py-5">
+                                <div class="avatar avatar-xl mx-auto mb-3">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="ri-shopping-bag-line ri-36px"></i>
+                                    </span>
+                                </div>
+                                <h6 class="mb-1">No sales data available</h6>
+                                <p class="text-muted small mb-0">Products will appear here once sales are recorded</p>
+                            </li>
+                        @endforelse
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Activity Grid -->
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <!-- Recent Activity -->
+    <div class="row g-4 mb-4">
         <!-- Recent Orders -->
-        <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Recent Orders
-                    </h2>
-                    <a href="{{ route('sales') }}" wire:navigate class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200">View all →</a>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-1">Recent Orders</h5>
+                        <p class="card-subtitle mb-0 text-muted">Latest transactions</p>
+                    </div>
+                    <a href="{{ route('sales') }}" wire:navigate class="btn btn-sm btn-label-primary">
+                        <i class="ri-arrow-right-line"></i>
+                    </a>
                 </div>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    @forelse ($analytics['recent_orders'] as $order)
-                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        @forelse ($analytics['recent_orders'] as $order)
+                            <li class="mb-3 pb-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                <div class="d-flex align-items-start">
+                                    <div class="avatar avatar-sm flex-shrink-0 me-3">
+                                        <div class="avatar-initial bg-label-primary rounded">
+                                            <i class="ri-receipt-line ri-20px"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <h6 class="mb-0">{{ $order->order_number }}</h6>
+                                            <span class="badge bg-label-success">${{ number_format($order->total_amount, 2) }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <small class="text-muted me-2">
+                                                <i class="ri-user-line me-1"></i>{{ Str::limit($order->customer?->name ?? 'Guest', 20) }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="ri-time-line me-1"></i>{{ $order->order_date?->diffForHumans() }}
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $order->order_number }}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $order->customer?->name ?? 'Guest' }}</p>
+                            </li>
+                        @empty
+                            <li class="text-center py-5">
+                                <div class="avatar avatar-xl mx-auto mb-3">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="ri-shopping-cart-line ri-36px"></i>
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">${{ number_format($order->total_amount, 2) }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $order->order_date?->diffForHumans() }}</p>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center text-gray-500 dark:text-gray-400 py-8">
-                            <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            <p>No orders yet</p>
-                            <p class="text-xs">Orders will appear here once you start selling</p>
-                        </div>
-                    @endforelse
+                                <h6 class="mb-1">No orders yet</h6>
+                                <p class="text-muted small mb-0">Orders will appear here once you start selling</p>
+                            </li>
+                        @endforelse
+                    </ul>
                 </div>
             </div>
         </div>
 
         <!-- Recent Invoices -->
-        <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        </svg>
-                        Recent Invoices
-                    </h2>
-                    <a href="{{ route('sales') }}" wire:navigate class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200">View all →</a>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-1">Recent Invoices</h5>
+                        <p class="card-subtitle mb-0 text-muted">Latest billing documents</p>
+                    </div>
+                    <a href="{{ route('sales') }}" wire:navigate class="btn btn-sm btn-label-primary">
+                        <i class="ri-arrow-right-line"></i>
+                    </a>
                 </div>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    @forelse ($analytics['recent_invoices'] as $invoice)
-                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900 dark:to-emerald-800 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        @forelse ($analytics['recent_invoices'] as $invoice)
+                            <li class="mb-3 pb-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                <div class="d-flex align-items-start">
+                                    <div class="avatar avatar-sm flex-shrink-0 me-3">
+                                        <div class="avatar-initial bg-label-success rounded">
+                                            <i class="ri-file-text-line ri-20px"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <h6 class="mb-0">{{ $invoice->name }}</h6>
+                                            <span class="badge bg-label-primary">${{ number_format($invoice->amount, 2) }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <small class="text-muted me-2">
+                                                <i class="ri-user-line me-1"></i>{{ Str::limit($invoice->customer?->name ?? 'No customer', 20) }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="ri-time-line me-1"></i>{{ $invoice->created_at?->diffForHumans() }}
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $invoice->name }}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $invoice->customer?->name ?? 'No customer' }}</p>
+                            </li>
+                        @empty
+                            <li class="text-center py-5">
+                                <div class="avatar avatar-xl mx-auto mb-3">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="ri-file-text-line ri-36px"></i>
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">${{ number_format($invoice->amount, 2) }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $invoice->created_at?->diffForHumans() }}</p>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center text-gray-500 dark:text-gray-400 py-8">
-                            <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                            </svg>
-                            <p>No invoices yet</p>
-                            <p class="text-xs">Invoices will appear here once you create them</p>
-                        </div>
-                    @endforelse
+                                <h6 class="mb-1">No invoices yet</h6>
+                                <p class="text-muted small mb-0">Invoices will appear here once you create them</p>
+                            </li>
+                        @endforelse
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Inventory Status Alert -->
+    <!-- Inventory Alert -->
     @if($analytics['low_stock_count'] > 0)
-        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-50 via-orange-50 to-yellow-50 dark:from-red-900/20 dark:via-orange-900/20 dark:to-yellow-900/20 border border-red-200 dark:border-red-800 hover:shadow-xl hover:shadow-red-500/20 transition-all duration-300">
-            <!-- Alert Header -->
-            <div class="px-6 py-4 border-b border-red-200 dark:border-red-800">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center mr-4 animate-pulse">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                            </svg>
+        <div class="card border-warning">
+            <div class="card-header bg-label-warning">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-md me-3">
+                            <span class="avatar-initial rounded bg-warning">
+                                <i class="ri-error-warning-line ri-24px text-white"></i>
+                            </span>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Inventory Alert</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $analytics['low_stock_count'] }} products need restocking</p>
+                            <h5 class="mb-0">Inventory Alert</h5>
+                            <p class="mb-0 text-muted small">
+                                <i class="ri-box-3-line me-1"></i>{{ $analytics['low_stock_count'] }} product{{ $analytics['low_stock_count'] > 1 ? 's' : '' }} need{{ $analytics['low_stock_count'] == 1 ? 's' : '' }} restocking
+                            </p>
                         </div>
                     </div>
-                    <a href="{{ route('inventory') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
+                    <a href="{{ route('inventory') }}" wire:navigate class="btn btn-sm btn-warning">
+                        <i class="ri-stack-line me-1"></i>
                         Manage Inventory
                     </a>
                 </div>
             </div>
-
-            <!-- Low Stock Products -->
-            <div class="p-6">
-                <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            <div class="card-body">
+                <div class="row g-3">
                     @foreach ($analytics['low_stock_products'] as $product)
-                        <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200">
-                            <div class="flex items-center space-x-3">
-                                @if($product->stock === 0)
-                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-red-100 dark:bg-red-900">
-                                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                        </svg>
-                                    </div>
-                                @elseif($product->stock <= 2)
-                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100 dark:bg-orange-900">
-                                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                        </svg>
-                                    </div>
-                                @else
-                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-yellow-100 dark:bg-yellow-900">
-                                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                        </svg>
-                                    </div>
-                                @endif
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $product->name }}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $product->category?->name ?? 'No category' }}</p>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 border rounded hover-shadow-sm">
+                                <div class="avatar avatar-md me-3 flex-shrink-0">
+                                    @if($product->stock === 0)
+                                        <span class="avatar-initial rounded bg-danger">
+                                            <i class="ri-close-circle-line ri-24px text-white"></i>
+                                        </span>
+                                    @elseif($product->stock <= 2)
+                                        <span class="avatar-initial rounded bg-warning">
+                                            <i class="ri-error-warning-line ri-24px text-white"></i>
+                                        </span>
+                                    @else
+                                        <span class="avatar-initial rounded bg-info">
+                                            <i class="ri-information-line ri-24px text-white"></i>
+                                        </span>
+                                    @endif
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                @if($product->stock === 0)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                                        OUT OF STOCK
-                                    </span>
-                                @elseif($product->stock <= 2)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
-                                        CRITICAL: {{ $product->stock }}
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                        LOW: {{ $product->stock }}
-                                    </span>
-                                @endif
+                                <div class="flex-grow-1 me-2">
+                                    <h6 class="mb-1">{{ Str::limit($product->name, 30) }}</h6>
+                                    <div class="d-flex align-items-center">
+                                        <small class="text-muted me-2">
+                                            <i class="ri-price-tag-3-line me-1"></i>{{ $product->category?->name ?? 'No category' }}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="text-end flex-shrink-0">
+                                    @if($product->stock === 0)
+                                        <span class="badge bg-danger mb-1">OUT OF STOCK</span>
+                                        <div><small class="text-danger fw-bold">{{ $product->stock }} units</small></div>
+                                    @elseif($product->stock <= 2)
+                                        <span class="badge bg-warning mb-1">CRITICAL</span>
+                                        <div><small class="text-warning fw-bold">{{ $product->stock }} unit{{ $product->stock > 1 ? 's' : '' }}</small></div>
+                                    @else
+                                        <span class="badge bg-info mb-1">LOW STOCK</span>
+                                        <div><small class="text-info fw-bold">{{ $product->stock }} units</small></div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -557,115 +683,97 @@
             </div>
         </div>
     @else
-        <!-- All Good Status -->
-        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300">
-            <div class="p-8 text-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+        <div class="card border-success">
+            <div class="card-body text-center py-5">
+                <div class="avatar avatar-xl mx-auto mb-4">
+                    <span class="avatar-initial rounded bg-label-success">
+                        <i class="ri-checkbox-circle-line ri-48px"></i>
+                    </span>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Inventory Healthy</h2>
-                <p class="text-gray-600 dark:text-gray-400">All your products are sufficiently stocked. Great job maintaining your inventory!</p>
+                <h4 class="mb-2">
+                    <i class="ri-check-line text-success"></i>
+                    Inventory Healthy
+                </h4>
+                <p class="text-muted mb-0">All your products are sufficiently stocked. Great job maintaining your inventory!</p>
             </div>
         </div>
     @endif
-
-    <!-- Real-time Updates & Animations -->
-    <script>
-        document.addEventListener('livewire:init', function() {
-            // Auto-refresh analytics every 5 minutes
-            setInterval(function() {
-                @this.call('refreshAnalytics');
-            }, 300000); // 5 minutes
-
-            // Animate number counters on load
-            function animateNumbers() {
-                const counters = document.querySelectorAll('[data-animate-number]');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
-                    const increment = target / 50;
-                    let current = 0;
-                    
-                    const updateCounter = () => {
-                        if (current < target) {
-                            current += increment;
-                            counter.textContent = counter.textContent.replace(/\d+/, Math.ceil(current));
-                            setTimeout(updateCounter, 40);
-                        } else {
-                            counter.textContent = counter.textContent.replace(/\d+/, target);
-                        }
-                    };
-                    
-                    setTimeout(updateCounter, Math.random() * 1000);
-                });
-            }
-
-            // Add pulse effect to critical alerts
-            function addPulseEffect() {
-                const alerts = document.querySelectorAll('.animate-pulse');
-                alerts.forEach(alert => {
-                    setInterval(() => {
-                        alert.classList.toggle('scale-105');
-                    }, 2000);
-                });
-            }
-
-            // Initialize animations
-            setTimeout(() => {
-                animateNumbers();
-                addPulseEffect();
-            }, 500);
-
-            // Listen for analytics refresh events
-            Livewire.on('analytics-refreshed', function() {
-                // Add a subtle flash effect to indicate refresh
-                document.body.classList.add('flash-update');
-                setTimeout(() => {
-                    document.body.classList.remove('flash-update');
-                }, 300);
-                
-                // Re-animate numbers after refresh
-                setTimeout(animateNumbers, 100);
-            });
-        });
-    </script>
-
-    <style>
-        .flash-update {
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-            animation: flash 0.3s ease-in-out;
-        }
-        
-        @keyframes flash {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        
-        .group:hover .group-hover\:rotate-180 {
-            transform: rotate(180deg);
-        }
-        
-        /* Smooth hover transitions for cards */
-        .group {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .group:hover {
-            transform: translateY(-4px);
-        }
-        
-        /* Loading skeleton animation */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-    </style>
 </div>
+
+@push('styles')
+<style>
+    .hover-shadow-sm {
+        transition: all 0.2s ease-in-out;
+    }
+    .hover-shadow-sm:hover {
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+    
+    /* Pulse animation for live badge */
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.7;
+            transform: scale(0.95);
+        }
+    }
+    
+    /* Slide in animation for cards */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Product item hover effect */
+    .product-item {
+        transition: all 0.3s ease;
+        padding: 8px;
+        margin: 0 -8px;
+        border-radius: 8px;
+    }
+    
+    .product-item:hover {
+        background: rgba(115, 103, 240, 0.05);
+        transform: translateX(5px);
+    }
+    
+    /* Progress bar animation */
+    .progress-bar {
+        transition: width 1s ease-in-out;
+    }
+    
+    /* Card animations */
+    .card {
+        animation: slideIn 0.5s ease-out;
+    }
+    
+    .card:hover {
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    /* Inventory alert hover */
+    .inventory-alert-item {
+        transition: transform 0.2s ease;
+    }
+    
+    .inventory-alert-item:hover {
+        transform: translateX(5px);
+    }
+    
+    /* Live badge pulse */
+    .pulse-badge {
+        animation: pulse 2s infinite;
+    }
+</style>
+@endpush

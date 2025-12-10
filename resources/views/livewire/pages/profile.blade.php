@@ -3,7 +3,7 @@
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('components.layouts.app')] class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     public string $name;
     public string $email;
     public ?string $status = null;
@@ -27,43 +27,77 @@ new #[Layout('components.layouts.app')] class extends Component {
         ]);
 
         $this->status = 'Profile updated successfully!';
-        $this->dispatchBrowserEvent('profile-updated', ['name' => $this->name]);
+        $this->dispatch('profile-updated', name: $this->name);
     }
 };
 ?>
 
 <div>
-    <h1 class="text-xl font-bold mb-4">Profile Settings</h1>
-
-    @if ($status)
-        <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
-            {{ $status }}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="ri-user-settings-line me-2"></i>
+                Profile Settings
+            </h5>
         </div>
-    @endif
+        <div class="card-body">
+            @if ($status)
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="ri-checkbox-circle-line me-2"></i>
+                        <span>{{ $status }}</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-    <form wire:submit.prevent="updateProfile">
-        @csrf
+            <form wire:submit.prevent="updateProfile">
+                <div class="row">
+                    <!-- Name -->
+                    <div class="col-md-6 mb-4">
+                        <label for="name" class="form-label">Name</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            wire:model.defer="name"
+                            class="form-control @error('name') is-invalid @enderror"
+                            placeholder="Enter your name"
+                        >
+                        @error('name') 
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        <!-- Name -->
-        <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-            <input type="text" id="name" wire:model.defer="name"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            @error('name') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <!-- Email -->
+                    <div class="col-md-6 mb-4">
+                        <label for="email" class="form-label">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            wire:model.defer="email"
+                            class="form-control @error('email') is-invalid @enderror"
+                            placeholder="Enter your email"
+                        >
+                        @error('email') 
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove>
+                            <i class="ri-save-line me-1"></i>
+                            Save Changes
+                        </span>
+                        <span wire:loading>
+                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            Saving...
+                        </span>
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <!-- Email -->
-        <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" id="email" wire:model.defer="email"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            @error('email') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-        </div>
-
-        <!-- Save Button -->
-        <button type="submit"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Save
-        </button>
-    </form>
+    </div>
 </div>

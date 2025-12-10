@@ -3,8 +3,8 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('components.layouts.app')] class extends Component {
-    public string $activeTab = 'profile';
+new #[Layout('layouts.app')] class extends Component {
+    public string $activeTab = 'company';
 
     public function setActiveTab(string $tab): void
     {
@@ -13,138 +13,125 @@ new #[Layout('components.layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <!-- Page Navigation -->
-    <x-page-navigation title="Settings" description="Configure your system preferences" :breadcrumbs="[
-        ['title' => 'Settings']
-    ]" />
-
-    <div class="p-4 sm:p-6 space-y-6">
-
-        <!-- Tab Navigation -->
-        <div class="mt-3 bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
-            <div class="border-b border-gray-200 dark:border-gray-700">
-                <nav class="flex space-x-8 px-6 overflow-x-auto" aria-label="Tabs">
-                    <button wire:click="setActiveTab('profile')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'profile' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            Profile
+    <!-- Enhanced Header with Gradient -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-0">
+            <!-- Gradient Header -->
+            <div class="p-3 p-md-4 bg-gradient-primary text-white rounded-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                    <div>
+                        <h4 class="mb-1 fw-bold text-white">
+                            <i class='bx bx-cog me-2'></i>Settings
+                        </h4>
+                        <p class="mb-0 text-white opacity-90 small d-none d-sm-block">Configure your system preferences and company information</p>
+                    </div>
+                    <div>
+                        <div class="badge bg-white text-primary px-2 px-md-3 py-2">
+                            <i class='bx bx-time-five me-1'></i>
+                            <span class="d-none d-sm-inline">Last Updated: </span>{{ now()->format('M d, Y') }}
                         </div>
-                    </button>
+                    </div>
+                </div>
+            </div>
 
-                    <button wire:click="setActiveTab('password')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'password' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                                </path>
-                            </svg>
-                            Password
-                        </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('appearance')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'appearance' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z">
-                                </path>
-                            </svg>
-                            Appearance
-                        </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('system')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'system' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            System
-                        </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('company')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'company' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                </path>
-                            </svg>
-                            Company
-                        </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('security')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'security' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                                </path>
-                            </svg>
+            <!-- Tab Navigation -->
+            <div class="border-bottom overflow-auto">
+                <ul class="nav nav-pills px-3 px-md-4 pt-3 flex-nowrap" style="gap: 0.5rem;">
+                    <li class="nav-item">
+                        <button wire:click="setActiveTab('company')" 
+                            class="nav-link {{ $activeTab === 'company' ? 'active' : '' }} text-nowrap"
+                            style="{{ $activeTab === 'company' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : '' }}">
+                            <i class='bx bx-buildings me-1'></i>
+                            <span class="d-none d-md-inline">Company </span>Profile
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button wire:click="setActiveTab('system')" 
+                            class="nav-link {{ $activeTab === 'system' ? 'active' : '' }} text-nowrap"
+                            style="{{ $activeTab === 'system' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : '' }}">
+                            <i class='bx bx-cog me-1'></i>
+                            <span class="d-none d-md-inline">System </span>Config
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button wire:click="setActiveTab('users')" 
+                            class="nav-link {{ $activeTab === 'users' ? 'active' : '' }} text-nowrap"
+                            style="{{ $activeTab === 'users' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : '' }}">
+                            <i class='bx bx-user me-1'></i>
+                            <span class="d-none d-md-inline">Users & </span>Roles
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button wire:click="setActiveTab('security')" 
+                            class="nav-link {{ $activeTab === 'security' ? 'active' : '' }} text-nowrap"
+                            style="{{ $activeTab === 'security' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : '' }}">
+                            <i class='bx bx-shield me-1'></i>
                             Security
-                        </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('email')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'email' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            Email & Notifications
-                        </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('business')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'business' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                </path>
-                            </svg>
-                            Business Rules
-                        </div>
-                    </button>
-
-
-                </nav>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button wire:click="setActiveTab('email')" 
+                            class="nav-link {{ $activeTab === 'email' ? 'active' : '' }} text-nowrap"
+                            style="{{ $activeTab === 'email' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : '' }}">
+                            <i class='bx bx-envelope me-1'></i>
+                            <span class="d-none d-lg-inline">Email & </span>Notifications
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button wire:click="setActiveTab('business')" 
+                            class="nav-link {{ $activeTab === 'business' ? 'active' : '' }} text-nowrap"
+                            style="{{ $activeTab === 'business' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : '' }}">
+                            <i class='bx bx-briefcase me-1'></i>
+                            <span class="d-none d-lg-inline">Business </span>Rules
+                        </button>
+                    </li>
+                </ul>
             </div>
+        </div>
+    </div>
 
-            <!-- Tab Content -->
-            <div class="p-6">
-                @if($activeTab === 'profile')
-                    <livewire:settings.profile />
-                @elseif($activeTab === 'password')
-                    <livewire:settings.password />
-                @elseif($activeTab === 'appearance')
-                    <livewire:settings.appearance />
-                @elseif($activeTab === 'system')
-                    <livewire:settings.system-configuration />
-                @elseif($activeTab === 'company')
-                    <livewire:settings.company-profile />
-                @elseif($activeTab === 'security')
-                    <livewire:settings.security-settings />
-                @elseif($activeTab === 'email')
-                    <livewire:settings.email-notifications />
-                @elseif($activeTab === 'business')
-                    <livewire:settings.business-rules />
-                @endif
-            </div>
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Company Profile Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'company' ? 'show active' : '' }}">
+            @if($activeTab === 'company')
+                <livewire:settings.company-profile />
+            @endif
+        </div>
+
+        <!-- System Configuration Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'system' ? 'show active' : '' }}">
+            @if($activeTab === 'system')
+                <livewire:settings.system-configuration />
+            @endif
+        </div>
+
+        <!-- Users & Roles Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'users' ? 'show active' : '' }}">
+            @if($activeTab === 'users')
+                <livewire:settings.users />
+            @endif
+        </div>
+
+        <!-- Security Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'security' ? 'show active' : '' }}">
+            @if($activeTab === 'security')
+                <livewire:settings.security-settings />
+            @endif
+        </div>
+
+        <!-- Email & Notifications Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'email' ? 'show active' : '' }}">
+            @if($activeTab === 'email')
+                <livewire:settings.email-notifications />
+            @endif
+        </div>
+
+        <!-- Business Rules Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'business' ? 'show active' : '' }}">
+            @if($activeTab === 'business')
+                <livewire:settings.business-rules />
+            @endif
         </div>
     </div>
 </div>

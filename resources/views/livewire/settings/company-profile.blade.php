@@ -1,328 +1,270 @@
 <div>
-    <div class="space-y-6">
-        <!-- Header -->
-        <div>
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Company Profile</h3>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Manage your company information, branding, and business details.
-            </p>
+    <!-- Success/Error Messages -->
+    @if (session()->has('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class='bx bx-check-circle me-2'></i>
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    @endif
 
-        @if (session()->has('message'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
-                {{ session('message') }}
-            </div>
-        @endif
+    @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class='bx bx-error-circle me-2'></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
-        @if (session()->has('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form wire:submit="save">
-            <!-- Basic Information -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Company Name *</flux:label>
-                                <flux:input wire:model="company_name" />
-                                <flux:error name="company_name" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Email Address</flux:label>
-                                <flux:input wire:model="company_email" type="email" />
-                                <flux:error name="company_email" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Phone Number</flux:label>
-                                <flux:input wire:model="company_phone" />
-                                <flux:error name="company_phone" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Website</flux:label>
-                                <flux:input wire:model="company_website" type="url" />
-                                <flux:error name="company_website" />
-                            </flux:field>
-                        </div>
-
-                        <div class="sm:col-span-2">
-                            <flux:field>
-                                <flux:label>Company Description</flux:label>
-                                <flux:textarea wire:model="company_description" rows="3" />
-                                <flux:description>Brief description of your company</flux:description>
-                                <flux:error name="company_description" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Company Slogan</flux:label>
-                                <flux:input wire:model="company_slogan" />
-                                <flux:error name="company_slogan" />
-                            </flux:field>
+    <form wire:submit="save">
+        <div class="row g-4">
+            <!-- Basic Information Card -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-info-circle text-primary me-2'></i>
+                            Basic Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="company_name" class="form-control @error('company_name') is-invalid @enderror" placeholder="Enter company name">
+                                @error('company_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email Address</label>
+                                <input type="email" wire:model="company_email" class="form-control @error('company_email') is-invalid @enderror" placeholder="company@example.com">
+                                @error('company_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Phone Number</label>
+                                <input type="text" wire:model="company_phone" class="form-control @error('company_phone') is-invalid @enderror" placeholder="+254 700 000 000">
+                                @error('company_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Website</label>
+                                <input type="url" wire:model="company_website" class="form-control @error('company_website') is-invalid @enderror" placeholder="https://example.com">
+                                @error('company_website') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Address Information -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Address Information</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div class="sm:col-span-2">
-                            <flux:field>
-                                <flux:label>Street Address</flux:label>
-                                <flux:textarea wire:model="company_address" rows="2" />
-                                <flux:error name="company_address" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>City</flux:label>
-                                <flux:input wire:model="company_city" />
-                                <flux:error name="company_city" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>State/Province</flux:label>
-                                <flux:input wire:model="company_state" />
-                                <flux:error name="company_state" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Postal Code</flux:label>
-                                <flux:input wire:model="company_postal_code" />
-                                <flux:error name="company_postal_code" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Country</flux:label>
-                                <flux:input wire:model="company_country" />
-                                <flux:error name="company_country" />
-                            </flux:field>
+                <!-- Address Information Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-map text-primary me-2'></i>
+                            Address Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Street Address</label>
+                                <textarea wire:model="company_address" class="form-control @error('company_address') is-invalid @enderror" rows="2" placeholder="Enter street address"></textarea>
+                                @error('company_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">City</label>
+                                <input type="text" wire:model="company_city" class="form-control @error('company_city') is-invalid @enderror" placeholder="City">
+                                @error('company_city') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">State/Province</label>
+                                <input type="text" wire:model="company_state" class="form-control @error('company_state') is-invalid @enderror" placeholder="State">
+                                @error('company_state') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Postal Code</label>
+                                <input type="text" wire:model="company_postal_code" class="form-control @error('company_postal_code') is-invalid @enderror" placeholder="00100">
+                                @error('company_postal_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Country</label>
+                                <input type="text" wire:model="company_country" class="form-control @error('company_country') is-invalid @enderror" placeholder="Kenya">
+                                @error('company_country') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Business Information -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Business Information</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Tax Number</flux:label>
-                                <flux:input wire:model="tax_number" />
-                                <flux:error name="tax_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Registration Number</flux:label>
-                                <flux:input wire:model="registration_number" />
-                                <flux:error name="registration_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>VAT Number</flux:label>
-                                <flux:input wire:model="vat_number" />
-                                <flux:error name="vat_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Industry</flux:label>
-                                <flux:select wire:model="industry">
-                                    <option value="">Select an industry...</option>
-                                    @foreach($this->getIndustries() as $key => $label)
-                                        <option value="{{ $key }}">{{ $label }}</option>
+                <!-- Business Information Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-briefcase text-primary me-2'></i>
+                            Business Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tax Number</label>
+                                <input type="text" wire:model="tax_number" class="form-control @error('tax_number') is-invalid @enderror" placeholder="Tax ID">
+                                @error('tax_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Registration Number</label>
+                                <input type="text" wire:model="registration_number" class="form-control @error('registration_number') is-invalid @enderror" placeholder="Registration No.">
+                                @error('registration_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">VAT Number</label>
+                                <input type="text" wire:model="vat_number" class="form-control @error('vat_number') is-invalid @enderror" placeholder="VAT No.">
+                                @error('vat_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Industry</label>
+                                <select wire:model="industry" class="form-select @error('industry') is-invalid @enderror">
+                                    <option value="">Select Industry</option>
+                                    @foreach($this->getIndustries() as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
                                     @endforeach
-                                </flux:select>
-                                <flux:error name="industry" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Company Size</flux:label>
-                                <flux:select wire:model="company_size">
-                                    <option value="">Select company size...</option>
-                                    @foreach($this->getCompanySizes() as $key => $label)
-                                        <option value="{{ $key }}">{{ $label }}</option>
+                                </select>
+                                @error('industry') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Company Size</label>
+                                <select wire:model="company_size" class="form-select @error('company_size') is-invalid @enderror">
+                                    <option value="">Select Size</option>
+                                    @foreach($this->getCompanySizes() as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
                                     @endforeach
-                                </flux:select>
-                                <flux:error name="company_size" />
-                            </flux:field>
+                                </select>
+                                @error('company_size') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Founded Year</label>
+                                <input type="number" wire:model="founded_year" class="form-control @error('founded_year') is-invalid @enderror" placeholder="2020" min="1800" max="{{ date('Y') }}">
+                                @error('founded_year') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div>
-                            <flux:field>
-                                <flux:label>Founded Year</flux:label>
-                                <flux:input wire:model="founded_year" type="number" min="1800" max="{{ date('Y') }}" />
-                                <flux:error name="founded_year" />
-                            </flux:field>
+                <!-- Financial Information Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-money text-primary me-2'></i>
+                            Financial Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Bank Name</label>
+                                <input type="text" wire:model="bank_name" class="form-control @error('bank_name') is-invalid @enderror" placeholder="Bank Name">
+                                @error('bank_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Account Number</label>
+                                <input type="text" wire:model="bank_account" class="form-control @error('bank_account') is-invalid @enderror" placeholder="Account No.">
+                                @error('bank_account') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">SWIFT Code</label>
+                                <input type="text" wire:model="swift_code" class="form-control @error('swift_code') is-invalid @enderror" placeholder="SWIFT/BIC">
+                                @error('swift_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">IBAN</label>
+                                <input type="text" wire:model="iban" class="form-control @error('iban') is-invalid @enderror" placeholder="IBAN">
+                                @error('iban') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Branding -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Branding</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6">
-                        <div>
-                            <flux:field>
-                                <flux:label>Company Logo</flux:label>
-                                <flux:input wire:model="logo" type="file" accept="image/*" />
-                                <flux:description>Upload a logo for your company (max 2MB)</flux:description>
-                                <flux:error name="logo" />
-                                
-                                <!-- Current Logo -->
-                                @if ($company_logo)
-                                    <div class="mt-3">
-                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Logo:</p>
-                                        <div class="flex items-center gap-3">
-                                            <img src="{{ asset('storage/' . $company_logo) }}" alt="Current Logo" class="h-16 w-auto border rounded-lg shadow-sm">
-                                            <flux:button variant="danger" size="sm" wire:click="removeLogo" type="button">
-                                                Remove Logo
-                                            </flux:button>
-                                        </div>
-                                    </div>
-                                @endif
-                                
-                                <!-- Preview New Logo -->
-                                @if ($logo)
-                                    <div class="mt-3">
-                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Logo Preview:</p>
-                                        <div class="flex items-center gap-3">
-                                            <img src="{{ $logo->temporaryUrl() }}" alt="Logo Preview" class="h-16 w-auto border rounded-lg shadow-sm">
-                                            <flux:button variant="outline" size="sm" wire:click="clearLogoUpload" type="button">
-                                                Clear
-                                            </flux:button>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">This logo will be saved when you submit the form</p>
-                                    </div>
-                                @endif
-                            </flux:field>
+            <!-- Logo & Branding Card -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-image text-primary me-2'></i>
+                            Company Logo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if($company_logo)
+                            <div class="text-center mb-3">
+                                <img src="{{ asset('storage/' . $company_logo) }}" alt="Company Logo" class="img-thumbnail" style="max-height: 150px;">
+                                <div class="mt-2">
+                                    <button type="button" wire:click="removeLogo" class="btn btn-sm btn-danger">
+                                        <i class='bx bx-trash'></i> Remove Logo
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if($logo)
+                            <div class="text-center mb-3">
+                                <p class="text-muted small mb-2">New Logo Preview:</p>
+                                <img src="{{ $logo->temporaryUrl() }}" alt="Logo Preview" class="img-thumbnail" style="max-height: 150px;">
+                                <div class="mt-2">
+                                    <button type="button" wire:click="clearLogoUpload" class="btn btn-sm btn-secondary">
+                                        <i class='bx bx-x'></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Upload Logo</label>
+                            <input type="file" wire:model="logo" class="form-control @error('logo') is-invalid @enderror" accept="image/*">
+                            @error('logo') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Max 2MB (JPEG, PNG, GIF, WebP)</small>
                         </div>
 
-                        <div>
-                            <flux:field>
-                                <flux:label>Login Background Image</flux:label>
-                                <flux:input wire:model="background_image" type="file" accept="image/*" />
-                                <flux:description>Upload a background image for login pages (max 5MB)</flux:description>
-                                <flux:error name="background_image" />
-                                
-                                <!-- Current Background Image -->
-                                @if ($company_background_image)
-                                    <div class="mt-3">
-                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Background Image:</p>
-                                        <div class="flex items-center gap-3">
-                                            <img src="{{ asset('storage/' . $company_background_image) }}" alt="Current Background" class="h-24 w-32 object-cover rounded-lg border shadow-sm">
-                                            <flux:button variant="danger" size="sm" wire:click="removeBackgroundImage" type="button">
-                                                Remove Background
-                                            </flux:button>
-                                        </div>
-                                    </div>
-                                @endif
-                                
-                                <!-- Preview New Background Image -->
-                                @if ($background_image)
-                                    <div class="mt-3">
-                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Background Preview:</p>
-                                        <div class="flex items-center gap-3">
-                                            <img src="{{ $background_image->temporaryUrl() }}" alt="Background Preview" class="h-24 w-32 object-cover rounded-lg border shadow-sm">
-                                            <flux:button variant="outline" size="sm" wire:click="clearBackgroundImageUpload" type="button">
-                                                Clear
-                                            </flux:button>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">This background will be saved when you submit the form</p>
-                                    </div>
-                                @endif
-                            </flux:field>
+                        <div wire:loading wire:target="logo" class="text-center">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Uploading...</span>
+                            </div>
+                            <span class="ms-2 text-muted">Uploading...</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Financial Information -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Financial Information</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Bank Name</flux:label>
-                                <flux:input wire:model="bank_name" />
-                                <flux:error name="bank_name" />
-                            </flux:field>
+                <!-- Branding Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-palette text-primary me-2'></i>
+                            Branding
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Company Slogan</label>
+                            <input type="text" wire:model="company_slogan" class="form-control @error('company_slogan') is-invalid @enderror" placeholder="Your tagline">
+                            @error('company_slogan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Bank Account</flux:label>
-                                <flux:input wire:model="bank_account" />
-                                <flux:error name="bank_account" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>SWIFT Code</flux:label>
-                                <flux:input wire:model="swift_code" />
-                                <flux:error name="swift_code" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>IBAN</flux:label>
-                                <flux:input wire:model="iban" />
-                                <flux:error name="iban" />
-                            </flux:field>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea wire:model="company_description" class="form-control @error('company_description') is-invalid @enderror" rows="4" placeholder="Brief company description"></textarea>
+                            @error('company_description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Actions -->
-            <div class="mt-6 flex justify-end">
-                <flux:button type="submit" variant="primary">
-                    Save Company Profile
-                </flux:button>
+                <!-- Save Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="save">
+                            <i class='bx bx-save me-2'></i>Save Company Profile
+                        </span>
+                        <span wire:loading wire:target="save">
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Saving...
+                        </span>
+                    </button>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

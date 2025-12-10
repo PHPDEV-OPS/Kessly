@@ -15,38 +15,166 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+/**
+ * Business Analytics Component
+ * 
+ * Performance Optimizations:
+ * - 5-minute caching for all analytics data
+ * - Eager loading for relationships
+ * - Database-level aggregations instead of collection operations
+ * - Limited data points (30 max) for trend charts
+ * - Conditional loading of comparison data
+ * 
+ * Recommended Database Indexes:
+ * - invoices: index on (created_at, amount)
+ * - orders: index on (created_at, branch_id, total_amount)
+ * - order_items: composite index on (order_id, product_id, quantity)
+ * - employees: index on (employment_status, branch_id, hire_date)
+ * - attendances: index on (date, status)
+ */
 class BusinessAnalytics extends Component
 {
     public $dateRange = 'last_30_days';
     public $selectedBranch = '';
+    public $comparisonMode = false;
+    public $viewMode = 'grid'; // grid or list
+    public $refreshInterval = 0; // in seconds, 0 means no auto-refresh
+    
+    protected $listeners = ['refreshAnalytics' => '$refresh'];
+    
+    public function mount()
+    {
+        // Initialize with default values
+    }
+    
+    public function clearCache()
+    {
+        // Clear all analytics cache
+        $patterns = ['analytics_*'];
+        foreach ($patterns as $pattern) {
+            cache()->forget($pattern);
+        }
+        
+        // Force refresh
+        $this->dispatch('analytics-cache-cleared');
+    }
+    
+    public function toggleComparison()
+    {
+        $this->comparisonMode = !$this->comparisonMode;
+    }
+    
+    public function toggleViewMode()
+    {
+        $this->viewMode = $this->viewMode === 'grid' ? 'list' : 'grid';
+    }
+    
+    public function exportData($format = 'csv')
+    {
+        // This will be handled by JavaScript
+        $this->dispatch('export-analytics', format: $format);
+    }
     
     public function render()
     {
         $startDate = $this->getStartDate();
         $endDate = now();
+        
+        // Create a cache key based on filters
+        $cacheKey = 'analytics_' . $this->dateRange . '_' . $this->selectedBranch . '_' . ($this->comparisonMode ? '1' : '0');
 
-        // Core Business Metrics
-        $metrics = $this->getBusinessMetrics($startDate, $endDate);
+        // Cache results for 5 minutes to improve performance
+        $data = cache()->remember($cacheKey, now()->addMinutes(5), function() use ($startDate, $endDate) {
+            // Core Business Metrics
+            $metrics = $this->getBusinessMetrics($startDate, $endDate);
+            
+            // Comparison metrics if enabled
+            $comparisonMetrics = null;
+            if ($this->comparisonMode) {
+                $comparisonMetrics = $this->getComparisonMetrics($startDate, $endDate);
+            }
+            
+            // HR Analytics
+            $hrAnalytics = $this->getHrAnalytics($startDate, $endDate);
+            
+            // Financial Analytics
+            $financialAnalytics = $this->getFinancialAnalytics($startDate, $endDate);
+            
+            // Branch Performance (optimized with eager loading)
+            $branchAnalytics = $this->getBranchAnalytics($startDate, $endDate);
+            
+            // Trends and Charts Data
+            $trends = $this->getTrendData($startDate, $endDate);
+            
+            return compact('metrics', 'comparisonMetrics', 'hrAnalytics', 'financialAnalytics', 'branchAnalytics', 'trends');
+        });
         
-        // HR Analytics
-        $hrAnalytics = $this->getHrAnalytics($startDate, $endDate);
+        // Extract cached data
+        extract($data);
         
-        // Financial Analytics
-        $financialAnalytics = $this->getFinancialAnalytics($startDate, $endDate);
-        
-        // Branch Performance
-        $branchAnalytics = $this->getBranchAnalytics($startDate, $endDate);
-        
-        // Trends and Charts Data
-        $trends = $this->getTrendData($startDate, $endDate);
+        // Additional insights (lightweight, no caching needed)
+        $insights = $this->getBusinessInsights($metrics, $trends);
 
         return view('livewire.analytics.business-analytics', compact(
             'metrics',
+            'comparisonMetrics',
             'hrAnalytics',
             'financialAnalytics',
             'branchAnalytics',
-            'trends'
+            'trends',
+            'insights'
         ));
+    }
+    
+    private function getComparisonMetrics($startDate, $endDate)
+    {
+        $daysDiff = $startDate->diffInDays($endDate);
+        $comparisonStart = $startDate->copy()->subDays($daysDiff);
+        $comparisonEnd = $startDate->copy()->subDay();
+        
+        return $this->getBusinessMetrics($comparisonStart, $comparisonEnd);
+    }
+    
+    private function getBusinessInsights($metrics, $trends)
+    {
+        $insights = [];
+        
+        // Revenue growth insight
+        if (count($trends['revenue_trend']) >= 2) {
+            $recentRevenue = $trends['revenue_trend']->last()->revenue ?? 0;
+            $previousRevenue = $trends['revenue_trend']->first()->revenue ?? 1;
+            $growth = $previousRevenue > 0 ? (($recentRevenue - $previousRevenue) / $previousRevenue) * 100 : 0;
+            
+            $insights[] = [
+                'type' => $growth >= 0 ? 'positive' : 'negative',
+                'icon' => $growth >= 0 ? 'trending-up' : 'trending-down',
+                'title' => 'Revenue Trend',
+                'message' => abs(round($growth, 1)) . '% ' . ($growth >= 0 ? 'increase' : 'decrease') . ' in revenue'
+            ];
+        }
+        
+        // Stock alert insight
+        if (($metrics['low_stock_items'] ?? 0) > 0) {
+            $insights[] = [
+                'type' => 'warning',
+                'icon' => 'alert-triangle',
+                'title' => 'Stock Alert',
+                'message' => $metrics['low_stock_items'] . ' items running low on stock'
+            ];
+        }
+        
+        // Top product insight
+        if ($trends['top_products']->isNotEmpty()) {
+            $topProduct = $trends['top_products']->first();
+            $insights[] = [
+                'type' => 'info',
+                'icon' => 'star',
+                'title' => 'Best Seller',
+                'message' => $topProduct->name . ' leads with ' . $topProduct->total_sold . ' units sold'
+            ];
+        }
+        
+        return $insights;
     }
 
     private function getStartDate()
@@ -131,18 +259,26 @@ class BusinessAnalytics extends Component
 
     private function getBranchAnalytics($startDate, $endDate)
     {
-        return Branch::with(['employees', 'orders'])
+        // Optimized query with aggregations in database instead of multiple queries
+        return Branch::query()
+            ->withCount(['employees' => function ($query) {
+                $query->where('employment_status', 'active');
+            }])
+            ->withCount(['orders' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            }])
+            ->withSum(['orders' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            }], 'total_amount')
+            ->with('manager.user:id,name')
             ->get()
-            ->map(function ($branch) use ($startDate, $endDate) {
-                $orders = $branch->orders()
-                    ->whereBetween('created_at', [$startDate, $endDate]);
-                    
+            ->map(function ($branch) {
                 return [
                     'id' => $branch->id,
                     'name' => $branch->name,
-                    'employees_count' => $branch->employees()->active()->count(),
-                    'orders_count' => $orders->count(),
-                    'revenue' => $orders->sum('total_amount'),
+                    'employees_count' => $branch->employees_count ?? 0,
+                    'orders_count' => $branch->orders_count ?? 0,
+                    'revenue' => $branch->orders_sum_total_amount ?? 0,
                     'manager' => $branch->manager?->user?->name ?? 'Not Assigned',
                 ];
             });
@@ -150,27 +286,34 @@ class BusinessAnalytics extends Component
 
     private function getTrendData($startDate, $endDate)
     {
-        // Revenue trend
+        // Optimize by limiting data points for better performance
+        // Revenue trend - limit to last 30 data points
         $revenueTrend = Invoice::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(amount) as revenue')
             )
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('date')
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date', 'desc')
+            ->limit(30)
+            ->get()
+            ->reverse()
+            ->values();
 
-        // Order trend
+        // Order trend - limit to last 30 data points
         $orderTrend = Order::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as orders')
             )
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('date')
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date', 'desc')
+            ->limit(30)
+            ->get()
+            ->reverse()
+            ->values();
 
-        // Top selling products
+        // Top selling products - already optimized
         $topProducts = DB::table('order_items')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->join('products', 'order_items.product_id', '=', 'products.id')

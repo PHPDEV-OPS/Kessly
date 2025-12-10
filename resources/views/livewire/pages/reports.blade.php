@@ -3,8 +3,8 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('components.layouts.app')] class extends Component {
-    public string $activeTab = 'overview';
+new #[Layout('layouts.app')] class extends Component {
+    public string $activeTab = 'sales';
 
     public function setActiveTab(string $tab): void
     {
@@ -13,225 +13,292 @@ new #[Layout('components.layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <!-- Page Navigation -->
-    <x-page-navigation title="Reports & Analytics" description="Comprehensive insights into your business performance"
-        :breadcrumbs="[
-        ['title' => 'Reports']
-    ]">
-        <!-- Quick Actions in Navigation -->
-        <div class="flex items-center space-x-3">
-            <select
-                class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
-                <option>Last 7 days</option>
-                <option>Last 30 days</option>
-                <option>Last 3 months</option>
-                <option>Last year</option>
-            </select>
-        </div>
-    </x-page-navigation>
-
-    <div class="p-4 sm:p-6 space-y-6">
-
-        <!-- Tab Navigation -->
-        <div class="mt-3 bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
-            <div class="border-b border-gray-200 dark:border-gray-700">
-                <nav class="flex space-x-8 px-6" aria-label="Tabs">
-                    <button wire:click="setActiveTab('overview')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'overview' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                </path>
-                            </svg>
-                            Overview
+    <!-- Enhanced Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary text-white">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h4 class="text-white fw-bold mb-2">
+                                <i class='bx bx-file-blank me-2'></i>Reports & Analytics
+                            </h4>
+                            <p class="text-white-50 mb-0 small d-none d-sm-block">
+                                Comprehensive business reports and insights
+                            </p>
                         </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('sales')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'sales' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                            Sales Reports
+                        <div class="no-print">
+                            <button class="btn btn-light btn-sm" onclick="window.print()">
+                                <i class='bx bx-printer me-1'></i><span class="d-none d-sm-inline">Print Report</span>
+                            </button>
                         </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('inventory')"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'inventory' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                            </svg>
-                            Inventory Reports
-                        </div>
-                    </button>
-                </nav>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Tab Content -->
-            <div class="p-6">
-                @if($activeTab === 'overview')
-                    <!-- Overview Dashboard -->
-                    <div class="space-y-6">
-                        <!-- Key Metrics -->
-                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                            <div class="bg-gradient-to-r from-blue-500 to-blue-600 overflow-hidden shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-4">
-                                            <dt class="text-sm font-medium text-blue-100 truncate">Total Revenue</dt>
-                                            <dd class="text-2xl font-bold text-white">$
-                                                {{ number_format(\App\Models\Invoice::sum('amount'), 2) }}
-                                            </dd>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <!-- Tab Navigation -->
+    <div class="card mb-4 no-print">
+        <div class="card-body p-0">
+            <nav class="nav nav-pills nav-justified overflow-auto flex-nowrap" role="tablist">
+                <button wire:click="setActiveTab('sales')" type="button"
+                    class="nav-link {{ $activeTab === 'sales' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-cart fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Sales Reports</span>
+                        <span class="d-inline d-sm-none small">Sales</span>
+                    </div>
+                </button>
 
-                            <div class="bg-gradient-to-r from-green-500 to-green-600 overflow-hidden shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-4">
-                                            <dt class="text-sm font-medium text-green-100 truncate">Orders Completed</dt>
-                                            <dd class="text-2xl font-bold text-white">{{ \App\Models\Order::count() }}</dd>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <button wire:click="setActiveTab('inventory')" type="button"
+                    class="nav-link {{ $activeTab === 'inventory' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-package fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Inventory Reports</span>
+                        <span class="d-inline d-sm-none small">Inventory</span>
+                    </div>
+                </button>
 
-                            <div
-                                class="bg-gradient-to-r from-purple-500 to-purple-600 overflow-hidden shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-4">
-                                            <dt class="text-sm font-medium text-purple-100 truncate">Products Sold</dt>
-                                            <dd class="text-2xl font-bold text-white">
-                                                {{ \App\Models\Product::sum('stock') }}
-                                            </dd>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <button wire:click="setActiveTab('financial')" type="button"
+                    class="nav-link {{ $activeTab === 'financial' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-dollar-circle fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Financial Reports</span>
+                        <span class="d-inline d-sm-none small">Financial</span>
+                    </div>
+                </button>
 
-                            <div
-                                class="bg-gradient-to-r from-orange-500 to-orange-600 overflow-hidden shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-4">
-                                            <dt class="text-sm font-medium text-orange-100 truncate">Active Customers</dt>
-                                            <dd class="text-2xl font-bold text-white">{{ \App\Models\Customer::count() }}
-                                            </dd>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <button wire:click="setActiveTab('custom')" type="button"
+                    class="nav-link {{ $activeTab === 'custom' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-customize fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Custom Reports</span>
+                        <span class="d-inline d-sm-none small">Custom</span>
+                    </div>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Sales Reports Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'sales' ? 'show active' : '' }}">
+            @if($activeTab === 'sales')
+                <livewire:reports.sales-report :key="'sales-'.now()" />
+            @endif
+        </div>
+
+        <!-- Inventory Reports Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'inventory' ? 'show active' : '' }}">
+            @if($activeTab === 'inventory')
+                <livewire:reports.stock-report :key="'inventory-'.now()" />
+            @endif
+        </div>
+
+        <!-- Financial Reports Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'financial' ? 'show active' : '' }}">
+            @if($activeTab === 'financial')
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                            <i class='bx bx-dollar-circle display-1 text-success'></i>
                         </div>
-
-                        <!-- Charts Placeholder -->
-                        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                            <!-- Sales Chart -->
-                            <div
-                                class="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Sales Trend</h3>
-                                <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="text-center">
-                                        <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mb-4" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                            </path>
-                                        </svg>
-                                        <p class="text-gray-500 dark:text-gray-400">Sales chart will be displayed here</p>
-                                        <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">Integration with charting
-                                            library needed</p>
+                        <h4 class="mb-2">Financial Reports</h4>
+                        <p class="text-muted mb-4">
+                            Detailed financial statements, profit & loss, balance sheets, and cash flow reports.
+                        </p>
+                        <div class="row g-3 text-start">
+                            <div class="col-md-4">
+                                <div class="card bg-label-success">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-line-chart fs-1 mb-2'></i>
+                                        <h6>Profit & Loss</h6>
+                                        <small>Income vs Expenses</small>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Top Products -->
-                            <div
-                                class="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Products</h3>
-                                <div class="space-y-4">
-                                    @php
-                                        $topProducts = \App\Models\Product::orderBy('stock', 'desc')->limit(5)->get();
-                                    @endphp
-                                    @forelse($topProducts as $product)
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <div
-                                                    class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-3">
-                                                    <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4">
-                                                        </path>
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                        {{ $product->name }}
-                                                    </p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                        {{ $product->category?->name ?? 'No category' }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    {{ $product->stock }}
-                                                </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">in stock</p>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">No products found</p>
-                                    @endforelse
+                            <div class="col-md-4">
+                                <div class="card bg-label-primary">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-receipt fs-1 mb-2'></i>
+                                        <h6>Balance Sheet</h6>
+                                        <small>Assets & Liabilities</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-label-info">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-wallet fs-1 mb-2'></i>
+                                        <h6>Cash Flow</h6>
+                                        <small>Money In & Out</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @elseif($activeTab === 'sales')
-                    <livewire:reports.sales-report />
-                @elseif($activeTab === 'inventory')
-                    <livewire:reports.stock-report />
-                @endif
-            </div>
+                </div>
+            @endif
+        </div>
+
+        <!-- Custom Reports Tab -->
+        <div class="tab-pane fade {{ $activeTab === 'custom' ? 'show active' : '' }}">
+            @if($activeTab === 'custom')
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                            <i class='bx bx-customize display-1 text-warning'></i>
+                        </div>
+                        <h4 class="mb-2">Custom Report Builder</h4>
+                        <p class="text-muted mb-4">
+                            Create custom reports tailored to your specific business needs with advanced filters and grouping.
+                        </p>
+                        <div class="row g-3 text-start">
+                            <div class="col-md-3">
+                                <div class="card bg-label-warning">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-filter fs-1 mb-2'></i>
+                                        <h6>Advanced Filters</h6>
+                                        <small>Custom criteria</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-label-info">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-group fs-1 mb-2'></i>
+                                        <h6>Grouping</h6>
+                                        <small>Organize data</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-label-success">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-save fs-1 mb-2'></i>
+                                        <h6>Save Templates</h6>
+                                        <small>Reuse reports</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-label-danger">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-calendar fs-1 mb-2'></i>
+                                        <h6>Schedule</h6>
+                                        <small>Auto-generate</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
+
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .nav-pills .nav-link {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-pills .nav-link:hover:not(.active) {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .tab-pane {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            @page {
+                size: A4;
+                margin: 2cm;
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #dee2e6 !important;
+                page-break-inside: avoid;
+                margin-bottom: 1rem !important;
+            }
+            
+            .card-header {
+                background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+                page-break-after: avoid;
+            }
+            
+            table {
+                page-break-inside: auto;
+            }
+            
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            
+            /* Company header for print */
+            body::before {
+                content: \"Kessly Business Reports\";
+                display: block;
+                text-align: center;
+                font-size: 28pt;
+                font-weight: bold;
+                margin-bottom: 10pt;
+            }
+            
+            body::after {
+                content: \"Generated on \" attr(data-print-date);
+                display: block;
+                text-align: center;
+                font-size: 10pt;
+                color: #666;
+                margin-top: 20pt;
+                padding-top: 10pt;
+                border-top: 1px solid #dee2e6;
+            }
+        }
+    </style>
+    
+    <script>
+        // Set print date
+        document.body.setAttribute('data-print-date', new Date().toLocaleString());
+    </script>
 </div>

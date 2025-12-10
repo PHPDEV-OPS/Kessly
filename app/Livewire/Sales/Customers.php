@@ -24,6 +24,8 @@ class Customers extends Component
     public ?string $notes = null;
 
     public bool $showForm = false;
+    public bool $showView = false;
+    public ?Customer $viewingCustomer = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -50,6 +52,16 @@ class Customers extends Component
         $this->resetPage();
     }
 
+    public function updatedPerPage(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortField(): void
+    {
+        $this->resetPage();
+    }
+
     public function sortBy(string $field): void
     {
         if ($this->sortField === $field) {
@@ -65,6 +77,23 @@ class Customers extends Component
     {
         $this->resetForm();
         $this->showForm = true;
+    }
+
+    public function view(int $id): void
+    {
+        $this->viewingCustomer = Customer::findOrFail($id);
+        $this->showView = true;
+    }
+
+    public function closeView(): void
+    {
+        $this->showView = false;
+        $this->viewingCustomer = null;
+    }
+
+    public function print(int $id): void
+    {
+        $this->dispatch('print-customer', customerId: $id);
     }
 
     public function edit(int $id): void
@@ -114,6 +143,38 @@ class Customers extends Component
     {
         $this->resetForm();
         $this->showForm = false;
+    }
+
+    public function export()
+    {
+        $query = Customer::query()
+            ->when($this->search !== '', function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%')
+                  ->orWhere('phone', 'like', '%' . $this->search . '%');
+            });
+
+        $allowed = ['name', 'email', 'created_at'];
+        $field = in_array($this->sortField, $allowed, true) ? $this->sortField : 'name';
+        $direction = $this->sortDirection === 'desc' ? 'desc' : 'asc';
+
+        $customers = $query->orderBy($field, $direction)->get();
+
+        $csv = "Name,Email,Phone,Address,Notes\n";
+        foreach ($customers as $customer) {
+            $csv .= '"' . str_replace('"', '""', $customer->name) . '",';
+            $csv .= '"' . str_replace('"', '""', $customer->email) . '",';
+            $csv .= '"' . str_replace('"', '""', $customer->phone ?? '') . '",';
+            $csv .= '"' . str_replace('"', '""', $customer->address ?? '') . '",';
+            $csv .= '"' . str_replace('"', '""', $customer->notes ?? '') . '"';
+            $csv .= "\n";
+        }
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, 'customers-' . now()->format('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
     protected function resetForm(): void
