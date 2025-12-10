@@ -13,6 +13,12 @@
       "url": "/inventory"
     },
     {
+      "name": "Sales",
+      "icon": "menu-icon icon-base ri ri-shopping-cart-line",
+      "slug": "sales",
+      "url": "/sales"
+    },
+    {
       "name": "Customers",
       "icon": "menu-icon icon-base ri ri-user-line",
       "slug": "customers",
