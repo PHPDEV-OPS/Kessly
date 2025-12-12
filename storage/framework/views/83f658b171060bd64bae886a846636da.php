@@ -42,13 +42,21 @@
             width: 100%;
             height: 100%;
             background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(2px);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 10000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+        }
+        
+        .page-loader.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
         }
         
         .page-loader.active {
@@ -531,24 +539,62 @@
         
         // Global loading state
         const pageLoader = document.getElementById('pageLoader');
+        let loaderTimeout = null;
+        
+        function showLoader() {
+            if (pageLoader) {
+                pageLoader.classList.add('active');
+            }
+        }
+        
+        function hideLoader() {
+            if (pageLoader) {
+                // Ensure loader shows for at least 300ms for better UX
+                if (loaderTimeout) clearTimeout(loaderTimeout);
+                loaderTimeout = setTimeout(() => {
+                    pageLoader.classList.remove('active');
+                }, 300);
+            }
+        }
+        
+        // Manual loader trigger for menu navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click listeners to all wire:navigate links
+            document.querySelectorAll('a[wire\\:navigate]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    showLoader();
+                });
+            });
+        });
         
         // Show loader on Livewire navigation
         document.addEventListener('livewire:navigating', () => {
-            pageLoader?.classList.add('active');
+            showLoader();
         });
         
         document.addEventListener('livewire:navigated', () => {
-            pageLoader?.classList.remove('active');
+            hideLoader();
         });
         
-        // Show loader during Livewire updates
+        // Alternative: Use Livewire hooks for more reliable loading
         document.addEventListener('livewire:init', () => {
-            Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
-                pageLoader?.classList.add('active');
+            // Hook into navigation start
+            Livewire.hook('before', ({ component, commit, succeed, fail, update }) => {
+                showLoader();
             });
             
-            Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
-                setTimeout(() => pageLoader?.classList.remove('active'), 300);
+            // Hook into navigation completion
+            Livewire.hook('after', ({ component, commit, succeed, fail, update }) => {
+                hideLoader();
+            });
+            
+            // Also listen for request/response cycle
+            Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
+                showLoader();
+            });
+            
+            Livewire.hook('response', ({ request, response, succeed, fail }) => {
+                hideLoader();
             });
         });
         

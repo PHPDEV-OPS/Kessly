@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
     <!-- ! Hide app brand if navbar-full -->
     <div class="app-brand demo">
-        <a href="{{url('/')}}" class="app-brand-link">
+        <a href="{{url('/')}}" class="app-brand-link" wire:navigate>
             <span class="app-brand-logo demo me-1">@include('_partials.macros')</span>
             <span class="app-brand-text demo menu-text fw-semibold ms-2">{{config('variables.templateName')}}</span>
         </a>
@@ -58,7 +58,8 @@ use Illuminate\Support\Facades\Route;
             <a href="{{ isset($menu->url) ? url($menu->url) : 'javascript:void(0);' }}" 
                class="{{ isset($menu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}" 
                @if (isset($menu->target) and !empty($menu->target)) target="_blank" @endif
-               @if (isset($menu->submenu)) onclick="toggleSubmenu(event, this)" @endif>
+               @if (isset($menu->submenu)) onclick="toggleSubmenu(event, this)" @endif
+               @if(isset($menu->url) && !isset($menu->submenu)) wire:navigate @endif>
                 @isset($menu->icon)
                 <i class="{{ $menu->icon }}"></i>
                 @endisset

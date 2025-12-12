@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Route;
     ?>
 
       <li class="menu-item <?php echo e($activeClass); ?>">
-        <a href="<?php echo e(isset($submenu->url) ? url($submenu->url) : 'javascript:void(0)'); ?>" class="<?php echo e(isset($submenu->submenu) ? 'menu-link menu-toggle' : 'menu-link'); ?>" <?php if(isset($submenu->target) and !empty($submenu->target)): ?> target="_blank" <?php endif; ?>>
+        <a href="<?php echo e(isset($submenu->url) ? url($submenu->url) : 'javascript:void(0)'); ?>" class="<?php echo e(isset($submenu->submenu) ? 'menu-link menu-toggle' : 'menu-link'); ?>" <?php if(isset($submenu->target) and !empty($submenu->target)): ?> target="_blank" <?php endif; ?> <?php if(isset($submenu->url) && !isset($submenu->submenu)): ?> wire:navigate <?php endif; ?>>
           <?php if(isset($submenu->icon)): ?>
           <i class="<?php echo e($submenu->icon); ?>"></i>
           <?php endif; ?>

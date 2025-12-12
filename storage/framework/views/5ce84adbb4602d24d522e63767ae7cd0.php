@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
     <!-- ! Hide app brand if navbar-full -->
     <div class="app-brand demo">
-        <a href="<?php echo e(url('/')); ?>" class="app-brand-link">
+        <a href="<?php echo e(url('/')); ?>" class="app-brand-link" wire:navigate>
             <span class="app-brand-logo demo me-1"><?php echo $__env->make('_partials.macros', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></span>
             <span class="app-brand-text demo menu-text fw-semibold ms-2"><?php echo e(config('variables.templateName')); ?></span>
         </a>
@@ -58,7 +58,8 @@ use Illuminate\Support\Facades\Route;
             <a href="<?php echo e(isset($menu->url) ? url($menu->url) : 'javascript:void(0);'); ?>" 
                class="<?php echo e(isset($menu->submenu) ? 'menu-link menu-toggle' : 'menu-link'); ?>" 
                <?php if(isset($menu->target) and !empty($menu->target)): ?> target="_blank" <?php endif; ?>
-               <?php if(isset($menu->submenu)): ?> onclick="toggleSubmenu(event, this)" <?php endif; ?>>
+               <?php if(isset($menu->submenu)): ?> onclick="toggleSubmenu(event, this)" <?php endif; ?>
+               <?php if(isset($menu->url) && !isset($menu->submenu)): ?> wire:navigate <?php endif; ?>>
                 <?php if(isset($menu->icon)): ?>
                 <i class="<?php echo e($menu->icon); ?>"></i>
                 <?php endif; ?>

@@ -1,6 +1,9 @@
 {
   "menu": [
     {
+      "menuHeader": "BUSINESS MANAGEMENT"
+    },
+    {
       "url": "/",
       "name": "Dashboard",
       "icon": "menu-icon icon-base ri ri-home-smile-line",
@@ -25,10 +28,28 @@
       "url": "/customers"
     },
     {
-      "name": "Human Resources",
+      "name": "Reports",
+      "icon": "menu-icon icon-base ri ri-file-list-line",
+      "slug": "reports",
+      "url": "/reports"
+    },
+    {
+      "menuHeader": "HR & OPERATIONS"
+    },
+    {
+      "name": "Human Resource",
       "icon": "menu-icon icon-base ri ri-team-line",
       "slug": "hr",
       "url": "/hr"
+    },
+    {
+      "name": "Branches",
+      "icon": "menu-icon icon-base ri ri-building-line",
+      "slug": "branches",
+      "url": "/branches"
+    },
+    {
+      "menuHeader": "FINANCE & ANALYTICS"
     },
     {
       "name": "Finance",
@@ -37,23 +58,13 @@
       "url": "/finance"
     },
     {
-      "name": "Performance & Analytics",
-      "icon": "menu-icon icon-base ri ri-bar-chart-box-line",
-      "slug": ["analytics", "reports"],
-      "submenu": [
-        {
-          "name": "Analytics",
-          "icon": "menu-icon icon-base ri ri-line-chart-line",
-          "slug": "analytics",
-          "url": "/analytics"
-        },
-        {
-          "name": "Reports",
-          "icon": "menu-icon icon-base ri ri-file-list-line",
-          "slug": "reports",
-          "url": "/reports"
-        }
-      ]
+      "name": "Analytics",
+      "icon": "menu-icon icon-base ri ri-line-chart-line",
+      "slug": "analytics",
+      "url": "/analytics"
+    },
+    {
+      "menuHeader": "ACCOUNT"
     },
     {
       "name": "Settings",
