@@ -14,6 +14,7 @@ class Invoices extends Component
 
     // Listing controls
     public string $search = '';
+    public string $statusFilter = '';
     public string $sortField = 'created_at';
     public string $sortDirection = 'desc';
     public int $perPage = 10;
@@ -26,6 +27,8 @@ class Invoices extends Component
 
     // UI state
     public bool $showForm = false;
+    public bool $showView = false;
+    public ?Invoice $viewingInvoice = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -47,6 +50,16 @@ class Invoices extends Component
         $this->resetPage();
     }
 
+    public function updatedStatusFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->resetPage();
+    }
+
     public function sortBy(string $field): void
     {
         if ($this->sortField === $field) {
@@ -62,6 +75,23 @@ class Invoices extends Component
     {
         $this->resetForm();
         $this->showForm = true;
+    }
+
+    public function view(int $id): void
+    {
+        $this->viewingInvoice = Invoice::with('customer')->findOrFail($id);
+        $this->showView = true;
+    }
+
+    public function closeView(): void
+    {
+        $this->showView = false;
+        $this->viewingInvoice = null;
+    }
+
+    public function print(int $id): void
+    {
+        $this->dispatch('print-invoice', invoiceId: $id);
     }
 
     public function edit(int $id): void
@@ -107,6 +137,41 @@ class Invoices extends Component
     {
         $this->resetForm();
         $this->showForm = false;
+    }
+
+    public function export()
+    {
+        $query = Invoice::query()
+            ->with('customer')
+            ->when($this->search !== '', function ($q) {
+                $q->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('customer', function ($q) {
+                          $q->where('name', 'like', '%' . $this->search . '%');
+                      });
+                });
+            });
+
+        $allowed = ['name', 'amount', 'created_at'];
+        $field = in_array($this->sortField, $allowed, true) ? $this->sortField : 'created_at';
+        $direction = $this->sortDirection === 'desc' ? 'desc' : 'asc';
+
+        $invoices = $query->orderBy($field, $direction)->get();
+
+        $csv = "Invoice Name,Customer,Date,Amount\n";
+        foreach ($invoices as $invoice) {
+            $csv .= '"' . str_replace('"', '""', $invoice->name) . '",';
+            $csv .= '"' . str_replace('"', '""', $invoice->customer?->name ?? '') . '",';
+            $csv .= '"' . ($invoice->created_at ? $invoice->created_at->format('Y-m-d') : '') . '",';
+            $csv .= '"' . number_format($invoice->amount, 2) . '"';
+            $csv .= "\n";
+        }
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, 'invoices-' . now()->format('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
     protected function resetForm(): void

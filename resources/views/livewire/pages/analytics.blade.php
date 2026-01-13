@@ -3,95 +3,265 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('components.layouts.app')] class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     public string $activeTab = 'business';
 
     public function setActiveTab(string $tab): void
     {
         $this->activeTab = $tab;
+        $this->dispatch('tab-changed', tab: $tab);
     }
 }; ?>
 
 <div>
-    <!-- Page Navigation -->
-    <x-page-navigation title="Analytics Dashboard" description="Comprehensive business insights and analytics"
-        :breadcrumbs="[
-        ['title' => 'Analytics']
-    ]" />
-
-    <div class="p-4 sm:p-6 space-y-6">
-
-        <!-- Tab Navigation -->
-        <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
-            <div class="border-b border-gray-200 dark:border-gray-700">
-                <nav class="flex space-x-8 px-6" aria-label="Tabs">
-                    <button wire:click="setActiveTab('business')"
-                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'business' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                </path>
-                            </svg>
-                            Business Analytics
+    <!-- Enhanced Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="text-white fw-bold mb-2">
+                                <i class='bx bx-line-chart me-2'></i>Analytics Dashboard
+                            </h4>
+                            <p class="text-white-50 mb-0">
+                                Comprehensive business insights and performance metrics
+                            </p>
                         </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('performance')"
-                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'performance' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                            </svg>
-                            Performance Metrics
+                        <div class="text-end">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <small class="text-white-50 d-block">Last Updated</small>
+                                    <span class="text-white fw-semibold" id="lastUpdatedTime"></span>
+                                </div>
+                                <button class="btn btn-light btn-sm" wire:click="$refresh" onclick="updateTime()">
+                                    <i class='bx bx-refresh'></i> Refresh
+                                </button>
+                            </div>
                         </div>
-                    </button>
-
-                    <button wire:click="setActiveTab('reports')"
-                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'reports' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                </path>
-                            </svg>
-                            Custom Reports
-                        </div>
-                    </button>
-                </nav>
-            </div>
-
-            <!-- Tab Content -->
-            <div class="p-6">
-                @if($activeTab === 'business')
-                    <livewire:analytics.business-analytics />
-                @elseif($activeTab === 'performance')
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Performance Metrics</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Detailed performance analysis and KPI
-                            tracking.
-                        </p>
                     </div>
-                @elseif($activeTab === 'reports')
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Custom Reports</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Generate custom reports and export data.
-                        </p>
-                    </div>
-                @endif
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Tab Navigation with Modern Design -->
+    <div class="card mb-4">
+        <div class="card-body p-0">
+            <nav class="nav nav-pills nav-justified" role="tablist">
+                <button wire:click="setActiveTab('business')" type="button"
+                    class="nav-link {{ $activeTab === 'business' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-bar-chart-alt-2 fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Business Analytics</span>
+                        <span class="d-inline d-sm-none">Business</span>
+                    </div>
+                </button>
+
+                <button wire:click="setActiveTab('performance')" type="button"
+                    class="nav-link {{ $activeTab === 'performance' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-trending-up fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Performance Metrics</span>
+                        <span class="d-inline d-sm-none">Performance</span>
+                    </div>
+                </button>
+
+                <button wire:click="setActiveTab('reports')" type="button"
+                    class="nav-link {{ $activeTab === 'reports' ? 'active' : '' }} rounded-0 border-0 d-flex align-items-center justify-content-center py-3">
+                    <div class="text-center">
+                        <i class='bx bx-file-blank fs-4 d-block mb-1'></i>
+                        <span class="d-none d-sm-inline">Custom Reports</span>
+                        <span class="d-inline d-sm-none">Reports</span>
+                    </div>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Tab Content with Transitions -->
+    <div class="tab-content">
+        <div class="tab-pane fade {{ $activeTab === 'business' ? 'show active' : '' }}">
+            @if($activeTab === 'business')
+                <livewire:analytics.business-analytics :key="'business-'.now()" />
+            @endif
+        </div>
+
+        <div class="tab-pane fade {{ $activeTab === 'performance' ? 'show active' : '' }}">
+            @if($activeTab === 'performance')
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                            <i class='bx bx-trending-up display-1 text-primary'></i>
+                        </div>
+                        <h4 class="mb-2">Performance Metrics</h4>
+                        <p class="text-muted mb-4">
+                            Track detailed performance KPIs, conversion rates, and efficiency metrics across your business operations.
+                        </p>
+                        <div class="row g-3 text-start">
+                            <div class="col-md-4">
+                                <div class="card bg-label-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class='bx bx-time-five me-2'></i>Coming Soon
+                                        </h5>
+                                        <p class="card-text small mb-0">Response Time Analytics</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-label-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class='bx bx-target-lock me-2'></i>Coming Soon
+                                        </h5>
+                                        <p class="card-text small mb-0">Conversion Rate Tracking</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-label-info">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class='bx bx-stopwatch me-2'></i>Coming Soon
+                                        </h5>
+                                        <p class="card-text small mb-0">Efficiency Metrics</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <div class="tab-pane fade {{ $activeTab === 'reports' ? 'show active' : '' }}">
+            @if($activeTab === 'reports')
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                            <i class='bx bx-file-blank display-1 text-info'></i>
+                        </div>
+                        <h4 class="mb-2">Custom Reports</h4>
+                        <p class="text-muted mb-4">
+                            Generate custom reports tailored to your specific business needs. Export data in multiple formats.
+                        </p>
+                        <div class="row g-3 text-start">
+                            <div class="col-md-3">
+                                <div class="card bg-label-primary">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-download fs-1 mb-2'></i>
+                                        <h6>Excel Export</h6>
+                                        <small>Download as .xlsx</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-label-danger">
+                                    <div class="card-body text-center">
+                                        <i class='bx bxs-file-pdf fs-1 mb-2'></i>
+                                        <h6>PDF Reports</h6>
+                                        <small>Generate PDFs</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-label-success">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-calendar fs-1 mb-2'></i>
+                                        <h6>Scheduled Reports</h6>
+                                        <small>Auto-generate</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-label-warning">
+                                    <div class="card-body text-center">
+                                        <i class='bx bx-customize fs-1 mb-2'></i>
+                                        <h6>Custom Fields</h6>
+                                        <small>Build your own</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Inline Styles -->
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .nav-pills .nav-link {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-pills .nav-link:hover:not(.active) {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .tab-pane {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-border-shadow-primary {
+            border-top: 3px solid #696cff;
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4) !important;
+        }
+        
+        .card-border-shadow-success {
+            border-top: 3px solid #71dd37;
+            box-shadow: 0 0.125rem 0.25rem rgba(113, 221, 55, 0.4) !important;
+        }
+        
+        .card-border-shadow-warning {
+            border-top: 3px solid #ffab00;
+            box-shadow: 0 0.125rem 0.25rem rgba(255, 171, 0, 0.4) !important;
+        }
+        
+        .card-border-shadow-info {
+            border-top: 3px solid #03c3ec;
+            box-shadow: 0 0.125rem 0.25rem rgba(3, 195, 236, 0.4) !important;
+        }
+    </style>
+
+    <script>
+        // Update time display
+        function updateTime() {
+            const timeElement = document.getElementById('lastUpdatedTime');
+            if (timeElement) {
+                timeElement.textContent = new Date().toLocaleTimeString();
+            }
+        }
+        
+        // Initialize time on page load
+        document.addEventListener('DOMContentLoaded', updateTime);
+        
+        // Update time when Livewire updates
+        document.addEventListener('livewire:init', () => {
+            Livewire.hook('commit', () => {
+                updateTime();
+            });
+        });
+    </script>
 </div>

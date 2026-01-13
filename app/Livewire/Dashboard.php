@@ -21,12 +21,6 @@ class Dashboard extends Component
         $this->dispatch('analytics-refreshed');
     }
 
-    public function mount()
-    {
-        // Clear cache on mount to ensure fresh data
-        $this->analyticsService->clearCache();
-    }
-
     public function render()
     {
         $analytics = $this->analyticsService->getAnalytics();

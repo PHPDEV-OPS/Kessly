@@ -1,0 +1,32 @@
+<?php
+// Variables
+return [
+  "creatorName" => "Kessly",
+  "creatorUrl" => config('app.url'),
+  "templateName" => config('app.name', 'Kessly'),
+  "templateSuffix" => "Business Management System",
+  "templateVersion" => "1.0.0",
+  "templateFree" => true,
+  "templateDescription" => "Comprehensive Business Management System built with Laravel & Livewire",
+  "templateKeyword" => "business management, inventory, sales, finance, hr management",
+  "licenseUrl" => config('app.url'),
+  "livePreview" => config('app.url'),
+  "productPage" => config('app.url'),
+  "support" => config('app.url'),
+  "adminTemplates" => "",
+  "bootstrapDashboard" => "",
+  "ogTitle" => config('app.name', 'Kessly') . " - Business Management System",
+  "ogImage" => "",
+  "ogType" => "website",
+  "moreThemes" => "",
+  "documentation" => "",
+  "repository" => "#",
+  "gitRepo" => "#",
+  "gitRepoAccess" => "",
+  "githubFreeUrl" => "",
+  "facebookUrl" => "",
+  "twitterUrl" => "",
+  "githubUrl" => "",
+  "dribbbleUrl" => "",
+  "instagramUrl" => ""
+];

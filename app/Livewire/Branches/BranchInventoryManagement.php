@@ -84,9 +84,9 @@ class BranchInventoryManagement extends Component
         
         // Prevent duplicate product-branch combinations
         if ($this->editing) {
-            $rules['product_id'] .= '|unique:branch_inventories,product_id,' . $this->inventoryId . ',id,branch_id,' . $this->branch_id;
+            $rules['product_id'] .= '|unique:branch_inventory,product_id,' . $this->inventoryId . ',id,branch_id,' . $this->branch_id;
         } else {
-            $rules['product_id'] .= '|unique:branch_inventories,product_id,NULL,id,branch_id,' . $this->branch_id;
+            $rules['product_id'] .= '|unique:branch_inventory,product_id,NULL,id,branch_id,' . $this->branch_id;
         }
         
         $this->validate($rules);

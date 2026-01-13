@@ -113,6 +113,36 @@ class Categories extends Component
         $this->showForm = false;
     }
 
+    public function export()
+    {
+        $query = Category::query()
+            ->when($this->search !== '', function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('slug', 'like', '%' . $this->search . '%');
+            });
+
+        $allowed = ['name', 'slug', 'created_at'];
+        $field = in_array($this->sortField, $allowed, true) ? $this->sortField : 'name';
+        $direction = $this->sortDirection === 'desc' ? 'desc' : 'asc';
+
+        $categories = $query->orderBy($field, $direction)->get();
+
+        $csv = "Name,Slug\n";
+        foreach ($categories as $category) {
+            $csv .= sprintf(
+                "\"%s\",\"%s\"\n",
+                str_replace('"', '""', $category->name),
+                str_replace('"', '""', $category->slug)
+            );
+        }
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, 'categories-' . now()->format('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
+    }
+
     protected function resetForm(): void
     {
         $this->reset(['categoryId', 'name', 'slug']);

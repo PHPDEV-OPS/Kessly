@@ -1,36 +1,86 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts/commonMaster')
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+@php
+/* Display elements */
+$contentNavbar = $contentNavbar ?? true;
+$containerNav = $containerNav ?? 'container-xxl';
+$isNavbar = $isNavbar ?? true;
+$isMenu = $isMenu ?? true;
+$isFlex = $isFlex ?? false;
+$isFooter = $isFooter ?? true;
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+/* HTML Classes */
+$navbarDetached = 'navbar-detached';
+$menuFixed = true;
+$navbarType = $navbarType ?? 'navbar-detached';
+$footerFixed = false;
+$menuCollapsed = false;
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            <livewire:layout.navigation />
+/* Content classes */
+$container = ($container ?? 'container-xxl');
+@endphp
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
+@section('layoutContent')
+<div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
+    <div class="layout-container">
+
+        @if ($isMenu)
+        @include('layouts/sections/menu/verticalMenu')
+        @endif
+
+        <!-- Layout page -->
+        <div class="layout-page">
+
+            <!-- BEGIN: Navbar-->
+            @if ($isNavbar)
+            @include('layouts/sections/navbar/navbar')
             @endif
+            <!-- END: Navbar-->
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+
+                <!-- Content -->
+                @if ($isFlex)
+                <div class="{{ $container }} d-flex align-items-stretch flex-grow-1 p-0">
+                @else
+                <div class="{{ $container }} flex-grow-1 container-p-y">
+                @endif
+
+                    <!-- Page Heading -->
+                    @if (isset($header))
+                        <div class="mb-4">
+                            {{ $header }}
+                        </div>
+                    @endif
+
+                    <!-- Page Content / Livewire Component -->
+                    {{ $slot }}
+
+                </div>
+                <!-- / Content -->
+
+                <!-- Footer -->
+                @if ($isFooter)
+                @include('layouts/sections/footer/footer')
+                @endif
+                <!-- / Footer -->
+                
+                <div class="content-backdrop fade"></div>
+            </div>
+            <!--/ Content wrapper -->
         </div>
-    </body>
-</html>
+        <!-- / Layout page -->
+    </div>
+
+    @if ($isMenu)
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle" onclick="toggleMenu(event)"></div>
+    @endif
+    
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
+</div>
+<!-- / Layout wrapper -->
+@endsection
+

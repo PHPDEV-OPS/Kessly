@@ -24,6 +24,11 @@ class Employees extends Component
     public $editing = false;
     public $employeeId = null;
 
+    // View modal state
+    public $showViewModal = false;
+    public $viewEmployee = null;
+    public $viewEmployeeId = null;
+
     // Form fields
     public $employee_id = '';
     public $user_id = '';
@@ -172,6 +177,29 @@ class Employees extends Component
     {
         Employee::findOrFail($employeeId)->delete();
         session()->flash('message', 'Employee deleted successfully.');
+    }
+
+    public function view($employeeId)
+    {
+        $this->viewEmployeeId = $employeeId;
+        $this->viewEmployee = Employee::with(['user', 'branch', 'manager.user'])
+            ->findOrFail($employeeId);
+        $this->showViewModal = true;
+    }
+
+    public function closeViewModal()
+    {
+        $this->showViewModal = false;
+        $this->viewEmployee = null;
+        $this->viewEmployeeId = null;
+    }
+
+    public function editFromView()
+    {
+        if ($this->viewEmployeeId) {
+            $this->closeViewModal();
+            $this->edit($this->viewEmployeeId);
+        }
     }
 
     private function resetForm()

@@ -1,51 +1,215 @@
-<div class="space-y-6">
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">System Configuration</h2>
-    
+<div>
+    <!-- Success/Error Messages -->
     @if (session()->has('message'))
-        <div class="p-3 rounded bg-green-100 text-green-800">{{ session('message') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class='bx bx-check-circle me-2'></i>
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     @endif
 
     @if (session()->has('error'))
-        <div class="p-3 rounded bg-red-100 text-red-800">{{ session('error') }}</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class='bx bx-error-circle me-2'></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     @endif
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Application Settings</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Application Name</label>
-                <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" wire:model.defer="app_name">
-                @error('app_name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Application URL</label>
-                <input type="url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" wire:model.defer="app_url">
-                @error('app_url') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+    <form wire:submit="save">
+        <div class="row g-4">
+            <!-- Application Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-cog text-primary me-2'></i>
+                            Application Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Application Name <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="app_name" class="form-control @error('app_name') is-invalid @enderror" placeholder="App Name">
+                                @error('app_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Application URL <span class="text-danger">*</span></label>
+                                <input type="url" wire:model="app_url" class="form-control @error('app_url') is-invalid @enderror" placeholder="https://example.com">
+                                @error('app_url') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Environment</label>
-                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" wire:model.defer="app_env">
-                    <option value="production">Production</option>
-                    <option value="staging">Staging</option>
-                    <option value="development">Development</option>
-                    <option value="local">Local</option>
-                </select>
-                @error('app_env') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+            <!-- Localization Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-world text-primary me-2'></i>
+                            Localization
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Timezone <span class="text-danger">*</span></label>
+                                <select wire:model="timezone" class="form-select @error('timezone') is-invalid @enderror">
+                                    <option value="">Select Timezone</option>
+                                    @foreach($this->getTimezones() as $tz => $label)
+                                        <option value="{{ $tz }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                @error('timezone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Language <span class="text-danger">*</span></label>
+                                <select wire:model="locale" class="form-select @error('locale') is-invalid @enderror">
+                                    @foreach($this->getLocales() as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                @error('locale') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <label class="flex items-center">
-                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" wire:model.defer="app_debug">
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Enable Debug Mode</span>
-                </label>
+            <!-- Currency & Format Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-money text-primary me-2'></i>
+                            Currency & Formats
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Currency <span class="text-danger">*</span></label>
+                                <select wire:model="currency" class="form-select @error('currency') is-invalid @enderror">
+                                    @foreach($this->getCurrencies() as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                @error('currency') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Currency Position <span class="text-danger">*</span></label>
+                                <select wire:model="currency_position" class="form-select @error('currency_position') is-invalid @enderror">
+                                    <option value="before">Before Amount ($100)</option>
+                                    <option value="after">After Amount (100$)</option>
+                                </select>
+                                @error('currency_position') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Date Format <span class="text-danger">*</span></label>
+                                <select wire:model="date_format" class="form-select @error('date_format') is-invalid @enderror">
+                                    @foreach($this->getDateFormats() as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                @error('date_format') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Time Format <span class="text-danger">*</span></label>
+                                <select wire:model="time_format" class="form-select @error('time_format') is-invalid @enderror">
+                                    @foreach($this->getTimeFormats() as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                @error('time_format') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Decimal Separator <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="decimal_separator" class="form-control @error('decimal_separator') is-invalid @enderror" maxlength="1" placeholder=".">
+                                @error('decimal_separator') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Thousands Separator <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="thousands_separator" class="form-control @error('thousands_separator') is-invalid @enderror" maxlength="1" placeholder=",">
+                                @error('thousands_separator') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Preferences Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-slider text-primary me-2'></i>
+                            System Preferences
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Session Lifetime (minutes) <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="session_lifetime" class="form-control @error('session_lifetime') is-invalid @enderror" min="1" max="10080">
+                                @error('session_lifetime') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <small class="text-muted">How long users stay logged in</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Max Login Attempts <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="max_login_attempts" class="form-control @error('max_login_attempts') is-invalid @enderror" min="1" max="20">
+                                @error('max_login_attempts') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <small class="text-muted">Before account lockout</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Lockout Duration (minutes) <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="lockout_duration" class="form-control @error('lockout_duration') is-invalid @enderror" min="1" max="1440">
+                                @error('lockout_duration') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <small class="text-muted">Account lock time</small>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="maintenance_mode" id="maintenanceMode">
+                                    <label class="form-check-label fw-semibold" for="maintenanceMode">
+                                        Maintenance Mode
+                                    </label>
+                                    <div class="text-muted small">Disable public access temporarily</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="cache_enabled" id="cacheEnabled">
+                                    <label class="form-check-label fw-semibold" for="cacheEnabled">
+                                        Enable Cache
+                                    </label>
+                                    <div class="text-muted small">Improve performance with caching</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-12">
+                <div class="d-flex gap-2 justify-content-end">
+                    <button type="button" wire:click="resetToDefaults" class="btn btn-outline-secondary" wire:loading.attr="disabled">
+                        <i class='bx bx-reset me-1'></i>
+                        Reset to Defaults
+                    </button>
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="save">
+                            <i class='bx bx-save me-1'></i>Save Configuration
+                        </span>
+                        <span wire:loading wire:target="save">
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                            Saving...
+                        </span>
+                    </button>
+                </div>
             </div>
         </div>
-
-        <div class="mt-6">
-            <button type="button" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" wire:click="save">Save Configuration</button>
-            <button type="button" class="ml-3 px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50" wire:click="resetToDefaults">Reset to Defaults</button>
-        </div>
-    </div>
+    </form>
 </div>

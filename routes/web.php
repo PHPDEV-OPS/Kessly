@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\SearchController;
 
 
 
@@ -14,6 +15,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('/settings', 'pages/settings')->name('settings');
     Volt::route('/profile', 'pages/profile')->name('profile');
     
+    // Global Search
+    Route::get('/search', [SearchController::class, 'globalSearch'])->name('search');
+    
     // HR Module Routes
     Volt::route('/hr', 'pages/hr')->name('hr');
     
@@ -25,6 +29,15 @@ Route::middleware(['auth'])->group(function () {
     
     // Customers Module Routes
     Volt::route('/customers', 'pages/customers')->name('customers');
+    
+    // Orders Route
+    Volt::route('/orders', 'pages/sales')->name('orders');
+    
+    // Invoices Route
+    Volt::route('/invoices', 'pages/sales')->name('invoices');
+    
+    // Employees Route
+    Volt::route('/employees', 'pages/hr')->name('employees');
     
     // Analytics Module Routes
     Volt::route('/analytics', 'pages/analytics')->name('analytics');

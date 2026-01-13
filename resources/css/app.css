@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Materio Bootstrap Admin Template */
+@import '../assets/vendor/scss/core.scss';
+@import '../assets/css/demo.css';
 
 /* Responsive helpers and variables */
 :root {

@@ -1,432 +1,339 @@
 <div>
-    <div class="space-y-6">
-        <!-- Header -->
-        <div>
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Business Rules</h3>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Configure business logic, workflows, numbering systems, and operational policies.
-            </p>
+    <!-- Success/Error Messages -->
+    @if (session()->has('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class='bx bx-check-circle me-2'></i>
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    @endif
 
-        @if (session()->has('message'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
-                {{ session('message') }}
-            </div>
-        @endif
+    @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class='bx bx-error-circle me-2'></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
-        @if (session()->has('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form wire:submit="save">
-            <!-- Financial Settings -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Financial Settings</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Default Currency</flux:label>
-                                <flux:select wire:model="default_currency">
-                                    @foreach($this->getCurrencies() as $code => $name)
-                                        <option value="{{ $code }}">{{ $name }}</option>
-                                    @endforeach
-                                </flux:select>
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Tax Rate (%)</flux:label>
-                                <flux:input wire:model="tax_rate" type="number" step="0.01" min="0" max="100" />
-                                <flux:error name="tax_rate" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Tax Name</flux:label>
-                                <flux:input wire:model="tax_name" />
-                                <flux:error name="tax_name" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Tax Number</flux:label>
-                                <flux:input wire:model="tax_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Invoice Prefix</flux:label>
-                                <flux:input wire:model="invoice_prefix" />
-                                <flux:error name="invoice_prefix" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Invoice Starting Number</flux:label>
-                                <flux:input wire:model="invoice_start_number" type="number" min="1" />
-                                <flux:error name="invoice_start_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Payment Terms (days)</flux:label>
-                                <flux:input wire:model="payment_terms_days" type="number" min="0" max="365" />
-                                <flux:error name="payment_terms_days" />
-                            </flux:field>
-                        </div>
-
-                        <div class="sm:col-span-2">
-                            <flux:field>
-                                <flux:label>Invoice Terms</flux:label>
-                                <flux:textarea wire:model="invoice_terms" rows="2" />
-                            </flux:field>
+    <form wire:submit="save">
+        <div class="row g-4">
+            <!-- Financial Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-dollar text-primary me-2'></i>
+                            Financial Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tax Rate (%) <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="tax_rate" class="form-control @error('tax_rate') is-invalid @enderror" step="0.01" min="0" max="100">
+                                @error('tax_rate') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tax Name <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="tax_name" class="form-control @error('tax_name') is-invalid @enderror" placeholder="VAT">
+                                @error('tax_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Invoice Prefix <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="invoice_prefix" class="form-control @error('invoice_prefix') is-invalid @enderror" placeholder="INV">
+                                @error('invoice_prefix') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Start Number <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="invoice_start_number" class="form-control @error('invoice_start_number') is-invalid @enderror" min="1">
+                                @error('invoice_start_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Payment Terms (days) <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="payment_terms_days" class="form-control @error('payment_terms_days') is-invalid @enderror" min="0" max="365">
+                                @error('payment_terms_days') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <small class="text-muted">Default payment due period</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Order Management -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Order Management</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Order Prefix</flux:label>
-                                <flux:input wire:model="order_prefix" />
-                                <flux:error name="order_prefix" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Order Starting Number</flux:label>
-                                <flux:input wire:model="order_start_number" type="number" min="1" />
-                                <flux:error name="order_start_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Minimum Order Amount</flux:label>
-                                <flux:input wire:model="minimum_order_amount" type="number" step="0.01" min="0" />
-                                <flux:error name="minimum_order_amount" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Order Expiry (days)</flux:label>
-                                <flux:input wire:model="order_expiry_days" type="number" min="1" max="365" />
-                                <flux:error name="order_expiry_days" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Stock Reservation (minutes)</flux:label>
-                                <flux:input wire:model="stock_reservation_minutes" type="number" min="1" max="1440" />
-                                <flux:description>How long to reserve stock for pending orders</flux:description>
-                                <flux:error name="stock_reservation_minutes" />
-                            </flux:field>
-                        </div>
-
-                        <div class="space-y-3">
-                            <flux:field>
-                                <flux:label>Order Options</flux:label>
-                                <div class="space-y-2">
-                                    <flux:checkbox wire:model="auto_order_approval">
-                                        Auto-approve new orders
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="allow_backorders">
-                                        Allow backorders when out of stock
-                                    </flux:checkbox>
+            <!-- Order Management Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-cart text-primary me-2'></i>
+                            Order Management
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Order Prefix <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="order_prefix" class="form-control @error('order_prefix') is-invalid @enderror" placeholder="ORD">
+                                @error('order_prefix') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Start Number <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="order_start_number" class="form-control @error('order_start_number') is-invalid @enderror" min="1">
+                                @error('order_start_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Minimum Order Amount <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="minimum_order_amount" class="form-control @error('minimum_order_amount') is-invalid @enderror" step="0.01" min="0">
+                                @error('minimum_order_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Order Expiry (days) <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="order_expiry_days" class="form-control @error('order_expiry_days') is-invalid @enderror" min="1" max="365">
+                                @error('order_expiry_days') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="auto_order_approval" id="autoApproval">
+                                    <label class="form-check-label fw-semibold" for="autoApproval">
+                                        Auto-approve Orders
+                                    </label>
                                 </div>
-                            </flux:field>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Inventory Settings -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Inventory Management</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Low Stock Threshold</flux:label>
-                                <flux:input wire:model="low_stock_threshold" type="number" min="0" />
-                                <flux:error name="low_stock_threshold" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Out of Stock Threshold</flux:label>
-                                <flux:input wire:model="out_of_stock_threshold" type="number" min="0" />
-                                <flux:error name="out_of_stock_threshold" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Reorder Point (days)</flux:label>
-                                <flux:input wire:model="reorder_point_days" type="number" min="1" max="365" />
-                                <flux:description>Days of stock to maintain before reordering</flux:description>
-                                <flux:error name="reorder_point_days" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Inventory Tracking Method</flux:label>
-                                <flux:select wire:model="inventory_tracking_method">
-                                    @foreach($this->getInventoryMethods() as $method => $label)
-                                        <option value="{{ $method }}">{{ $label }}</option>
-                                    @endforeach
-                                </flux:select>
-                            </flux:field>
-                        </div>
-
-                        <div class="space-y-3">
-                            <flux:field>
-                                <flux:label>Inventory Options</flux:label>
-                                <div class="space-y-2">
-                                    <flux:checkbox wire:model="auto_reorder_enabled">
-                                        Enable automatic reordering
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="allow_negative_stock">
-                                        Allow negative stock levels
-                                    </flux:checkbox>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="allow_backorders" id="allowBackorders">
+                                    <label class="form-check-label fw-semibold" for="allowBackorders">
+                                        Allow Backorders
+                                    </label>
                                 </div>
-                            </flux:field>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Customer Settings -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Customer Management</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Customer Prefix</flux:label>
-                                <flux:input wire:model="customer_prefix" />
-                                <flux:error name="customer_prefix" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Customer Starting Number</flux:label>
-                                <flux:input wire:model="customer_start_number" type="number" min="1" />
-                                <flux:error name="customer_start_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Default Credit Limit</flux:label>
-                                <flux:input wire:model="customer_credit_limit" type="number" step="0.01" min="0" />
-                                <flux:error name="customer_credit_limit" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Loyalty Points Rate (%)</flux:label>
-                                <flux:input wire:model="loyalty_points_rate" type="number" step="0.01" min="0" max="100" />
-                                <flux:error name="loyalty_points_rate" />
-                            </flux:field>
-                        </div>
-
-                        <div class="space-y-3">
-                            <flux:field>
-                                <flux:label>Customer Options</flux:label>
-                                <div class="space-y-2">
-                                    <flux:checkbox wire:model="require_customer_approval">
-                                        Require admin approval for new customers
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="loyalty_program_enabled">
-                                        Enable loyalty program
-                                    </flux:checkbox>
+            <!-- Inventory Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-package text-primary me-2'></i>
+                            Inventory Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Low Stock Threshold <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="low_stock_threshold" class="form-control @error('low_stock_threshold') is-invalid @enderror" min="0">
+                                @error('low_stock_threshold') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Out of Stock Threshold <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="out_of_stock_threshold" class="form-control @error('out_of_stock_threshold') is-invalid @enderror" min="0">
+                                @error('out_of_stock_threshold') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Reorder Point (days) <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="reorder_point_days" class="form-control @error('reorder_point_days') is-invalid @enderror" min="1" max="365">
+                                @error('reorder_point_days') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tracking Method</label>
+                                <select wire:model="inventory_tracking_method" class="form-select">
+                                    <option value="fifo">FIFO (First In, First Out)</option>
+                                    <option value="lifo">LIFO (Last In, First Out)</option>
+                                    <option value="average">Average Cost</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="auto_reorder_enabled" id="autoReorder">
+                                    <label class="form-check-label fw-semibold" for="autoReorder">
+                                        Auto Reorder
+                                    </label>
                                 </div>
-                            </flux:field>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Employee Settings -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Employee Management</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Employee Prefix</flux:label>
-                                <flux:input wire:model="employee_prefix" />
-                                <flux:error name="employee_prefix" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Employee Starting Number</flux:label>
-                                <flux:input wire:model="employee_start_number" type="number" min="1" />
-                                <flux:error name="employee_start_number" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Default Work Hours/Day</flux:label>
-                                <flux:input wire:model="default_work_hours_per_day" type="number" step="0.5" min="1" max="24" />
-                                <flux:error name="default_work_hours_per_day" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Default Work Days/Week</flux:label>
-                                <flux:input wire:model="default_work_days_per_week" type="number" min="1" max="7" />
-                                <flux:error name="default_work_days_per_week" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Overtime Rate Multiplier</flux:label>
-                                <flux:input wire:model="overtime_rate_multiplier" type="number" step="0.1" min="1" max="5" />
-                                <flux:error name="overtime_rate_multiplier" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Leave Accrual Rate (days/month)</flux:label>
-                                <flux:input wire:model="leave_accrual_rate" type="number" step="0.25" min="0" max="10" />
-                                <flux:error name="leave_accrual_rate" />
-                            </flux:field>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Branch Operations -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Branch Operations</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Default Branch ID</flux:label>
-                                <flux:input wire:model="default_branch_id" type="number" min="1" />
-                            </flux:field>
-                        </div>
-
-                        <div class="space-y-3">
-                            <flux:field>
-                                <flux:label>Branch Features</flux:label>
-                                <div class="space-y-2">
-                                    <flux:checkbox wire:model="enable_multi_branch">
-                                        Enable multi-branch operations
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="inter_branch_transfers">
-                                        Allow inter-branch transfers
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="branch_stock_sync">
-                                        Synchronize branch stock levels
-                                    </flux:checkbox>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="allow_negative_stock" id="negativeStock">
+                                    <label class="form-check-label fw-semibold" for="negativeStock">
+                                        Allow Negative Stock
+                                    </label>
                                 </div>
-                            </flux:field>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Reporting Settings -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Reporting Settings</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Fiscal Year Start</flux:label>
-                                <flux:select wire:model="fiscal_year_start">
-                                    @foreach($this->getMonths() as $month => $name)
-                                        <option value="{{ $month }}">{{ $name }}</option>
-                                    @endforeach
-                                </flux:select>
-                                <flux:error name="fiscal_year_start" />
-                            </flux:field>
+            <!-- Customer Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-user-circle text-primary me-2'></i>
+                            Customer Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Customer Prefix <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="customer_prefix" class="form-control @error('customer_prefix') is-invalid @enderror" placeholder="CUST">
+                                @error('customer_prefix') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Start Number <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="customer_start_number" class="form-control @error('customer_start_number') is-invalid @enderror" min="1">
+                                @error('customer_start_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Default Credit Limit <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="customer_credit_limit" class="form-control @error('customer_credit_limit') is-invalid @enderror" step="0.01" min="0">
+                                @error('customer_credit_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Loyalty Points Rate <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="loyalty_points_rate" class="form-control @error('loyalty_points_rate') is-invalid @enderror" step="0.01" min="0" max="100">
+                                @error('loyalty_points_rate') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <small class="text-muted">Points per currency unit</small>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="require_customer_approval" id="custApproval">
+                                    <label class="form-check-label fw-semibold" for="custApproval">
+                                        Require Customer Approval
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="loyalty_program_enabled" id="loyaltyProgram">
+                                    <label class="form-check-label fw-semibold" for="loyaltyProgram">
+                                        Enable Loyalty Program
+                                    </label>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div>
-                            <flux:field>
-                                <flux:label>Reporting Currency</flux:label>
-                                <flux:select wire:model="reporting_currency">
-                                    @foreach($this->getCurrencies() as $code => $name)
-                                        <option value="{{ $code }}">{{ $name }}</option>
-                                    @endforeach
-                                </flux:select>
-                            </flux:field>
+            <!-- Employee Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-id-card text-primary me-2'></i>
+                            Employee Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Employee Prefix <span class="text-danger">*</span></label>
+                                <input type="text" wire:model="employee_prefix" class="form-control @error('employee_prefix') is-invalid @enderror" placeholder="EMP">
+                                @error('employee_prefix') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Start Number <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="employee_start_number" class="form-control @error('employee_start_number') is-invalid @enderror" min="1">
+                                @error('employee_start_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Work Hours/Day <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="default_work_hours_per_day" class="form-control @error('default_work_hours_per_day') is-invalid @enderror" step="0.5" min="1" max="24">
+                                @error('default_work_hours_per_day') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Work Days/Week <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="default_work_days_per_week" class="form-control @error('default_work_days_per_week') is-invalid @enderror" min="1" max="7">
+                                @error('default_work_days_per_week') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Overtime Multiplier <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="overtime_rate_multiplier" class="form-control @error('overtime_rate_multiplier') is-invalid @enderror" step="0.1" min="1" max="5">
+                                @error('overtime_rate_multiplier') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Leave Accrual Rate <span class="text-danger">*</span></label>
+                                <input type="number" wire:model="leave_accrual_rate" class="form-control @error('leave_accrual_rate') is-invalid @enderror" step="0.1" min="0" max="10">
+                                @error('leave_accrual_rate') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <small class="text-muted">Days per month</small>
+                            </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div>
-                            <flux:field>
-                                <flux:label>Decimal Places</flux:label>
-                                <flux:select wire:model="decimal_places">
+            <!-- Reporting Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-bar-chart text-primary me-2'></i>
+                            Reporting Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Fiscal Year Start <span class="text-danger">*</span></label>
+                                <select wire:model="fiscal_year_start" class="form-select @error('fiscal_year_start') is-invalid @enderror">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                @error('fiscal_year_start') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Decimal Places <span class="text-danger">*</span></label>
+                                <select wire:model="decimal_places" class="form-select @error('decimal_places') is-invalid @enderror">
                                     <option value="0">0</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
-                                </flux:select>
-                                <flux:error name="decimal_places" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Report Options</flux:label>
-                                <flux:checkbox wire:model="show_zero_amounts">
-                                    Show zero amounts in reports
-                                </flux:checkbox>
-                            </flux:field>
+                                </select>
+                                @error('decimal_places') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" wire:model="show_zero_amounts" id="showZero">
+                                    <label class="form-check-label fw-semibold" for="showZero">
+                                        Show Zero Amounts in Reports
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="mt-6 flex justify-end space-x-3">
-                <flux:button type="button" variant="outline" wire:click="loadSettings">
-                    Cancel
-                </flux:button>
-                <flux:button type="submit" variant="primary">
-                    Save Business Rules
-                </flux:button>
+            <!-- Action Buttons -->
+            <div class="col-12">
+                <div class="d-flex gap-2 justify-content-end">
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="save">
+                            <i class='bx bx-save me-1'></i>Save Business Rules
+                        </span>
+                        <span wire:loading wire:target="save">
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                            Saving...
+                        </span>
+                    </button>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

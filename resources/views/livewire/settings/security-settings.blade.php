@@ -1,278 +1,238 @@
 <div>
-    <div class="space-y-6">
-        <!-- Header -->
-        <div>
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Security Settings</h3>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Configure security policies, authentication requirements, and access controls.
-            </p>
+    <!-- Success/Error Messages -->
+    @if (session()->has('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class='bx bx-check-circle me-2'></i>
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    @endif
 
-        @if (session()->has('message'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
-                {{ session('message') }}
+    @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class='bx bx-error-circle me-2'></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <form wire:submit="save">
+        <div class="row g-4">
+            <!-- Password Policies Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-lock-alt text-primary me-2'></i>
+                            Password Policies
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Minimum Length <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="password_min_length" class="form-control @error('password_min_length') is-invalid @enderror" min="6" max="128">
+                            @error('password_min_length') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="password_require_uppercase" id="reqUppercase">
+                                <label class="form-check-label fw-semibold" for="reqUppercase">
+                                    Require Uppercase Letters
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="password_require_lowercase" id="reqLowercase">
+                                <label class="form-check-label fw-semibold" for="reqLowercase">
+                                    Require Lowercase Letters
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="password_require_numbers" id="reqNumbers">
+                                <label class="form-check-label fw-semibold" for="reqNumbers">
+                                    Require Numbers
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="password_require_symbols" id="reqSymbols">
+                                <label class="form-check-label fw-semibold" for="reqSymbols">
+                                    Require Special Characters
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Password Expiry (days)</label>
+                            <input type="number" wire:model="password_expiry_days" class="form-control @error('password_expiry_days') is-invalid @enderror" placeholder="Leave empty for no expiry">
+                            @error('password_expiry_days') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Force password change after this many days</small>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Password History Limit</label>
+                            <input type="number" wire:model="password_history_limit" class="form-control @error('password_history_limit') is-invalid @enderror" min="0" max="24">
+                            @error('password_history_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Prevent reusing last N passwords</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
 
-        @if (session()->has('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
-                {{ session('error') }}
+            <!-- Session Settings Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-time text-primary me-2'></i>
+                            Session Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Session Timeout (minutes) <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="session_timeout" class="form-control @error('session_timeout') is-invalid @enderror" min="5" max="1440">
+                            @error('session_timeout') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Auto logout after inactivity</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Concurrent Sessions <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="concurrent_sessions" class="form-control @error('concurrent_sessions') is-invalid @enderror" min="1" max="10">
+                            @error('concurrent_sessions') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Max active sessions per user</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="remember_me_enabled" id="rememberMe">
+                                <label class="form-check-label fw-semibold" for="rememberMe">
+                                    Enable "Remember Me"
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Remember Me Duration (days) <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="remember_me_duration" class="form-control @error('remember_me_duration') is-invalid @enderror" min="1" max="365">
+                            @error('remember_me_duration') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
 
-        <form wire:submit="save">
-            <!-- Password Policy -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Password Policy</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Minimum Password Length</flux:label>
-                                <flux:input wire:model="password_min_length" type="number" min="6" max="128" />
-                                <flux:error name="password_min_length" />
-                            </flux:field>
+            <!-- Account Lockout Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-lock-open-alt text-primary me-2'></i>
+                            Account Lockout
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="account_lockout_enabled" id="lockoutEnabled">
+                                <label class="form-check-label fw-semibold" for="lockoutEnabled">
+                                    Enable Account Lockout
+                                </label>
+                            </div>
                         </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Password Expiry (days)</flux:label>
-                                <flux:input wire:model="password_expiry_days" type="number" min="1" max="365" />
-                                <flux:description>Leave empty for no expiry</flux:description>
-                                <flux:error name="password_expiry_days" />
-                            </flux:field>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Max Failed Attempts <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="max_failed_attempts" class="form-control @error('max_failed_attempts') is-invalid @enderror" min="1" max="20">
+                            @error('max_failed_attempts') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Password History Limit</flux:label>
-                                <flux:input wire:model="password_history_limit" type="number" min="0" max="24" />
-                                <flux:description>Number of previous passwords to remember</flux:description>
-                                <flux:error name="password_history_limit" />
-                            </flux:field>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Lockout Duration (minutes) <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="lockout_duration_minutes" class="form-control @error('lockout_duration_minutes') is-invalid @enderror" min="1" max="1440">
+                            @error('lockout_duration_minutes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Reset Counter After (minutes) <span class="text-danger">*</span></label>
+                            <input type="number" wire:model="reset_failed_attempts_after" class="form-control @error('reset_failed_attempts_after') is-invalid @enderror" min="1" max="1440">
+                            @error('reset_failed_attempts_after') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Reset failed attempts counter</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="space-y-3">
-                            <flux:field>
-                                <flux:label>Password Requirements</flux:label>
-                                <div class="space-y-2">
-                                    <flux:checkbox wire:model="password_require_uppercase">
-                                        Require uppercase letters
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="password_require_lowercase">
-                                        Require lowercase letters
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="password_require_numbers">
-                                        Require numbers
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="password_require_symbols">
-                                        Require special symbols
-                                    </flux:checkbox>
+            <!-- Security Features Card -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class='bx bx-shield text-primary me-2'></i>
+                            Security Features
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="two_factor_required" id="twoFactor">
+                                <label class="form-check-label fw-semibold" for="twoFactor">
+                                    Require Two-Factor Authentication
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="email_verification_required" id="emailVerify">
+                                <label class="form-check-label fw-semibold" for="emailVerify">
+                                    Require Email Verification
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="login_notification_enabled" id="loginNotify">
+                                <label class="form-check-label fw-semibold" for="loginNotify">
+                                    Login Notifications
+                                </label>
+                                <div class="text-muted small">Email users on new login</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="suspicious_activity_detection" id="suspiciousActivity">
+                                <label class="form-check-label fw-semibold" for="suspiciousActivity">
+                                    Suspicious Activity Detection
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" wire:model="ip_whitelist_enabled" id="ipWhitelist">
+                                <label class="form-check-label fw-semibold" for="ipWhitelist">
+                                    IP Whitelist
+                                </label>
+                            </div>
+                            @if($ip_whitelist_enabled)
+                                <div class="mt-2">
+                                    <textarea wire:model="allowed_ips" class="form-control" rows="3" placeholder="Enter allowed IPs (one per line)"></textarea>
+                                    <small class="text-muted">One IP address per line</small>
                                 </div>
-                            </flux:field>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Session Management -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Session Management</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Session Timeout (minutes)</flux:label>
-                                <flux:input wire:model="session_timeout" type="number" min="5" max="1440" />
-                                <flux:description>Automatically log out inactive users</flux:description>
-                                <flux:error name="session_timeout" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Concurrent Sessions</flux:label>
-                                <flux:input wire:model="concurrent_sessions" type="number" min="1" max="10" />
-                                <flux:description>Maximum sessions per user</flux:description>
-                                <flux:error name="concurrent_sessions" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Remember Me Duration (days)</flux:label>
-                                <flux:input wire:model="remember_me_duration" type="number" min="1" max="365" />
-                                <flux:error name="remember_me_duration" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>Remember Me Feature</flux:label>
-                                <flux:checkbox wire:model="remember_me_enabled">
-                                    Enable "Remember Me" option
-                                </flux:checkbox>
-                            </flux:field>
-                        </div>
-                    </div>
+            <!-- Action Buttons -->
+            <div class="col-12">
+                <div class="d-flex gap-2 justify-content-end">
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="save">
+                            <i class='bx bx-save me-1'></i>Save Security Settings
+                        </span>
+                        <span wire:loading wire:target="save">
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                            Saving...
+                        </span>
+                    </button>
                 </div>
             </div>
-
-            <!-- Authentication & Access -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Authentication & Access</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div class="space-y-3">
-                            <flux:field>
-                                <flux:label>Security Features</flux:label>
-                                <div class="space-y-2">
-                                    <flux:checkbox wire:model="two_factor_required">
-                                        Require Two-Factor Authentication
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="email_verification_required">
-                                        Require Email Verification
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="login_notification_enabled">
-                                        Send Login Notifications
-                                    </flux:checkbox>
-                                    <flux:checkbox wire:model="suspicious_activity_detection">
-                                        Detect Suspicious Activity
-                                    </flux:checkbox>
-                                </div>
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>IP Whitelisting</flux:label>
-                                <flux:checkbox wire:model="ip_whitelist_enabled">
-                                    Enable IP Whitelisting
-                                </flux:checkbox>
-                                @if($ip_whitelist_enabled)
-                                    <flux:textarea wire:model="allowed_ips" rows="3" class="mt-2" />
-                                    <flux:description>Enter allowed IP addresses, one per line</flux:description>
-                                    <flux:error name="allowed_ips" />
-                                @endif
-                            </flux:field>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Account Lockout -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Account Lockout Policy</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Account Lockout</flux:label>
-                                <flux:checkbox wire:model="account_lockout_enabled">
-                                    Enable automatic account lockout
-                                </flux:checkbox>
-                            </flux:field>
-                        </div>
-
-                        @if($account_lockout_enabled)
-                            <div>
-                                <flux:field>
-                                    <flux:label>Max Failed Attempts</flux:label>
-                                    <flux:input wire:model="max_failed_attempts" type="number" min="1" max="20" />
-                                    <flux:error name="max_failed_attempts" />
-                                </flux:field>
-                            </div>
-
-                            <div>
-                                <flux:field>
-                                    <flux:label>Lockout Duration (minutes)</flux:label>
-                                    <flux:input wire:model="lockout_duration_minutes" type="number" min="1" max="1440" />
-                                    <flux:error name="lockout_duration_minutes" />
-                                </flux:field>
-                            </div>
-
-                            <div>
-                                <flux:field>
-                                    <flux:label>Reset Failed Attempts After (minutes)</flux:label>
-                                    <flux:input wire:model="reset_failed_attempts_after" type="number" min="1" max="1440" />
-                                    <flux:description>Reset counter after this period of no failed attempts</flux:description>
-                                    <flux:error name="reset_failed_attempts_after" />
-                                </flux:field>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- API Security -->
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-5 sm:p-6">
-                    <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">API Security</h4>
-                    
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <flux:field>
-                                <flux:label>Rate Limiting</flux:label>
-                                <flux:checkbox wire:model="api_rate_limit_enabled">
-                                    Enable API rate limiting
-                                </flux:checkbox>
-                            </flux:field>
-                        </div>
-
-                        @if($api_rate_limit_enabled)
-                            <div>
-                                <flux:field>
-                                    <flux:label>Requests Per Minute</flux:label>
-                                    <flux:input wire:model="api_requests_per_minute" type="number" min="1" max="10000" />
-                                    <flux:error name="api_requests_per_minute" />
-                                </flux:field>
-                            </div>
-                        @endif
-
-                        <div>
-                            <flux:field>
-                                <flux:label>API Key Expiry (days)</flux:label>
-                                <flux:input wire:model="api_key_expiry_days" type="number" min="1" max="365" />
-                                <flux:error name="api_key_expiry_days" />
-                            </flux:field>
-                        </div>
-
-                        <div>
-                            <flux:field>
-                                <flux:label>CORS</flux:label>
-                                <flux:checkbox wire:model="cors_enabled">
-                                    Enable CORS
-                                </flux:checkbox>
-                                @if($cors_enabled)
-                                    <flux:textarea wire:model="allowed_origins" rows="2" class="mt-2" />
-                                    <flux:description>Allowed origins, one per line (* for all)</flux:description>
-                                    <flux:error name="allowed_origins" />
-                                @endif
-                            </flux:field>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="mt-6 flex items-center justify-between">
-                <flux:button type="button" variant="ghost" wire:click="resetToDefaults">
-                    Reset to Defaults
-                </flux:button>
-                
-                <div class="flex space-x-3">
-                    <flux:button type="button" variant="outline" wire:click="loadSettings">
-                        Cancel
-                    </flux:button>
-                    <flux:button type="submit" variant="primary">
-                        Save Security Settings
-                    </flux:button>
-                </div>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

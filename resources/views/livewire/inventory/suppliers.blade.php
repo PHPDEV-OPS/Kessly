@@ -1,101 +1,200 @@
 <div>
     @if (session()->has('status'))
-        <div class="p-3 rounded bg-green-100 text-green-800">{{ session('status') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="ri-checkbox-circle-line ri-20px me-2"></i>
+                <span>{{ session('status') }}</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 
-    <div class="space-y-6">
-
-    <div class="mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <h2 class="text-xl font-semibold">Suppliers</h2>
-
-        <div class="flex gap-2 items-center w-full md:w-auto">
-            <input type="text" placeholder="Search suppliers..." class="w-full md:w-64 rounded-md border-gray-300 shadow-sm" wire:model.debounce.300ms="search">
-            <select class="rounded-md border-gray-300 shadow-sm" wire:model="perPage">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-            <button type="button" class="px-3 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" wire:click="create">New Supplier</button>
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label small text-muted">Search</label>
+                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search by name, email, phone..." class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Per Page</label>
+                    <select wire:model.live="perPage" class="form-select">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button type="button" class="btn btn-label-secondary" wire:click="export">
+                        <i class="ri-download-line me-1"></i>
+                        Export
+                    </button>
+                    <button type="button" class="btn btn-primary" wire:click="create">
+                        <i class="ri-add-line me-1"></i>
+                        Add Supplier
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="mt-3 overflow-x-auto bg-white rounded-lg shadow">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <!-- Suppliers Table -->
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        <button type="button" class="flex items-center gap-1" wire:click="sortBy('name')">
-                            Name
-                            @if ($sortField === 'name')
-                                <span>@if ($sortDirection === 'asc') ↑ @else ↓ @endif</span>
-                            @endif
-                        </button>
-                    </th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
-                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse ($suppliers as $sup)
-                    <tr>
-                        <td class="px-4 py-3">{{ $sup->name }}</td>
-                        <td class="px-4 py-3">{{ $sup->contact_email }}</td>
-                        <td class="px-4 py-3">{{ $sup->phone ?? '—' }}</td>
-                        <td class="px-4 py-3">{{ $sup->address ?? '—' }}</td>
-                        <td class="px-4 py-3 text-right space-x-2">
-                            <button type="button" class="text-blue-600 hover:text-blue-800" wire:click="edit({{ $sup->id }})">Edit</button>
-                            <button type="button" class="text-red-600 hover:text-red-800" wire:click="delete({{ $sup->id }})" onclick="return confirm('Delete this supplier?')">Delete</button>
-                        </td>
+                    <th>
+                            <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 d-flex align-items-center gap-1" wire:click="sortBy('name')">
+                                Name
+                                @if ($sortField === 'name')
+                                    <i class="ri-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}-s-line text-primary"></i>
+                                @endif
+                            </button>
+                        </th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th class="text-end">Actions</th>
                     </tr>
-                @empty
-                    <tr><td colspan="5" class="px-4 py-6 text-center text-gray-500">No suppliers found.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        <div class="px-4 py-3">{{ $suppliers->links() }}</div>
+                </thead>
+                <tbody>
+                    @forelse ($suppliers as $sup)
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-3">
+                                        <span class="avatar-initial rounded bg-label-info">
+                                            <i class="ri-truck-line ri-20px"></i>
+                                        </span>
+                                    </div>
+                                    <h6 class="mb-0">{{ $sup->name }}</h6>
+                                </div>
+                            </td>
+                            <td>
+                                @if($sup->contact_email)
+                                    <a href="mailto:{{ $sup->contact_email }}" class="text-decoration-none">
+                                        <i class="ri-mail-line ri-16px me-1"></i>{{ $sup->contact_email }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($sup->phone)
+                                    <i class="ri-phone-line ri-16px me-1"></i>{{ $sup->phone }}
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td>{{ $sup->address ?? '—' }}</td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-1">
+                                    <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="edit({{ $sup->id }})" title="Edit">
+                                        <i class="ri-edit-line ri-20px"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-icon btn-text-danger rounded-pill" wire:click="delete({{ $sup->id }})" onclick="return confirm('Delete this supplier?')" title="Delete">
+                                        <i class="ri-delete-bin-line ri-20px"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="avatar avatar-xl mb-3">
+                                        <span class="avatar-initial rounded bg-label-secondary">
+                                            <i class="ri-truck-line ri-48px"></i>
+                                        </span>
+                                    </div>
+                                    <h6 class="mb-1">No suppliers found</h6>
+                                    <p class="text-muted small mb-0">Add suppliers to manage your inventory sources.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
     </div>
 
-    @if ($showForm)
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">{{ $supplierId ? 'Edit Supplier' : 'New Supplier' }}</h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" wire:model.defer="name">
-                    @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+    <!-- Pagination and Stats -->
+    <div class="card-footer border-top">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <small class="text-muted">
+                        <i class="ri-information-line me-1"></i>
+                        Showing {{ $suppliers->firstItem() ?? 0 }} to {{ $suppliers->lastItem() ?? 0 }} of {{ $suppliers->total() }} suppliers
+                    </small>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" wire:model.defer="contact_email">
-                    @error('contact_email') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Phone</label>
-                    <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" wire:model.defer="phone">
-                    @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Address</label>
-                    <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" wire:model.defer="address">
-                    @error('address') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">Notes</label>
-                    <textarea rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" wire:model.defer="notes"></textarea>
-                    @error('notes') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                </div>
+                @if($suppliers->hasPages())
+                    <nav aria-label="Supplier pagination">
+                        {{ $suppliers->links('pagination::bootstrap-5') }}
+                    </nav>
+                @endif
             </div>
+    </div>
 
-            <div class="mt-6 flex items-center gap-3">
-                <button type="button" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" wire:click="save">Save</button>
-                <button type="button" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300" wire:click="cancel">Cancel</button>
+    <style>
+        .pagination .page-link svg {
+            display: none;
+        }
+        .pagination .page-link {
+            padding: 0.375rem 0.75rem;
+        }
+    </style>
+
+    <!-- Create/Edit Modal -->
+    @if ($showForm)
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="ri-{{ $supplierId ? 'edit' : 'add' }}-line me-2"></i>
+                            {{ $supplierId ? 'Edit Supplier' : 'New Supplier' }}
+                        </h5>
+                        <button type="button" class="btn-close" wire:click="cancel" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.defer="name" placeholder="Supplier name">
+                                @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control @error('contact_email') is-invalid @enderror" wire:model.defer="contact_email" placeholder="email@example.com">
+                                @error('contact_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model.defer="phone" placeholder="+1 234 567 8900">
+                                @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control @error('address') is-invalid @enderror" wire:model.defer="address" placeholder="123 Main St, City">
+                                @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea rows="3" class="form-control @error('notes') is-invalid @enderror" wire:model.defer="notes" placeholder="Additional notes about this supplier"></textarea>
+                                @error('notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" wire:click="save">
+                            <i class="ri-save-line me-1"></i>
+                            {{ $supplierId ? 'Update' : 'Create' }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     @endif
-</div>
 </div>
