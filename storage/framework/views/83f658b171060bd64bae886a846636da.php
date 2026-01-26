@@ -153,8 +153,10 @@
             }
         };
         
-        // Global Search Functionality
-        let searchTimeout;
+        // Menu Toggle Functionality
+        if (!window.searchInitialized) {
+            window.searchInitialized = true;
+            window.searchTimeout = window.searchTimeout || null;
         const searchInput = document.getElementById('globalSearch');
         const searchResults = document.getElementById('searchResults');
         const searchContent = document.getElementById('searchContent');
@@ -460,6 +462,7 @@
                     this.style.transform = '';
                 });
             });
+        }
         }
         
         // Menu Toggle Functionality

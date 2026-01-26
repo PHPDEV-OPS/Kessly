@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'is_verified',
     ];
 
     /**
@@ -64,6 +65,18 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(\App\Models\Role::class);
+    }
+
+    public function hasPermission($permission)
+    {
+        if (!$this->role) return false;
+        $permissions = explode(',', $this->role->permissions ?? '');
+        return in_array($permission, $permissions);
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->role && $this->role->name === $roleName;
     }
 
     public function employee()

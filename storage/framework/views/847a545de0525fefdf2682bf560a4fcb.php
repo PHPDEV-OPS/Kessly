@@ -237,160 +237,163 @@
                         </div>
 
                         <script>
-                            let revenueChart = null;
+                            if (!window.revenueChartInitialized) {
+                                window.revenueChartInitialized = true;
+                                window.revenueChart = null;
 
-                            function initRevenueChart() {
-                                const revenueData = <?php echo json_encode($analytics['monthly_revenue_trend']->pluck('total')->toArray(), 15, 512) ?>;
-                                const revenueMonths = <?php echo json_encode($analytics['monthly_revenue_trend']->map(function($item) {
-                                    return \Carbon\Carbon::parse($item->month)->format('M Y');
-                                })->toArray(), 15, 512) ?>;
+                                function initRevenueChart() {
+                                    const revenueData = <?php echo json_encode($analytics['monthly_revenue_trend']->pluck('total')->toArray(), 15, 512) ?>;
+                                    const revenueMonths = <?php echo json_encode($analytics['monthly_revenue_trend']->map(function($item) {
+                                        return \Carbon\Carbon::parse($item->month)->format('M Y');
+                                    })->toArray(), 15, 512) ?>;
 
-                                const revenueChartEl = document.querySelector('#revenueChart');
+                                    const revenueChartEl = document.querySelector('#revenueChart');
 
-                                if (revenueChartEl && typeof ApexCharts !== 'undefined') {
-                                    // Destroy existing chart if it exists
-                                    if (revenueChart) {
-                                        revenueChart.destroy();
-                                    }
+                                    if (revenueChartEl && typeof ApexCharts !== 'undefined') {
+                                        // Destroy existing chart if it exists
+                                        if (window.revenueChart) {
+                                            window.revenueChart.destroy();
+                                        }
 
-                                    const revenueChartConfig = {
-                                        chart: {
-                                            type: 'area',
-                                            height: 280,
-                                            parentHeightOffset: 0,
-                                            toolbar: {
-                                                show: false
+                                        const revenueChartConfig = {
+                                            chart: {
+                                                type: 'area',
+                                                height: 280,
+                                                parentHeightOffset: 0,
+                                                toolbar: {
+                                                    show: false
+                                                },
+                                                sparkline: {
+                                                    enabled: false
+                                                },
+                                                animations: {
+                                                    enabled: true,
+                                                    easing: 'easeinout',
+                                                    speed: 800,
+                                                    animateGradually: {
+                                                        enabled: true,
+                                                        delay: 150
+                                                    },
+                                                    dynamicAnimation: {
+                                                        enabled: true,
+                                                        speed: 350
+                                                    }
+                                                }
                                             },
-                                            sparkline: {
+                                            series: [{
+                                                name: 'Revenue',
+                                                data: revenueData
+                                            }],
+                                            colors: ['#7367F0'],
+                                            fill: {
+                                                type: 'gradient',
+                                                gradient: {
+                                                    shade: 'light',
+                                                    type: 'vertical',
+                                                    shadeIntensity: 0.4,
+                                                    gradientToColors: ['#9055FD'],
+                                                    inverseColors: false,
+                                                    opacityFrom: 0.7,
+                                                    opacityTo: 0.2,
+                                                    stops: [0, 90, 100]
+                                                }
+                                            },
+                                            stroke: {
+                                                curve: 'smooth',
+                                                width: 3
+                                            },
+                                            dataLabels: {
                                                 enabled: false
                                             },
-                                            animations: {
+                                            series: [{
+                                                name: 'Revenue',
+                                                data: revenueData
+                                            }],
+                                            colors: ['#7367F0'],
+                                            xaxis: {
+                                                categories: revenueMonths,
+                                                axisBorder: {
+                                                    show: false
+                                                },
+                                                axisTicks: {
+                                                    show: false
+                                                },
+                                                labels: {
+                                                    style: {
+                                                        fontSize: '12px',
+                                                        colors: '#a1acb8'
+                                                    }
+                                                }
+                                            },
+                                            yaxis: {
+                                                labels: {
+                                                    formatter: function (val) {
+                                                        return "$" + val.toLocaleString();
+                                                    },
+                                                    style: {
+                                                        fontSize: '12px',
+                                                        colors: '#a1acb8'
+                                                    }
+                                                }
+                                            },
+                                            grid: {
+                                                show: true,
+                                                borderColor: '#f1f1f1',
+                                                strokeDashArray: 4,
+                                                padding: {
+                                                    top: 0,
+                                                    right: 10,
+                                                    bottom: 0,
+                                                    left: 10
+                                                }
+                                            },
+                                            tooltip: {
                                                 enabled: true,
-                                                easing: 'easeinout',
-                                                speed: 800,
-                                                animateGradually: {
-                                                    enabled: true,
-                                                    delay: 150
-                                                },
-                                                dynamicAnimation: {
-                                                    enabled: true,
-                                                    speed: 350
-                                                }
-                                            }
-                                        },
-                                        series: [{
-                                            name: 'Revenue',
-                                            data: revenueData
-                                        }],
-                                        colors: ['#7367F0'],
-                                        fill: {
-                                            type: 'gradient',
-                                            gradient: {
-                                                shade: 'light',
-                                                type: 'vertical',
-                                                shadeIntensity: 0.4,
-                                                gradientToColors: ['#9055FD'],
-                                                inverseColors: false,
-                                                opacityFrom: 0.7,
-                                                opacityTo: 0.2,
-                                                stops: [0, 90, 100]
-                                            }
-                                        },
-                                        stroke: {
-                                            curve: 'smooth',
-                                            width: 3
-                                        },
-                                        dataLabels: {
-                                            enabled: false
-                                        },
-                                        series: [{
-                                            name: 'Revenue',
-                                            data: revenueData
-                                        }],
-                                        colors: ['#7367F0'],
-                                        xaxis: {
-                                            categories: revenueMonths,
-                                            axisBorder: {
-                                                show: false
-                                            },
-                                            axisTicks: {
-                                                show: false
-                                            },
-                                            labels: {
+                                                shared: true,
+                                                followCursor: true,
+                                                intersect: false,
+                                                theme: 'light',
                                                 style: {
-                                                    fontSize: '12px',
-                                                    colors: '#a1acb8'
-                                                }
-                                            }
-                                        },
-                                        yaxis: {
-                                            labels: {
-                                                formatter: function (val) {
-                                                    return "$" + val.toLocaleString();
+                                                    fontSize: '12px'
                                                 },
-                                                style: {
-                                                    fontSize: '12px',
-                                                    colors: '#a1acb8'
-                                                }
-                                            }
-                                        },
-                                        grid: {
-                                            show: true,
-                                            borderColor: '#f1f1f1',
-                                            strokeDashArray: 4,
-                                            padding: {
-                                                top: 0,
-                                                right: 10,
-                                                bottom: 0,
-                                                left: 10
-                                            }
-                                        },
-                                        tooltip: {
-                                            enabled: true,
-                                            shared: true,
-                                            followCursor: true,
-                                            intersect: false,
-                                            theme: 'light',
-                                            style: {
-                                                fontSize: '12px'
-                                            },
-                                            y: {
-                                                formatter: function (val) {
-                                                    return "$" + val.toLocaleString();
+                                                y: {
+                                                    formatter: function (val) {
+                                                        return "$" + val.toLocaleString();
+                                                    }
+                                                },
+                                                marker: {
+                                                    show: true
                                                 }
                                             },
-                                            marker: {
-                                                show: true
+                                            markers: {
+                                                size: 6,
+                                                colors: ['#fff'],
+                                                strokeColors: ['#7367F0'],
+                                                strokeWidth: 3,
+                                                hover: {
+                                                    size: 8
+                                                }
                                             }
-                                        },
-                                        markers: {
-                                            size: 6,
-                                            colors: ['#fff'],
-                                            strokeColors: ['#7367F0'],
-                                            strokeWidth: 3,
-                                            hover: {
-                                                size: 8
-                                            }
-                                        }
-                                    };
+                                        };
 
-                                    revenueChart = new ApexCharts(revenueChartEl, revenueChartConfig);
-                                    revenueChart.render();
+                                        window.revenueChart = new ApexCharts(revenueChartEl, revenueChartConfig);
+                                        window.revenueChart.render();
+                                    }
                                 }
-                            }
 
-                            // Initialize chart on page load and Livewire navigation
-                            function initializeCharts() {
-                                if (typeof ApexCharts !== 'undefined') {
-                                    initRevenueChart();
-                                } else {
-                                    // Retry after a short delay if ApexCharts is not loaded yet
-                                    setTimeout(initializeCharts, 100);
+                                // Initialize chart on page load and Livewire navigation
+                                function initializeCharts() {
+                                    if (typeof ApexCharts !== 'undefined') {
+                                        initRevenueChart();
+                                    } else {
+                                        // Retry after a short delay if ApexCharts is not loaded yet
+                                        setTimeout(initializeCharts, 100);
+                                    }
                                 }
-                            }
 
-                            document.addEventListener('DOMContentLoaded', initializeCharts);
-                            document.addEventListener('livewire:navigated', initializeCharts);
+                                document.addEventListener('DOMContentLoaded', initializeCharts);
+                                document.addEventListener('livewire:navigated', initializeCharts);
+                            }
                         </script>
                     <?php else: ?>
                         <div class="text-center py-5">
