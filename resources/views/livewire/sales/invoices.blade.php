@@ -83,7 +83,7 @@
                         </td>
                         <td>{{ $invoice->customer?->name ?? '—' }}</td>
                         <td>{{ optional($invoice->created_at)->format('M d, Y') }}</td>
-                        <td><span class="fw-semibold">${{ number_format($invoice->amount, 2) }}</span></td>
+                        <td><span class="fw-semibold">Ksh {{ number_format($invoice->amount, 2) }}</span></td>
                         <td>
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="view({{ $invoice->id }})" title="View">

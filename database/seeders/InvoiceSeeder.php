@@ -20,35 +20,19 @@ class InvoiceSeeder extends Seeder
             return;
         }
 
-        // Create high-value invoices for VIP customers
-        $vipCustomers = $customers->where('customer_type', 'enterprise');
-        if ($vipCustomers->isNotEmpty()) {
-            foreach ($vipCustomers as $customer) {
-                Invoice::factory()
-                    ->highValue()
-                    ->forCustomer($customer)
-                    ->count(rand(3, 8))
-                    ->create();
-            }
-        }
-
-        // Create regular invoices for business customers
-        $businessCustomers = $customers->where('customer_type', 'business');
-        foreach ($businessCustomers->take(20) as $customer) {
+        // Create invoices for the last three months
+        $now = now();
+        $allCustomers = $customers->shuffle();
+        for ($i = 0; $i < 90; $i++) {
+            $date = $now->copy()->subDays($i);
+            $customer = $allCustomers->random();
             Invoice::factory()
-                ->forCustomer($customer)
-                ->count(rand(2, 6))
-                ->create();
-        }
-
-        // Create low-value invoices for individual customers
-        $individualCustomers = $customers->where('customer_type', 'individual');
-        foreach ($individualCustomers->take(30) as $customer) {
-            Invoice::factory()
-                ->lowValue()
-                ->forCustomer($customer)
-                ->count(rand(1, 4))
-                ->create();
+                ->count(rand(1, 2))
+                ->create([
+                    'customer_id' => $customer->id,
+                    'created_at' => $date,
+                    'updated_at' => $date,
+                ]);
         }
 
         $this->command->info('✅ Invoices seeded successfully!');

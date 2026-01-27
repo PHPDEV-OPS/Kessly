@@ -10,7 +10,7 @@
                             <div class="card h-100 border shadow-sm">
                                 <div class="card-body p-2 d-flex flex-column align-items-center justify-content-between">
                                     <h6 class="mb-1 text-center">{{ $product->name }}</h6>
-                                    <div class="mb-2 text-muted">${{ number_format($product->price, 2) }}</div>
+                                    <div class="mb-2 text-muted">Ksh {{ number_format($product->price, 2) }}</div>
                                     <button type="button" class="btn btn-sm btn-primary w-100 mt-auto" wire:click="addToCart({{ $product->id }})">Add</button>
                                 </div>
                             </div>
@@ -46,12 +46,12 @@
                                     @foreach($cart as $item)
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span>{{ $item['name'] }} x{{ $item['qty'] }}</span>
-                                            <span>${{ number_format($item['price'] * $item['qty'], 2) }}</span>
+                                            <span>Ksh {{ number_format($item['price'] * $item['qty'], 2) }}</span>
                                         </li>
                                     @endforeach
                                 </ul>
                                 <div class="mb-3">
-                                    <strong>Total: ${{ number_format($total, 2) }}</strong>
+                                    <strong>Total: Ksh {{ number_format($total, 2) }}</strong>
                                 </div>
                                 <input type="hidden" name="amount" value="{{ $total }}">
                                 <button type="submit" class="btn btn-success w-100">Checkout with Pesapal</button>
