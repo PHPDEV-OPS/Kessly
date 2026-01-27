@@ -5,6 +5,7 @@ namespace App\Livewire\Reports;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\BranchInventory;
+use App\Models\Order;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -46,18 +47,18 @@ class StockReport extends Component
     private function getStockSummary()
     {
         return [
-            'total_products' => Product::count(),
-            'total_stock' => Product::sum('stock'),
-            'total_stock_value' => Product::sum(DB::raw('stock * price')),
-            'low_stock' => Product::where('stock', '>', 0)->where('stock', '<=', 10)->count(),
-            'out_of_stock' => Product::where('stock', 0)->count(),
-            'total_categories' => Category::count(),
+            'total_products' => Product::forUser()->count(),
+            'total_stock' => Product::forUser()->sum('stock'),
+            'total_stock_value' => Product::forUser()->sum(DB::raw('stock * price')),
+            'low_stock' => Product::forUser()->where('stock', '>', 0)->where('stock', '<=', 10)->count(),
+            'out_of_stock' => Product::forUser()->where('stock', 0)->count(),
+            'total_categories' => Category::forUser()->count(),
         ];
     }
     
     private function getProducts()
     {
-        $query = Product::with(['category', 'supplier']);
+        $query = Product::forUser()->with(['category', 'supplier']);
         
         // Apply filters
         if ($this->filterBy === 'low_stock') {
@@ -80,7 +81,7 @@ class StockReport extends Component
     
     private function getCategoryStock()
     {
-        return Category::select(
+        return Category::forUser()->select(
                 'categories.id',
                 'categories.name',
                 DB::raw('COUNT(products.id) as product_count'),
@@ -88,6 +89,7 @@ class StockReport extends Component
                 DB::raw('COALESCE(SUM(products.stock * products.price), 0) as stock_value')
             )
             ->leftJoin('products', 'categories.id', '=', 'products.category_id')
+            ->whereIn('products.id', Product::forUser()->pluck('id'))
             ->groupBy('categories.id', 'categories.name')
             ->get()
             ->map(function($category) {
@@ -109,6 +111,7 @@ class StockReport extends Component
                 DB::raw('DATE(orders.created_at) as date'),
                 DB::raw('SUM(order_items.quantity) as items_sold')
             )
+            ->whereIn('orders.id', Order::forUser()->pluck('id'))
             ->where('orders.created_at', '>=', now()->subDays(30))
             ->groupBy('date')
             ->orderBy('date')
@@ -118,11 +121,11 @@ class StockReport extends Component
     private function getStockAlerts()
     {
         return [
-            'danger' => Product::where('stock', 0)
+            'danger' => Product::forUser()->where('stock', 0)
                 ->get()
                 ->map(fn($p) => ['id' => $p->id, 'name' => $p->name])
                 ->toArray(),
-            'warning' => Product::where('stock', '>', 0)
+            'warning' => Product::forUser()->where('stock', '>', 0)
                 ->where('stock', '<=', 10)
                 ->get()
                 ->map(fn($p) => ['id' => $p->id, 'name' => $p->name, 'stock' => $p->stock])

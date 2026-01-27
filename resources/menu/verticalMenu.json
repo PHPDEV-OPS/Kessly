@@ -22,6 +22,12 @@
       "url": "/sales"
     },
     {
+      "name": "POS",
+      "icon": "menu-icon icon-base ri ri-cash-line",
+      "slug": "pos",
+      "url": "/pos"
+    },
+    {
       "name": "Customers",
       "icon": "menu-icon icon-base ri ri-user-line",
       "slug": "customers",

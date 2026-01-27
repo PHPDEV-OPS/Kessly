@@ -151,7 +151,7 @@ class Orders extends Component
 
     public function export()
     {
-        $query = Order::query()
+        $query = Order::forUser()
             ->with('customer')
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
@@ -213,7 +213,7 @@ class Orders extends Component
 
     public function render()
     {
-        $query = Order::query()
+        $query = Order::forUser()
             ->with('customer')
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
@@ -232,7 +232,7 @@ class Orders extends Component
 
         return view('livewire.sales.orders', [
             'orders' => $orders,
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => Customer::forUser()->orderBy('name')->get(),
         ]);
     }
 }

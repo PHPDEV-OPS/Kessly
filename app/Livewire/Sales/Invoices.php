@@ -141,7 +141,7 @@ class Invoices extends Component
 
     public function export()
     {
-        $query = Invoice::query()
+        $query = Invoice::forUser()
             ->with('customer')
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
@@ -184,7 +184,7 @@ class Invoices extends Component
 
     public function render()
     {
-        $query = Invoice::query()
+        $query = Invoice::forUser()
             ->with('customer')
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
@@ -203,7 +203,7 @@ class Invoices extends Component
 
         return view('livewire.sales.invoices', [
             'invoices' => $invoices,
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => Customer::forUser()->orderBy('name')->get(),
         ]);
     }
 }

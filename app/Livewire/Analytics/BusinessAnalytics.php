@@ -195,12 +195,12 @@ class BusinessAnalytics extends Component
     private function getBusinessMetrics($startDate, $endDate)
     {
         $query = function($model) use ($startDate, $endDate) {
-            return $model::whereBetween('created_at', [$startDate, $endDate]);
+            return $model::forUser()->whereBetween('created_at', [$startDate, $endDate]);
         };
 
         $branchQuery = $this->selectedBranch ? 
             function($model) use ($startDate, $endDate) {
-                return $model::where('branch_id', $this->selectedBranch)
+                return $model::forUser()->where('branch_id', $this->selectedBranch)
                            ->whereBetween('created_at', [$startDate, $endDate]);
             } : $query;
 
@@ -211,45 +211,46 @@ class BusinessAnalytics extends Component
             'total_customers' => $query(\App\Models\Customer::class)->count(),
             'total_products_sold' => DB::table('order_items')
                 ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->whereIn('orders.id', Order::forUser()->pluck('id'))
                 ->whereBetween('orders.created_at', [$startDate, $endDate])
                 ->sum('order_items.quantity'),
-            'inventory_value' => Product::sum(DB::raw('stock * price')),
-            'low_stock_items' => Product::where('stock', '<=', 5)->count(),
+            'inventory_value' => Product::forUser()->sum(DB::raw('stock * price')),
+            'low_stock_items' => Product::forUser()->where('stock', '<=', 5)->count(),
         ];
     }
 
     private function getHrAnalytics($startDate, $endDate)
     {
         return [
-            'total_employees' => Employee::active()->count(),
-            'total_managers' => Employee::managers()->active()->count(),
-            'total_staff' => Employee::staff()->active()->count(),
+            'total_employees' => Employee::forUser()->active()->count(),
+            'total_managers' => Employee::forUser()->managers()->active()->count(),
+            'total_staff' => Employee::forUser()->staff()->active()->count(),
             'average_attendance_rate' => $this->calculateAttendanceRate($startDate, $endDate),
-            'total_payroll_cost' => Payroll::processed()
+            'total_payroll_cost' => Payroll::forUser()->processed()
                 ->whereBetween('pay_period_start', [$startDate, $endDate])
                 ->sum('net_pay'),
-            'departments' => Employee::select('department', DB::raw('count(*) as count'))
+            'departments' => Employee::forUser()->select('department', DB::raw('count(*) as count'))
                 ->active()
                 ->groupBy('department')
                 ->get(),
-            'recent_hires' => Employee::whereBetween('hire_date', [$startDate, $endDate])->count(),
+            'recent_hires' => Employee::forUser()->whereBetween('hire_date', [$startDate, $endDate])->count(),
         ];
     }
 
     private function getFinancialAnalytics($startDate, $endDate)
     {
         return [
-            'total_budget_allocated' => Budget::where('status', 'approved')
+            'total_budget_allocated' => Budget::forUser()->where('status', 'approved')
                 ->whereBetween('period_start', [$startDate, $endDate])
                 ->sum('allocated_amount'),
-            'total_expenses' => Expense::approved()
+            'total_expenses' => Expense::forUser()->approved()
                 ->whereBetween('expense_date', [$startDate, $endDate])
                 ->sum('amount'),
             'budget_utilization' => $this->calculateBudgetUtilization($startDate, $endDate),
-            'payroll_expenses' => Payroll::processed()
+            'payroll_expenses' => Payroll::forUser()->processed()
                 ->whereBetween('pay_period_start', [$startDate, $endDate])
                 ->sum('net_pay'),
-            'expense_categories' => Expense::select('category', DB::raw('sum(amount) as total'))
+            'expense_categories' => Expense::forUser()->select('category', DB::raw('sum(amount) as total'))
                 ->approved()
                 ->whereBetween('expense_date', [$startDate, $endDate])
                 ->groupBy('category')
@@ -260,7 +261,7 @@ class BusinessAnalytics extends Component
     private function getBranchAnalytics($startDate, $endDate)
     {
         // Optimized query with aggregations in database instead of multiple queries
-        return Branch::query()
+        return Branch::forUser()
             ->withCount(['employees' => function ($query) {
                 $query->where('employment_status', 'active');
             }])
@@ -288,7 +289,7 @@ class BusinessAnalytics extends Component
     {
         // Optimize by limiting data points for better performance
         // Revenue trend - limit to last 30 data points
-        $revenueTrend = Invoice::select(
+        $revenueTrend = Invoice::forUser()->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(amount) as revenue')
             )
@@ -301,7 +302,7 @@ class BusinessAnalytics extends Component
             ->values();
 
         // Order trend - limit to last 30 data points
-        $orderTrend = Order::select(
+        $orderTrend = Order::forUser()->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as orders')
             )
@@ -318,6 +319,7 @@ class BusinessAnalytics extends Component
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->select('products.name', DB::raw('SUM(order_items.quantity) as total_sold'))
+            ->whereIn('orders.id', Order::forUser()->pluck('id'))
             ->whereBetween('orders.created_at', [$startDate, $endDate])
             ->groupBy('products.id', 'products.name')
             ->orderBy('total_sold', 'desc')
@@ -334,12 +336,12 @@ class BusinessAnalytics extends Component
     private function calculateAttendanceRate($startDate, $endDate)
     {
         $totalWorkingDays = $this->getWorkingDaysBetween($startDate, $endDate);
-        $totalEmployees = Employee::active()->count();
+        $totalEmployees = Employee::forUser()->active()->count();
         $totalExpectedAttendance = $totalWorkingDays * $totalEmployees;
         
         if ($totalExpectedAttendance == 0) return 0;
 
-        $actualAttendance = Attendance::whereBetween('date', [$startDate, $endDate])
+        $actualAttendance = Attendance::forUser()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('status', ['present', 'late'])
             ->count();
 
@@ -348,13 +350,13 @@ class BusinessAnalytics extends Component
 
     private function calculateBudgetUtilization($startDate, $endDate)
     {
-        $totalBudget = Budget::where('status', 'approved')
+        $totalBudget = Budget::forUser()->where('status', 'approved')
             ->whereBetween('period_start', [$startDate, $endDate])
             ->sum('allocated_amount');
             
         if ($totalBudget == 0) return 0;
 
-        $totalSpent = Budget::where('status', 'approved')
+        $totalSpent = Budget::forUser()->where('status', 'approved')
             ->whereBetween('period_start', [$startDate, $endDate])
             ->sum('spent_amount');
 

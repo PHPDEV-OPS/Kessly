@@ -224,7 +224,8 @@ class BranchManagement extends Component
 
     public function render()
     {
-        $branches = Branch::with(['manager.user', 'employees'])
+        $branches = Branch::forUser()
+            ->with(['manager.user', 'employees'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('code', 'like', '%' . $this->search . '%')
@@ -238,9 +239,9 @@ class BranchManagement extends Component
 
         $managers = Employee::with('user')->managers()->active()->get();
 
-        // Branch statistics
-        $totalBranches = Branch::count();
-        $activeBranches = Branch::where('status', 'active')->count();
+        // Branch statistics - filtered by user role
+        $totalBranches = Branch::forUser()->count();
+        $activeBranches = Branch::forUser()->where('status', 'active')->count();
         $totalEmployees = Employee::count();
 
         return view('livewire.branches.branch-management', compact(

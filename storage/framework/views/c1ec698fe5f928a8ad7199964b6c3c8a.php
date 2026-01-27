@@ -44,7 +44,7 @@
                     </label>
                     <select wire:model.live="selectedBranch" class="form-select form-select-sm" wire:loading.attr="disabled">
                         <option value="">All</option>
-                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = \App\Models\Branch::all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $branch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = \App\Models\Branch::forUser()->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $branch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <option value="<?php echo e($branch->id); ?>"><?php echo e($branch->name); ?></option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                     </select>

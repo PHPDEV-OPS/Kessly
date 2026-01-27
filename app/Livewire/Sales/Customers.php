@@ -147,7 +147,7 @@ class Customers extends Component
 
     public function export()
     {
-        $query = Customer::query()
+        $query = Customer::forUser()
             ->when($this->search !== '', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('email', 'like', '%' . $this->search . '%')
@@ -186,7 +186,7 @@ class Customers extends Component
 
     public function render()
     {
-        $query = Customer::query()
+        $query = Customer::forUser()
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')

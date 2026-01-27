@@ -65,7 +65,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('inventory.products', []);
 
-$__html = app('livewire')->mount($__name, $__params, 'products-'.now()->timestamp, $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-1088577283-0', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -82,7 +82,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('inventory.categories', []);
 
-$__html = app('livewire')->mount($__name, $__params, 'categories-'.now()->timestamp, $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-1088577283-1', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -99,7 +99,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('inventory.suppliers', []);
 
-$__html = app('livewire')->mount($__name, $__params, 'suppliers-'.now()->timestamp, $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-1088577283-2', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 

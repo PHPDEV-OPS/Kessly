@@ -115,7 +115,7 @@ class Categories extends Component
 
     public function export()
     {
-        $query = Category::query()
+        $query = Category::forUser()
             ->when($this->search !== '', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('slug', 'like', '%' . $this->search . '%');
@@ -152,7 +152,7 @@ class Categories extends Component
 
     public function render()
     {
-        $query = Category::query()
+        $query = Category::forUser()
             ->when($this->search !== '', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('slug', 'like', '%' . $this->search . '%');

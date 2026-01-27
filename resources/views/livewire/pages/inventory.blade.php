@@ -63,11 +63,11 @@ new #[Layout('layouts.app')] class extends Component {
         <div class="card-body p-0">
             <div class="tab-content">
                 @if($activeTab === 'products')
-                    <livewire:inventory.products :key="'products-'.now()->timestamp" />
+                    <livewire:inventory.products />
                 @elseif($activeTab === 'categories')
-                    <livewire:inventory.categories :key="'categories-'.now()->timestamp" />
+                    <livewire:inventory.categories />
                 @elseif($activeTab === 'suppliers')
-                    <livewire:inventory.suppliers :key="'suppliers-'.now()->timestamp" />
+                    <livewire:inventory.suppliers />
                 @endif
             </div>
         </div>

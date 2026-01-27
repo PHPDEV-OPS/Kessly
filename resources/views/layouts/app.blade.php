@@ -55,7 +55,11 @@ $container = ($container ?? 'container-xxl');
                     @endif
 
                     <!-- Page Content / Livewire Component -->
-                    {{ $slot }}
+                    @if (isset($slot))
+                        {{ $slot }}
+                    @else
+                        @yield('layoutContent')
+                    @endif
 
                 </div>
                 <!-- / Content -->

@@ -53,7 +53,7 @@ class SalesReport extends Component
     
     private function getSalesSummary($start, $end)
     {
-        $query = Order::whereBetween('created_at', [$start, $end]);
+        $query = Order::forUser()->whereBetween('created_at', [$start, $end]);
         
         if ($this->selectedCustomer) {
             $query->where('customer_id', $this->selectedCustomer);
@@ -65,6 +65,7 @@ class SalesReport extends Component
             'avg_order_value' => $query->avg('total_amount') ?? 0,
             'total_items_sold' => DB::table('order_items')
                 ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->whereIn('orders.id', Order::forUser()->pluck('id'))
                 ->whereBetween('orders.created_at', [$start, $end])
                 ->sum('order_items.quantity'),
         ];
@@ -80,7 +81,7 @@ class SalesReport extends Component
             default => "DATE(created_at)",
         };
         
-        return Order::select(
+        return Order::forUser()->select(
                 DB::raw("{$groupByColumn} as period"),
                 DB::raw('COUNT(*) as orders'),
                 DB::raw('SUM(total_amount) as revenue')
@@ -102,6 +103,7 @@ class SalesReport extends Component
                 DB::raw('SUM(order_items.unit_price * order_items.quantity) as total_revenue'),
                 DB::raw('COUNT(DISTINCT orders.id) as total_orders')
             )
+            ->whereIn('orders.id', Order::forUser()->pluck('id'))
             ->whereBetween('orders.created_at', [$start, $end])
             ->groupBy('products.id', 'products.name')
             ->orderBy('total_revenue', 'desc')
@@ -111,12 +113,13 @@ class SalesReport extends Component
     
     private function getTopCustomers($start, $end)
     {
-        return Customer::select(
+        return Customer::forUser()->select(
                 'customers.*',
                 DB::raw('COUNT(orders.id) as total_orders'),
                 DB::raw('SUM(orders.total_amount) as total_spent')
             )
             ->join('orders', 'customers.id', '=', 'orders.customer_id')
+            ->whereIn('orders.id', Order::forUser()->pluck('id'))
             ->whereBetween('orders.created_at', [$start, $end])
             ->groupBy('customers.id', 'customers.name', 'customers.email', 'customers.phone', 'customers.address', 'customers.created_at', 'customers.updated_at')
             ->orderBy('total_spent', 'desc')
@@ -126,7 +129,7 @@ class SalesReport extends Component
     
     private function getRecentOrders($start, $end)
     {
-        return Order::with(['customer', 'orderItems'])
+        return Order::forUser()->with(['customer', 'orderItems'])
             ->withCount('orderItems')
             ->whereBetween('created_at', [$start, $end])
             ->orderBy('created_at', 'desc')

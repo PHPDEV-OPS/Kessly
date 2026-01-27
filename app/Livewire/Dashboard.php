@@ -16,14 +16,36 @@ class Dashboard extends Component
     
     public function refreshAnalytics()
     {
+        $analyticsService = app(DashboardAnalyticsService::class);
+        
+        // Check if user is a branch manager and apply branch filter for cache clearing
+        $user = auth()->user();
+        if ($user && $user->hasRole(['Branch Manager', 'Sales Manager', 'HR Manager'])) {
+            $branch = $user->getBranch();
+            if ($branch) {
+                $analyticsService->setBranch($branch->id);
+            }
+        }
+        
         // Clear the cache and refresh
-        $this->analyticsService->clearCache();
+        $analyticsService->clearCache();
         $this->dispatch('analytics-refreshed');
     }
 
     public function render()
     {
-        $analytics = $this->analyticsService->getAnalytics();
+        $analyticsService = app(DashboardAnalyticsService::class);
+        
+        // Check if user is a branch manager and apply branch filter
+        $user = auth()->user();
+        if ($user && $user->hasRole(['Branch Manager', 'Sales Manager', 'HR Manager'])) {
+            $branch = $user->getBranch();
+            if ($branch) {
+                $analyticsService->setBranch($branch->id);
+            }
+        }
+        
+        $analytics = $analyticsService->getAnalytics();
         
         return view('livewire.dashboard', compact('analytics'));
     }

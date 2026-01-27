@@ -22,6 +22,7 @@ class Users extends Component
     public string $email = '';
     public ?int $role_id = null;
     public ?string $password = null;
+    public bool $is_verified = false;
 
     public bool $showForm = false;
 
@@ -43,6 +44,7 @@ class Users extends Component
             ],
             'role_id' => ['nullable', 'exists:roles,id'],
             'password' => $passwordRule,
+            'is_verified' => ['boolean'],
         ];
     }
 
@@ -75,6 +77,7 @@ class Users extends Component
         $this->name = $u->name;
         $this->email = $u->email;
         $this->role_id = $u->role_id;
+        $this->is_verified = $u->is_verified;
         $this->password = null;
         $this->showForm = true;
     }
@@ -87,6 +90,7 @@ class Users extends Component
             'name' => $this->name,
             'email' => $this->email,
             'role_id' => $this->role_id,
+            'is_verified' => $this->is_verified,
         ];
 
         if ($this->password) {
@@ -94,10 +98,20 @@ class Users extends Component
         }
 
         if ($this->userId) {
+            $user = User::find($this->userId);
+            $wasVerified = $user->is_verified;
             User::whereKey($this->userId)->update($data);
+            $user->refresh();
+            if (!$wasVerified && $this->is_verified) {
+                $user->notify(new \App\Notifications\AccountVerified());
+            }
             session()->flash('status', 'User updated');
         } else {
-            User::create($data);
+            $user = User::create($data);
+            if ($this->is_verified) {
+                $user->notify(new \App\Notifications\AccountVerified());
+            }
+            // Note: Admin-created users are typically pre-verified, so no admin notification needed
             session()->flash('status', 'User created');
         }
 
@@ -124,7 +138,7 @@ class Users extends Component
 
     protected function resetForm(): void
     {
-        $this->reset(['userId', 'name', 'email', 'role_id', 'password']);
+        $this->reset(['userId', 'name', 'email', 'role_id', 'password', 'is_verified']);
         $this->resetErrorBag();
         $this->resetValidation();
     }

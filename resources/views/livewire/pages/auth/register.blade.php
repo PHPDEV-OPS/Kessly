@@ -1,12 +1,16 @@
 <?php
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -14,6 +18,7 @@ new #[Layout('layouts.guest')] class extends Component
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $role_id = '';
 
     /**
      * Handle an incoming registration request.
@@ -24,15 +29,42 @@ new #[Layout('layouts.guest')] class extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'role_id' => ['required', 'exists:roles,id'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+        $validated['is_verified'] = false; // User needs admin verification
 
-        event(new Registered($user = User::create($validated)));
+        $user = User::create($validated);
 
-        Auth::login($user);
+        // Send notification to admin
+        $adminUsers = User::whereHas('role', function($query) {
+            $query->where('name', 'Administrator');
+        })->get();
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        foreach ($adminUsers as $admin) {
+            $admin->notify(new AdminNewUserNotification($user));
+        }
+
+        // Send welcome email to user
+        Mail::to($user->email)->send(new WelcomeEmail($user));
+
+        // Don't auto-login - user needs verification
+        // Auth::login($user);
+
+        session()->flash('status', 'Registration successful! Please wait for admin verification. You will receive an email once your account is approved.');
+
+        // Redirect to login with message
+        $this->redirect(route('login'), navigate: true);
+    }
+
+    public function getAvailableRolesProperty()
+    {
+        // Return roles that users can register for (exclude admin roles)
+        return Role::whereNotIn('name', ['Administrator', 'Super Admin'])
+                  ->whereIn('name', ['Sales Manager', 'Sales Representative', 'Branch Manager', 'HR Manager', 'Inventory Manager', 'Accountant', 'Customer Service'])
+                  ->orderBy('name')
+                  ->get();
     }
 }; ?>
 
@@ -52,6 +84,13 @@ new #[Layout('layouts.guest')] class extends Component
                 
                 <h4 class="mb-1">Join Kessly Today! 🚀</h4>
                 <p class="mb-5">Create your account to streamline your supply chain operations</p>
+
+                @if (session()->has('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
                 <form wire:submit="register" class="mb-3">
                     <div class="mb-3">
@@ -79,6 +118,22 @@ new #[Layout('layouts.guest')] class extends Component
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="role_id" class="form-label">Role</label>
+                        <select
+                            class="form-select @error('role_id') is-invalid @enderror"
+                            id="role_id"
+                            wire:model="role_id"
+                            required
+                        >
+                            <option value="">Select your role</option>
+                            @foreach($this->availableRoles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('role_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     
                     <div class="mb-3 form-password-toggle">
@@ -121,7 +176,13 @@ new #[Layout('layouts.guest')] class extends Component
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary d-grid w-100">Sign up</button>
+                    <button type="submit" class="btn btn-primary d-grid w-100" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Sign up</span>
+                        <span wire:loading>
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Creating account...
+                        </span>
+                    </button>
                 </form>
 
                 <p class="text-center">

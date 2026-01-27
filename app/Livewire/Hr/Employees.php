@@ -5,6 +5,7 @@ namespace App\Livewire\Hr;
 use App\Models\Employee;
 use App\Models\User;
 use App\Models\Branch;
+use App\Models\Role;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
@@ -45,9 +46,21 @@ class Employees extends Component
     public $emergency_phone = '';
     public $notes = '';
 
+    // User creation fields
+    public $create_user = false;
+    public $user_name = '';
+    public $user_email = '';
+    public $user_password = '';
+    public $user_role_id = '';
+
     protected $rules = [
         'employee_id' => 'required|string|max:255',
-        'user_id' => 'required|exists:users,id',
+        'user_id' => 'required_without:create_user|exists:users,id|nullable',
+        'create_user' => 'boolean',
+        'user_name' => 'required_if:create_user,true|string|max:255',
+        'user_email' => 'required_if:create_user,true|email|max:255|unique:users,email',
+        'user_password' => 'required_if:create_user,true|string|min:8',
+        'user_role_id' => 'required_if:create_user,true|exists:roles,id',
         'branch_id' => 'required|exists:branches,id',
         'department_name' => 'required|string|max:255',
         'position' => 'required|string|max:255',
@@ -66,13 +79,33 @@ class Employees extends Component
         'employee_id.unique' => 'This employee ID is already taken.',
         'user_id.unique' => 'This user is already assigned to another employee.',
         'user_id.exists' => 'Selected user does not exist.',
+        'user_id.required_without' => 'Please select an existing user or create a new one.',
+        'user_name.required_if' => 'User name is required when creating a new user.',
+        'user_email.required_if' => 'User email is required when creating a new user.',
+        'user_email.unique' => 'This email is already taken.',
+        'user_password.required_if' => 'User password is required when creating a new user.',
+        'user_role_id.required_if' => 'User role is required when creating a new user.',
         'branch_id.exists' => 'Selected branch does not exist.',
         'manager_id.exists' => 'Selected manager does not exist.',
     ];
 
-    public function updatingSearch()
+    public function updatedCreateUser($value)
     {
-        $this->resetPage();
+        if ($value) {
+            $this->user_id = '';
+        } else {
+            $this->user_name = '';
+            $this->user_email = '';
+            $this->user_password = '';
+            $this->user_role_id = '';
+        }
+    }
+
+    public function updatedUserId($value)
+    {
+        if ($value) {
+            $this->create_user = false;
+        }
     }
 
     public function sortBy($field)
@@ -130,18 +163,30 @@ class Employees extends Component
             
             // Only validate user_id uniqueness if it's actually changing
             if ($currentEmployee->user_id != $this->user_id) {
-                $rules['user_id'] = 'required|exists:users,id|unique:employees,user_id';
+                $rules['user_id'] = 'required_without:create_user|exists:users,id|unique:employees,user_id|nullable';
             } else {
                 // If user_id is not changing, just validate existence
-                $rules['user_id'] = 'required|exists:users,id';
+                $rules['user_id'] = 'required_without:create_user|exists:users,id|nullable';
             }
         } else {
             // For new records, ensure both employee_id and user_id are unique
             $rules['employee_id'] = 'required|string|max:255|unique:employees,employee_id';
-            $rules['user_id'] = 'required|exists:users,id|unique:employees,user_id';
+            $rules['user_id'] = 'required_without:create_user|exists:users,id|unique:employees,user_id|nullable';
         }
 
         $this->validate($rules);
+
+        // Create user if requested
+        if ($this->create_user) {
+            $user = User::create([
+                'name' => $this->user_name,
+                'email' => $this->user_email,
+                'password' => $this->user_password,
+                'role_id' => $this->user_role_id,
+                'is_verified' => true, // HR-created users are auto-verified
+            ]);
+            $this->user_id = $user->id;
+        }
 
         $data = [
             'employee_id' => $this->employee_id,
@@ -220,6 +265,13 @@ class Employees extends Component
         $this->emergency_phone = '';
         $this->notes = '';
         $this->editing = false;
+
+        // Reset user creation fields
+        $this->create_user = false;
+        $this->user_name = '';
+        $this->user_email = '';
+        $this->user_password = '';
+        $this->user_role_id = '';
     }
 
     #[On('close-modal')]
@@ -231,7 +283,8 @@ class Employees extends Component
 
     public function render()
     {
-        $employees = Employee::with(['user', 'branch', 'manager.user'])
+        $employees = Employee::forUser()
+            ->with(['user', 'branch', 'manager.user'])
             ->when($this->search, function ($query) {
                 $query->whereHas('user', function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
@@ -265,10 +318,11 @@ class Employees extends Component
             }
         }
         
-        $branches = Branch::active()->get();
-        $managers = Employee::with('user')->managers()->active()->get();
-        $departments = Employee::distinct('department')->pluck('department')->filter();
+        $branches = Branch::forUser()->active()->get();
+        $managers = Employee::forUser()->with('user')->managers()->active()->get();
+        $departments = Employee::forUser()->distinct('department')->pluck('department')->filter();
+        $roles = Role::all();
 
-        return view('livewire.hr.employees', compact('employees', 'users', 'branches', 'managers', 'departments'));
+        return view('livewire.hr.employees', compact('employees', 'users', 'branches', 'managers', 'departments', 'roles'));
     }
 }

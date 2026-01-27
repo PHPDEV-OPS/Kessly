@@ -44,7 +44,7 @@
                     </label>
                     <select wire:model.live="selectedBranch" class="form-select form-select-sm" wire:loading.attr="disabled">
                         <option value="">All</option>
-                        @foreach(\App\Models\Branch::all() as $branch)
+                        @foreach(\App\Models\Branch::forUser()->get() as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
                     </select>

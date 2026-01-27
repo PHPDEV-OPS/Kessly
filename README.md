@@ -13,6 +13,35 @@ Kessly is a robust and modern Supply Chain Management System tailored for wine d
 - **Reporting & Analytics**: Access dashboards and export comprehensive business reports.
 - **Settings & Customization**: Configure company settings, permissions, and workflow automation.
 
+### Email Features
+
+- **Transactional Emails**: Custom HTML email templates for welcome, verification, and admin notifications
+- **Email Analytics**: Track open rates, delivery status, and user engagement
+- **Queue Processing**: Asynchronous email sending for better performance
+- **Email Templates**: Professional, branded email templates with tracking pixels
+- **SMTP Integration**: Brevo (Sendinblue) SMTP for reliable email delivery
+
+### Email Commands
+
+```bash
+# Test email configuration
+php artisan app:test-email user@example.com
+
+# Process email queues
+php artisan queue:process-emails
+
+# View email statistics
+php artisan tinker
+>>> \App\Models\EmailTracking::getStats()
+```
+
+### Email Types
+
+- **Welcome Email**: Sent to new users upon registration
+- **Admin Notification**: Alerts administrators about new user registrations
+- **Verification Email**: Confirms user account approval
+- **System Notifications**: Various automated system communications
+
 ---
 
 ## Technology Stack
@@ -74,19 +103,19 @@ Experience the platform visually:
 
 | Analytics Dashboard | Branches Overview | Customer Management |
 |---------------------|-------------------|--------------------|
-| ![](images/Kessly-analytics.png) | ![](images/Kessly-branches.png) | ![](images/Kessly-customers.png) |
+| ![](images/analytics_page.png) | ![](images/branches_page.png) | ![](images/customer_page.png) |
 
 | Main Dashboard | Finance Module | HR Module |
 |----------------|---------------|-----------|
-| ![](images/Kessly-dash.png) | ![](images/Kessly-finance.png) | ![](images/Kessly-hr.png) |
+| ![](images/dashboard_admin_page.png) | ![](images/finance_page.png) | ![](images/hr_page.png) |
 
 | Inventory Management | Payroll Additions | Reporting |
 |---------------------|------------------|-----------|
-| ![](images/Kessly-inventory.png) | ![](images/Kessly-pr.png) | ![](images/Kessly-reports.png) |
+| ![](images/inventory_page.png) | ![](images/pos_page.png) | ![](images/reports_page.png) |
 
 | Sales Overview | System Settings |
 |---------------|-----------------|
-| ![](images/Kessly-sales.png) | ![](images/Kessly-settings.png) |
+| ![](images/sales_page.png) | ![](images/settings_page.png) |
 
 ---
 
@@ -111,7 +140,38 @@ Experience the platform visually:
    php artisan migrate
    ```
 
-4. **Run the application**
+4. **Configure Brevo Email (Optional)**
+   - Sign up for a [Brevo](https://www.brevo.com/) account
+   - Get your SMTP credentials from the Brevo dashboard
+   - Update your `.env` file with Brevo settings:
+
+   ```env
+   MAIL_MAILER=brevo
+   BREVO_SMTP_HOST=smtp-relay.brevo.com
+   BREVO_SMTP_PORT=587
+   BREVO_SMTP_ENCRYPTION=tls
+   BREVO_SMTP_USERNAME=your_brevo_smtp_username
+   BREVO_SMTP_PASSWORD=your_brevo_smtp_password
+   MAIL_FROM_ADDRESS=your-email@yourdomain.com
+   MAIL_FROM_NAME="${APP_NAME}"
+   ```
+
+   - Test email configuration:
+   ```bash
+   php artisan app:test-email your-email@example.com
+   ```
+
+5. **Configure Email Queues (Recommended)**
+   - Start the email queue processor for better performance:
+   ```bash
+   php artisan queue:process-emails
+   ```
+   - Or run in background:
+   ```bash
+   php artisan queue:work --queue=default --sleep=3 --tries=3
+   ```
+
+6. **Run the application**
    ```bash
    php artisan serve
    ```

@@ -138,7 +138,8 @@ class BranchInventoryManagement extends Component
 
     public function render()
     {
-        $inventory = BranchInventory::with(['branch', 'product'])
+        $inventory = BranchInventory::forUser()
+            ->with(['branch', 'product'])
             ->when($this->search, function ($query) {
                 $query->whereHas('product', function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
@@ -154,13 +155,13 @@ class BranchInventoryManagement extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
 
-        $branches = Branch::active()->get();
+        $branches = Branch::forUser()->active()->get();
         $products = Product::all();
 
-        // Statistics
-        $totalItems = BranchInventory::sum('quantity');
-        $lowStockItems = BranchInventory::whereColumn('quantity', '<=', 'min_stock_level')->count();
-        $outOfStockItems = BranchInventory::where('quantity', 0)->count();
+        // Statistics - filtered by user role
+        $totalItems = BranchInventory::forUser()->sum('quantity');
+        $lowStockItems = BranchInventory::forUser()->whereColumn('quantity', '<=', 'min_stock_level')->count();
+        $outOfStockItems = BranchInventory::forUser()->where('quantity', 0)->count();
 
         return view('livewire.branches.branch-inventory-management', [
             'inventory' => $inventory,

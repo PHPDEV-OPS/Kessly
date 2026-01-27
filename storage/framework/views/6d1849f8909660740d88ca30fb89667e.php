@@ -1,12 +1,16 @@
 <?php
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 ?>
 
@@ -26,6 +30,14 @@ use Livewire\Volt\Component;
                 
                 <h4 class="mb-1">Join Kessly Today! 🚀</h4>
                 <p class="mb-5">Create your account to streamline your supply chain operations</p>
+
+                <!--[if BLOCK]><![endif]--><?php if(session()->has('status')): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php echo e(session('status')); ?>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                 <form wire:submit="register" class="mb-3">
                     <div class="mb-3">
@@ -78,6 +90,36 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
                             <div class="invalid-feedback"><?php echo e($message); ?></div>
                         <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="role_id" class="form-label">Role</label>
+                        <select
+                            class="form-select <?php $__errorArgs = ['role_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                            id="role_id"
+                            wire:model="role_id"
+                            required
+                        >
+                            <option value="">Select your role</option>
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $this->availableRoles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($role->id); ?>"><?php echo e($role->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                        </select>
+                        <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['role_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
@@ -137,7 +179,13 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary d-grid w-100">Sign up</button>
+                    <button type="submit" class="btn btn-primary d-grid w-100" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Sign up</span>
+                        <span wire:loading>
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Creating account...
+                        </span>
+                    </button>
                 </form>
 
                 <p class="text-center">

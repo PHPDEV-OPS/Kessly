@@ -173,7 +173,8 @@ class AttendanceManagement extends Component
 
     public function render()
     {
-        $attendances = Attendance::with(['employee.user'])
+        $attendances = Attendance::forUser()
+            ->with(['employee.user'])
             ->when($this->selectedDate, function ($query) {
                 $query->whereDate('date', $this->selectedDate);
             })
@@ -185,19 +186,22 @@ class AttendanceManagement extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
 
-        $employees = Employee::with('user')->active()->get();
+        $employees = Employee::forUser()->with('user')->active()->get();
 
-        // Statistics
-        $totalEmployees = Employee::active()->count();
-        $presentToday = Attendance::whereDate('date', $this->selectedDate)
-                                 ->where('status', 'present')
-                                 ->count();
-        $absentToday = Attendance::whereDate('date', $this->selectedDate)
-                                ->where('status', 'absent')
-                                ->count();
-        $lateToday = Attendance::whereDate('date', $this->selectedDate)
-                              ->where('status', 'late')
-                              ->count();
+        // Statistics - filtered by user role
+        $totalEmployees = Employee::forUser()->active()->count();
+        $presentToday = Attendance::forUser()
+            ->whereDate('date', $this->selectedDate)
+            ->where('status', 'present')
+            ->count();
+        $absentToday = Attendance::forUser()
+            ->whereDate('date', $this->selectedDate)
+            ->where('status', 'absent')
+            ->count();
+        $lateToday = Attendance::forUser()
+            ->whereDate('date', $this->selectedDate)
+            ->where('status', 'late')
+            ->count();
 
         return view('livewire.hr.attendance-management', compact(
             'attendances', 

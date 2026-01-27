@@ -1,18 +1,23 @@
 <?php
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Notifications\UserRegistrationNotification;
+use App\Notifications\AdminNewUserNotification;
 
 new #[Layout('components.layouts.auth')] class extends Component {
     public string $name = '';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $role_id = '';
 
     /**
      * Handle an incoming registration request.
@@ -23,15 +28,39 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'role_id' => ['required', 'exists:roles,id'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+        $validated['is_verified'] = false; // User needs admin verification
 
-        event(new Registered(($user = User::create($validated))));
+        $user = User::create($validated);
 
-        Auth::login($user);
+        // Send notification to admin
+        $adminUsers = User::whereHas('role', function($query) {
+            $query->where('name', 'Administrator');
+        })->get();
 
-        $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
+        foreach ($adminUsers as $admin) {
+            $admin->notify(new AdminNewUserNotification($user));
+        }
+
+        // Don't auto-login - user needs verification
+        // Auth::login($user);
+
+        session()->flash('status', 'Registration successful! Please wait for admin verification. You will receive an email once your account is approved.');
+
+        // Redirect to login with message
+        $this->redirect(route('login'), navigate: true);
+    }
+
+    public function getAvailableRolesProperty()
+    {
+        // Return roles that users can register for (exclude admin roles)
+        return Role::whereNotIn('name', ['Administrator', 'Super Admin'])
+                  ->whereIn('name', ['Sales Manager', 'Sales Representative', 'Branch Manager', 'HR Manager', 'Inventory Manager', 'Accountant', 'Customer Service'])
+                  ->orderBy('name')
+                  ->get();
     }
 }; ?>
 
@@ -62,6 +91,18 @@ new #[Layout('components.layouts.auth')] class extends Component {
             autocomplete="email"
             placeholder="email@example.com"
         />
+
+        <!-- Role Selection -->
+        <div>
+            <label for="role_id" class="form-label">Role <span class="text-danger">*</span></label>
+            <select wire:model="role_id" id="role_id" class="form-select @error('role_id') is-invalid @enderror" required>
+                <option value="">Select your role</option>
+                @foreach($this->availableRoles as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+            @error('role_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
 
         <!-- Password -->
         <flux:input

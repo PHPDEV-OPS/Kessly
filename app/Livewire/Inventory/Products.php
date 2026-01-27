@@ -2,28 +2,30 @@
 
 namespace App\Livewire\Inventory;
 
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Supplier;
+use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 class Products extends Component
 {
     use WithPagination, WithFileUploads;
-
-    // Listing controls
-    public string $search = '';
     public string $categoryFilter = '';
+    public string $search = '';
     public string $sortField = 'name';
     public string $sortDirection = 'asc';
     public int $perPage = 10;
-
-    // Form fields
     public ?int $productId = null;
     public string $name = '';
+    
+    public function showAddProductModal(): void
+    {
+        $this->create();
+    }
     public ?string $description = '';
     public $image;
     public ?int $category_id = null;
@@ -149,7 +151,7 @@ class Products extends Component
 
     public function export()
     {
-        $query = Product::query()
+        $query = Product::forUser()
             ->with(['category', 'supplier'])
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
@@ -186,9 +188,12 @@ class Products extends Component
 
     protected function resetForm(): void
     {
-        $this->reset([
-            'productId', 'name', 'description', 'image', 'category_id', 'supplier_id', 'stock', 'price'
-        ]);
+        $this->productId = null;
+        $this->name = '';
+        $this->description = '';
+        $this->image = null;
+        $this->category_id = null;
+        $this->supplier_id = null;
         $this->stock = 0;
         $this->price = 0.0;
         $this->resetErrorBag();
@@ -197,7 +202,7 @@ class Products extends Component
 
     public function render()
     {
-        $query = Product::query()
+        $query = Product::forUser()
             ->with(['category', 'supplier'])
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
@@ -219,8 +224,8 @@ class Products extends Component
 
         return view('livewire.inventory.products', [
             'products' => $products,
-            'categories' => Category::orderBy('name')->get(),
-            'suppliers' => Supplier::orderBy('name')->get(),
+            'categories' => Category::forUser()->orderBy('name')->get(),
+            'suppliers' => Supplier::forUser()->orderBy('name')->get(),
         ]);
     }
 }

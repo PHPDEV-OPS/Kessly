@@ -54,8 +54,12 @@ $container = ($container ?? 'container-xxl');
                     <?php endif; ?>
 
                     <!-- Page Content / Livewire Component -->
-                    <?php echo e($slot); ?>
+                    <?php if(isset($slot)): ?>
+                        <?php echo e($slot); ?>
 
+                    <?php else: ?>
+                        <?php echo $__env->yieldContent('layoutContent'); ?>
+                    <?php endif; ?>
 
                 </div>
                 <!-- / Content -->

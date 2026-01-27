@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+
 });
 
 // Livewire hooks for enhanced UX
