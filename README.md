@@ -103,19 +103,19 @@ Experience the platform visually:
 
 | Analytics Dashboard | Branches Overview | Customer Management |
 |---------------------|-------------------|--------------------|
-| ![](images/Kessly-analytics.png) | ![](images/Kessly-branches.png) | ![](images/Kessly-customers.png) |
+| ![](images/analytics_page.png) | ![](images/branches_page.png) | ![](images/customer_page.png) |
 
 | Main Dashboard | Finance Module | HR Module |
 |----------------|---------------|-----------|
-| ![](images/Kessly-dash.png) | ![](images/Kessly-finance.png) | ![](images/Kessly-hr.png) |
+| ![](images/dashboard_admin_page.png) | ![](images/finance_page.png) | ![](images/hr_page.png) |
 
 | Inventory Management | Payroll Additions | Reporting |
 |---------------------|------------------|-----------|
-| ![](images/Kessly-inventory.png) | ![](images/Kessly-pr.png) | ![](images/Kessly-reports.png) |
+| ![](images/inventory_page.png) | ![](images/pos_page.png) | ![](images/reports_page.png) |
 
 | Sales Overview | System Settings |
 |---------------|-----------------|
-| ![](images/Kessly-sales.png) | ![](images/Kessly-settings.png) |
+| ![](images/sales_page.png) | ![](images/settings_page.png) |
 
 ---
 
