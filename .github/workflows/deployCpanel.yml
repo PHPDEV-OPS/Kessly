@@ -83,7 +83,7 @@ jobs:
 
     # Deploy via FTP
     - name: Deploy to cPanel via FTP
-      uses: SamKirkland/FTP-Deploy-Action@main
+      uses: SamKirkland/ftp-deploy-action@v4
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
