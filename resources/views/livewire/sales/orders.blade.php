@@ -89,7 +89,7 @@
                         </td>
                         <td>{{ $order->customer?->name ?? '—' }}</td>
                         <td>{{ optional($order->order_date)->format('M d, Y') }}</td>
-                        <td><span class="fw-semibold">${{ number_format($order->total_amount, 2) }}</span></td>
+                        <td><span class="fw-semibold">Ksh {{ number_format($order->total_amount, 2) }}</span></td>
                         <td>
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="view({{ $order->id }})" title="View">

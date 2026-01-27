@@ -93,9 +93,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Currency <span class="text-danger">*</span></label>
                                 <select wire:model="currency" class="form-select @error('currency') is-invalid @enderror">
-                                    @foreach($this->getCurrencies() as $key => $value)
-                                        <option value="{{ $key }}">{{ $value }}</option>
-                                    @endforeach
+                                    <option value="KES">Kenyan Shilling (KES)</option>
                                 </select>
                                 @error('currency') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>

@@ -25,25 +25,20 @@ class OrderSeeder extends Seeder
             return;
         }
 
-        // Create recent orders
-        $recentOrders = Order::factory()
-            ->recent()
-            ->count(50)
-            ->create([
-                'customer_id' => $customers->random()->id,
-                'branch_id' => $branches->random()->id,
-            ]);
-
-        // Create older orders
-        $oldOrders = Order::factory()
-            ->old()
-            ->count(100)
-            ->create([
-                'customer_id' => $customers->random()->id,
-                'branch_id' => $branches->random()->id,
-            ]);
-
-        $allOrders = $recentOrders->merge($oldOrders);
+        // Create orders for the last three months
+        $allOrders = collect();
+        $now = now();
+        for ($i = 0; $i < 90; $i++) {
+            $date = $now->copy()->subDays($i);
+            $ordersForDay = Order::factory()
+                ->count(rand(1, 3))
+                ->create([
+                    'customer_id' => $customers->random()->id,
+                    'branch_id' => $branches->random()->id,
+                    'order_date' => $date,
+                ]);
+            $allOrders = $allOrders->merge($ordersForDay);
+        }
 
         // Create order items for each order
         foreach ($allOrders as $order) {
