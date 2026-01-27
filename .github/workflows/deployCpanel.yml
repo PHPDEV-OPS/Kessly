@@ -1,94 +1,30 @@
-name: Deploy to cPanel
-
+name: Deploy Laravel Project on push
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main
 jobs:
-  FTP-Deploy-Action:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: laravel_test
-          MYSQL_USER: github
-          MYSQL_PASSWORD: github
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
     steps:
-    - uses: actions/checkout@v4
-
-    # Copy .env
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-
-    # Install dependencies
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-    # Generate key
-    - name: Generate Laravel Key
-      run: php artisan key:generate
-
-    # Directory permissions
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
-
-    # Configure .env for testing MySQL
-    - name: Configure DB for MySQL
-      run: |
-        php -r "
-        \$env = file_get_contents('.env');
-        \$env = preg_replace('/DB_CONNECTION=.*/', 'DB_CONNECTION=mysql', \$env);
-        \$env = preg_replace('/DB_HOST=.*/', 'DB_HOST=127.0.0.1', \$env);
-        \$env = preg_replace('/DB_PORT=.*/', 'DB_PORT=3306', \$env);
-        \$env = preg_replace('/DB_DATABASE=.*/', 'DB_DATABASE=laravel_test', \$env);
-        \$env = preg_replace('/DB_USERNAME=.*/', 'DB_USERNAME=github', \$env);
-        \$env = preg_replace('/DB_PASSWORD=.*/', 'DB_PASSWORD=github', \$env);
-        file_put_contents('.env', \$env);
-        "
-
-    # Run migrations
-    - name: Run Migrations
-      env:
-        DB_CONNECTION: mysql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_DATABASE: laravel_test
-        DB_USERNAME: github
-        DB_PASSWORD: github
-      run: php artisan migrate --force
-           
-
-    # Run tests
-    - name: Execute Tests
-      env:
-        DB_CONNECTION: mysql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_DATABASE: laravel_test
-        DB_USERNAME: github
-        DB_PASSWORD: github
-      run: php artisan test
-
-    # Deploy via FTP
-    - name: Deploy to cPanel via FTP
-      uses: SamKirkland/ftp-deploy-action@v4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./  # root of repo
-        server-dir: scm-p.iganjo.delivery
-        git-ftp-args: --insecure
-
+      - name: Get the latest code
+        uses: actions/checkout@v2.3.2
+      - uses: actions/setup-node@master
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Install Dependencies
+        run: composer update --ignore-platform-reqs
+      - name: Generate key
+        run: php artisan key:generate
+      - name: Generate storage link
+        run: php artisan storage:link
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /
