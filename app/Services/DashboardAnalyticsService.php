@@ -13,13 +13,27 @@ use Illuminate\Support\Collection;
 
 class DashboardAnalyticsService
 {
+    private $branchId = null;
+
+    /**
+     * Set branch filter for analytics
+     */
+    public function setBranch($branchId)
+    {
+        $this->branchId = $branchId;
+        return $this;
+    }
+
     /**
      * dashboard analytics data
      */
     public function getAnalytics(): array
     {
+        // Create cache key based on branch
+        $cacheKey = $this->branchId ? "dashboard_analytics_branch_{$this->branchId}" : 'dashboard_analytics';
+
         // Cache analytics for 30 minutes instead of 5
-        return cache()->remember('dashboard_analytics', now()->addMinutes(30), function () {
+        return cache()->remember($cacheKey, now()->addMinutes(30), function () {
             try {
                 return [
                     'total_products' => $this->getTotalProducts(),
@@ -51,6 +65,10 @@ class DashboardAnalyticsService
     public function clearCache(): void
     {
         cache()->forget('dashboard_analytics');
+        // Also clear any branch-specific caches
+        if ($this->branchId) {
+            cache()->forget("dashboard_analytics_branch_{$this->branchId}");
+        }
     }
 
     /**
@@ -59,12 +77,18 @@ class DashboardAnalyticsService
     private function getTopSellingProducts(): Collection
     {
         try {
-            return Product::select(
+            $query = Product::select(
                     'products.*',
                     DB::raw('COALESCE(SUM(order_items.quantity), 0) as total_sold')
                 )
-                ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
-                ->groupBy('products.id', 'products.name', 'products.description', 'products.category_id', 'products.supplier_id', 'products.stock', 'products.price', 'products.created_at', 'products.updated_at')
+                ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id');
+
+            if ($this->branchId) {
+                $query->leftJoin('orders', 'order_items.order_id', '=', 'orders.id')
+                      ->where('orders.branch_id', $this->branchId);
+            }
+
+            return $query->groupBy('products.id', 'products.name', 'products.description', 'products.category_id', 'products.supplier_id', 'products.stock', 'products.price', 'products.created_at', 'products.updated_at')
                 ->orderByDesc(DB::raw('COALESCE(SUM(order_items.quantity), 0)'))
                 ->limit(5)
                 ->get();
@@ -85,12 +109,19 @@ class DashboardAnalyticsService
     private function getMonthlyRevenueTrend(): Collection
     {
         try {
-            return Invoice::select(
+            $query = Invoice::select(
                     DB::raw("strftime('%Y-%m', created_at) as month"),
                     DB::raw('SUM(amount) as total')
                 )
-                ->where('created_at', '>=', now()->subMonths(6))
-                ->groupBy('month')
+                ->where('created_at', '>=', now()->subMonths(6));
+
+            if ($this->branchId) {
+                $query->whereHas('customer.orders', function ($subQuery) {
+                    $subQuery->where('branch_id', $this->branchId);
+                });
+            }
+
+            return $query->groupBy('month')
                 ->orderBy('month')
                 ->get();
         } catch (\Exception $e) {
@@ -100,6 +131,9 @@ class DashboardAnalyticsService
 
     private function getTotalProducts(): int
     {
+        if ($this->branchId) {
+            return \App\Models\BranchInventory::where('branch_id', $this->branchId)->count();
+        }
         return Product::count();
     }
 
@@ -115,57 +149,114 @@ class DashboardAnalyticsService
 
     private function getTotalCustomers(): int
     {
+        if ($this->branchId) {
+            return Customer::whereHas('orders', function ($query) {
+                $query->where('branch_id', $this->branchId);
+            })->count();
+        }
         return Customer::count();
     }
 
     private function getTotalOrders(): int
     {
+        if ($this->branchId) {
+            return Order::where('branch_id', $this->branchId)->count();
+        }
         return Order::count();
     }
 
     private function getLowStockCount(): int
     {
+        if ($this->branchId) {
+            return \App\Models\BranchInventory::where('branch_id', $this->branchId)
+                ->whereRaw('quantity <= min_stock_level')
+                ->count();
+        }
         return Product::where('stock', '<=', 5)->count();
     }
 
     private function getOutOfStockCount(): int
     {
+        if ($this->branchId) {
+            return \App\Models\BranchInventory::where('branch_id', $this->branchId)
+                ->where('quantity', '=', 0)
+                ->count();
+        }
         return Product::where('stock', '=', 0)->count();
     }
 
     private function getRevenue(int $days): float
     {
+        if ($this->branchId) {
+            return (float) Invoice::whereHas('customer.orders', function ($query) use ($days) {
+                $query->where('branch_id', $this->branchId)
+                      ->where('created_at', '>=', now()->subDays($days));
+            })->where('created_at', '>=', now()->subDays($days))->sum('amount') ?? 0;
+        }
         return (float) Invoice::where('created_at', '>=', now()->subDays($days))->sum('amount') ?? 0;
     }
 
     private function getRevenueToday(): float
     {
+        if ($this->branchId) {
+            return (float) Invoice::whereHas('customer.orders', function ($query) {
+                $query->where('branch_id', $this->branchId)
+                      ->whereDate('created_at', today());
+            })->whereDate('created_at', today())->sum('amount') ?? 0;
+        }
         return (float) Invoice::whereDate('created_at', today())->sum('amount') ?? 0;
     }
 
     private function getOrdersToday(): int
     {
+        if ($this->branchId) {
+            return Order::where('branch_id', $this->branchId)
+                ->whereDate('created_at', today())
+                ->count();
+        }
         return Order::whereDate('created_at', today())->count();
     }
 
     private function getRecentOrders(): Collection
     {
-        return Order::with('customer')
-            ->latest('created_at')
+        $query = Order::with('customer');
+        if ($this->branchId) {
+            $query->where('branch_id', $this->branchId);
+        }
+        return $query->latest('created_at')
             ->limit(5)
             ->get();
     }
 
     private function getRecentInvoices(): Collection
     {
-        return Invoice::with('customer')
-            ->latest('created_at')
+        $query = Invoice::with('customer');
+        if ($this->branchId) {
+            $query->whereHas('customer.orders', function ($subQuery) {
+                $subQuery->where('branch_id', $this->branchId);
+            });
+        }
+        return $query->latest('created_at')
             ->limit(5)
             ->get();
     }
 
     private function getLowStockProducts(): Collection
     {
+        if ($this->branchId) {
+            return \App\Models\BranchInventory::with(['product.category', 'product.supplier'])
+                ->where('branch_id', $this->branchId)
+                ->whereRaw('quantity <= min_stock_level')
+                ->orderBy('quantity', 'asc')
+                ->limit(10)
+                ->get()
+                ->map(function ($branchInventory) {
+                    $product = $branchInventory->product;
+                    $product->current_stock = $branchInventory->quantity;
+                    $product->min_stock_level = $branchInventory->min_stock_level;
+                    return $product;
+                });
+        }
         return Product::with(['category', 'supplier'])
             ->where('stock', '<=', 5)
             ->orderBy('stock', 'asc')

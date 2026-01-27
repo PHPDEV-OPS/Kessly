@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->role && $this->role->name === $roleName;
     }
 
+    public function getBranch()
+    {
+        return $this->employee?->branch;
+    }
+
     public function employee()
     {
         return $this->hasOne(Employee::class);

@@ -1,12 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PesapalController;
+use App\Http\Controllers\EmailTrackingController;
 use Livewire\Volt\Volt;
-use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PosController;
 
+require __DIR__.'/auth.php'; // login, register, reset-password
 
+// Email tracking routes (public)
+Route::get('/email/track/{trackingId}', [EmailTrackingController::class, 'track'])->name('email.track');
+Route::post('/pesapal/pay', [PesapalController::class, 'pay'])->name('pesapal.pay');
+Route::get('/pesapal/callback', [PesapalController::class, 'callback'])->name('pesapal.callback');
 
-// Volt Page Routes
+// Protected pages
 Route::middleware(['auth'])->group(function () {
     Volt::route('/', 'pages/dashboard')->name('dashboard');
     Volt::route('/inventory', 'pages/inventory')->name('inventory');
@@ -14,37 +21,18 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('/reports', 'pages/reports')->name('reports');
     Volt::route('/settings', 'pages/settings')->name('settings');
     Volt::route('/profile', 'pages/profile')->name('profile');
-    
+
     // Global Search
-    Route::get('/search', [SearchController::class, 'globalSearch'])->name('search');
-    
-    // HR Module Routes
+    Route::get('/search', [\App\Http\Controllers\SearchController::class, 'globalSearch'])->name('search');
+
+    // HR, Branches, Finance, Customers, Orders, Invoices, Employees, Analytics, POS
     Volt::route('/hr', 'pages/hr')->name('hr');
-    
-    // Branches Module Routes
     Volt::route('/branches', 'pages/branches')->name('branches');
-    
-    // Finance Module Routes
     Volt::route('/finance', 'pages/finance')->name('finance');
-    
-    // Customers Module Routes
     Volt::route('/customers', 'pages/customers')->name('customers');
-    
-    // Orders Route
     Volt::route('/orders', 'pages/sales')->name('orders');
-    
-    // Invoices Route
     Volt::route('/invoices', 'pages/sales')->name('invoices');
-    
-    // Employees Route
     Volt::route('/employees', 'pages/hr')->name('employees');
-    
-    // Analytics Module Routes
     Volt::route('/analytics', 'pages/analytics')->name('analytics');
+    Volt::route('/pos', 'pages/pos')->name('pos');
 });
-
-
-
-
-
-require __DIR__.'/auth.php';

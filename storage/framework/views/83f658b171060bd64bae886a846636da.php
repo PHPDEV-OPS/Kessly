@@ -128,6 +128,7 @@
     <!-- Include Scripts -->
     <?php echo $__env->make('layouts/sections/scripts', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     
+
     <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
     
@@ -541,21 +542,21 @@
         });
         
         // Global loading state
-        const pageLoader = document.getElementById('pageLoader');
-        let loaderTimeout = null;
+        window.pageLoader = window.pageLoader || document.getElementById('pageLoader');
+        window.loaderTimeout = window.loaderTimeout || null;
         
         function showLoader() {
-            if (pageLoader) {
-                pageLoader.classList.add('active');
+            if (window.pageLoader) {
+                window.pageLoader.classList.add('active');
             }
         }
-        
+
         function hideLoader() {
-            if (pageLoader) {
+            if (window.pageLoader) {
                 // Ensure loader shows for at least 300ms for better UX
-                if (loaderTimeout) clearTimeout(loaderTimeout);
-                loaderTimeout = setTimeout(() => {
-                    pageLoader.classList.remove('active');
+                if (window.loaderTimeout) clearTimeout(window.loaderTimeout);
+                window.loaderTimeout = setTimeout(() => {
+                    window.pageLoader.classList.remove('active');
                 }, 300);
             }
         }
@@ -603,12 +604,12 @@
         
         // Show loader on form submissions
         window.addEventListener('beforeunload', () => {
-            pageLoader?.classList.add('active');
+            window.pageLoader?.classList.add('active');
         });
         
         // Hide loader when page is fully loaded
         window.addEventListener('load', () => {
-            pageLoader?.classList.remove('active');
+            window.pageLoader?.classList.remove('active');
         });
     </script>
 </body>

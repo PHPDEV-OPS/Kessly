@@ -121,7 +121,7 @@ class Suppliers extends Component
 
     public function export()
     {
-        $query = Supplier::query()
+        $query = Supplier::forUser()
             ->when($this->search !== '', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('contact_email', 'like', '%' . $this->search . '%')
@@ -162,7 +162,7 @@ class Suppliers extends Component
 
     public function render()
     {
-        $query = Supplier::query()
+        $query = Supplier::forUser()
             ->when($this->search !== '', function ($q) {
                 $q->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')

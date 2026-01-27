@@ -153,14 +153,57 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-medium">User</label>
-                                    <select wire:model="user_id" class="form-select @error('user_id') is-invalid @enderror">
-                                        <option value="">Select User</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                                        @endforeach
-                                    </select>
-                                    @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <label class="form-label fw-medium">User Account</label>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" wire:model.live="create_user" class="form-check-input" id="create_user">
+                                            <label class="form-check-label" for="create_user">
+                                                Create new user account
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    @if($create_user)
+                                        <div class="border rounded p-3 bg-light">
+                                            <h6 class="mb-3">New User Details</h6>
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <label class="form-label">Name <span class="text-danger">*</span></label>
+                                                    <input type="text" wire:model="user_name" class="form-control @error('user_name') is-invalid @enderror" placeholder="Full Name">
+                                                    @error('user_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                                    <input type="email" wire:model="user_email" class="form-control @error('user_email') is-invalid @enderror" placeholder="user@example.com">
+                                                    @error('user_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Role <span class="text-danger">*</span></label>
+                                                    <select wire:model="user_role_id" class="form-select @error('user_role_id') is-invalid @enderror">
+                                                        <option value="">Select Role</option>
+                                                        @foreach($roles as $role)
+                                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('user_role_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Password <span class="text-danger">*</span></label>
+                                                    <input type="password" wire:model="user_password" class="form-control @error('user_password') is-invalid @enderror" placeholder="••••••••">
+                                                    @error('user_password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                    <small class="text-muted">Minimum 8 characters</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <select wire:model="user_id" class="form-select @error('user_id') is-invalid @enderror">
+                                            <option value="">Select Existing User</option>
+                                            @foreach($users as $user)
+                                                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                                            @endforeach
+                                        </select>
+                                        @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    @endif
                                 </div>
 
                                 <div class="col-md-6">

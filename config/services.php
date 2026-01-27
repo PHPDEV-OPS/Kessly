@@ -34,5 +34,12 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    
+    'pesapal' => [
+        'consumer_key' => env('PESAPAL_CONSUMER_KEY'),
+        'consumer_secret' => env('PESAPAL_CONSUMER_SECRET'),
+        'callback_url' => env('PESAPAL_CALLBACK_URL'),
+        'base_url' => env('PESAPAL_BASE_URL', 'https://sandbox.pesapal.com'),
+    ],
 
 ];

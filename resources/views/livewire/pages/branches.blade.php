@@ -26,7 +26,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </div>
                         <div>
                             <div class="text-muted small">Total Branches</div>
-                            <h5 class="mb-0">{{ \App\Models\Branch::count() }}</h5>
+                            <h5 class="mb-0">{{ \App\Models\Branch::forUser()->count() }}</h5>
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </div>
                         <div>
                             <div class="text-muted small">Active Branches</div>
-                            <h5 class="mb-0 text-success">{{ \App\Models\Branch::where('status', 'active')->count() }}</h5>
+                            <h5 class="mb-0 text-success">{{ \App\Models\Branch::forUser()->where('status', 'active')->count() }}</h5>
                         </div>
                     </div>
                 </div>

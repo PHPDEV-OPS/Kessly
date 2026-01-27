@@ -67,6 +67,15 @@ new #[Layout('components.layouts.auth')] class extends Component {
             ]);
         }
 
+        // Check if user is verified
+        if (!$user->is_verified) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('Your account is pending verification. Please wait for admin approval.'),
+            ]);
+        }
+
         return $user;
     }
 

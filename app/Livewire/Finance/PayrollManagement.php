@@ -195,7 +195,8 @@ class PayrollManagement extends Component
 
     public function render()
     {
-        $payrolls = Payroll::with(['employee.user', 'processor'])
+        $payrolls = Payroll::forUser()
+            ->with(['employee.user', 'processor'])
             ->when($this->search, function ($query) {
                 $query->whereHas('employee.user', function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%');
@@ -210,13 +211,13 @@ class PayrollManagement extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
 
-        $employees = Employee::with('user')->active()->get();
+        $employees = Employee::forUser()->with('user')->active()->get();
 
-        // Statistics
-        $totalPayrolls = Payroll::count();
-        $processedPayrolls = Payroll::where('status', 'processed')->count();
-        $pendingPayrolls = Payroll::where('status', 'pending')->count();
-        $totalPayroll = Payroll::where('status', 'processed')->sum('net_pay');
+        // Statistics - filtered by user role
+        $totalPayrolls = Payroll::forUser()->count();
+        $processedPayrolls = Payroll::forUser()->where('status', 'processed')->count();
+        $pendingPayrolls = Payroll::forUser()->where('status', 'pending')->count();
+        $totalPayroll = Payroll::forUser()->where('status', 'processed')->sum('net_pay');
 
         return view('livewire.finance.payroll-management', compact(
             'payrolls', 

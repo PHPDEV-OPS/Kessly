@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\RoleBasedAccess;
 
 class Attendance extends Model
 {
-    use HasFactory;
+    use HasFactory, RoleBasedAccess;
 
     protected $fillable = [
         'employee_id',

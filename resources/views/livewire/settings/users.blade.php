@@ -65,6 +65,7 @@
                                         @endif
                                     </th>
                                     <th>Role</th>
+                                    <th>Status</th>
                                     <th wire:click="sortBy('created_at')" style="cursor: pointer;">
                                         Joined
                                         @if($sortField === 'created_at')
@@ -96,6 +97,17 @@
                                                 <span class="badge bg-info-subtle text-info">{{ $user->role->name }}</span>
                                             @else
                                                 <span class="badge bg-secondary-subtle text-secondary">No Role</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($user->is_verified)
+                                                <span class="badge bg-success-subtle text-success">
+                                                    <i class='bx bx-check-circle me-1'></i>Verified
+                                                </span>
+                                            @else
+                                                <span class="badge bg-warning-subtle text-warning">
+                                                    <i class='bx bx-time me-1'></i>Pending
+                                                </span>
                                             @endif
                                         </td>
                                         <td>{{ $user->created_at->format('M d, Y') }}</td>
@@ -175,6 +187,16 @@
                                     @endforeach
                                 </select>
                                 @error('role_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" wire:model="is_verified" class="form-check-input @error('is_verified') is-invalid @enderror" id="is_verified">
+                                    <label class="form-check-label fw-semibold" for="is_verified">
+                                        Account Verified
+                                    </label>
+                                </div>
+                                <small class="text-muted">Check to verify the user account and send notification email</small>
+                                @error('is_verified') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">

@@ -22,48 +22,52 @@ $container = ($container ?? 'container-xxl');
 <div class="layout-wrapper layout-content-navbar <?php echo e($isMenu ? '' : 'layout-without-menu'); ?>">
     <div class="layout-container">
 
-        <?php if($isMenu): ?>
+        <!--[if BLOCK]><![endif]--><?php if($isMenu): ?>
         <?php echo $__env->make('layouts/sections/menu/verticalMenu', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <?php endif; ?>
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
         <!-- Layout page -->
         <div class="layout-page">
 
             <!-- BEGIN: Navbar-->
-            <?php if($isNavbar): ?>
+            <!--[if BLOCK]><![endif]--><?php if($isNavbar): ?>
             <?php echo $__env->make('layouts/sections/navbar/navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-            <?php endif; ?>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             <!-- END: Navbar-->
 
             <!-- Content wrapper -->
             <div class="content-wrapper">
 
                 <!-- Content -->
-                <?php if($isFlex): ?>
+                <!--[if BLOCK]><![endif]--><?php if($isFlex): ?>
                 <div class="<?php echo e($container); ?> d-flex align-items-stretch flex-grow-1 p-0">
                 <?php else: ?>
                 <div class="<?php echo e($container); ?> flex-grow-1 container-p-y">
-                <?php endif; ?>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                     <!-- Page Heading -->
-                    <?php if(isset($header)): ?>
+                    <!--[if BLOCK]><![endif]--><?php if(isset($header)): ?>
                         <div class="mb-4">
                             <?php echo e($header); ?>
 
                         </div>
-                    <?php endif; ?>
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                     <!-- Page Content / Livewire Component -->
-                    <?php echo e($slot); ?>
+                    <!--[if BLOCK]><![endif]--><?php if(isset($slot)): ?>
+                        <?php echo e($slot); ?>
 
+                    <?php else: ?>
+                        <?php echo $__env->yieldContent('layoutContent'); ?>
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                 </div>
                 <!-- / Content -->
 
                 <!-- Footer -->
-                <?php if($isFooter): ?>
+                <!--[if BLOCK]><![endif]--><?php if($isFooter): ?>
                 <?php echo $__env->make('layouts/sections/footer/footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                <?php endif; ?>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <!-- / Footer -->
                 
                 <div class="content-backdrop fade"></div>
@@ -73,10 +77,10 @@ $container = ($container ?? 'container-xxl');
         <!-- / Layout page -->
     </div>
 
-    <?php if($isMenu): ?>
+    <!--[if BLOCK]><![endif]--><?php if($isMenu): ?>
     <!-- Overlay -->
     <div class="layout-overlay layout-menu-toggle" onclick="toggleMenu(event)"></div>
-    <?php endif; ?>
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     
     <!-- Drag Target Area To SlideIn Menu On Small Screens -->
     <div class="drag-target"></div>

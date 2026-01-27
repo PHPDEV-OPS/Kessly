@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\RoleBasedAccess;
 
 class BranchInventory extends Model
 {
-    use HasFactory;
+    use HasFactory, RoleBasedAccess;
 
     protected $table = 'branch_inventory';
 

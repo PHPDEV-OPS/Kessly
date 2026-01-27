@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\RoleBasedAccess;
 
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory, RoleBasedAccess;
 
     protected $fillable = [
         'employee_id',
@@ -68,7 +69,7 @@ class Employee extends Model
 
     public function scopeManagers($query)
     {
-        return $query->whereIn('position', ['Manager', 'Senior Manager', 'Department Head']);
+        return $query->where('position', 'like', '%Manager%');
     }
 
     public function scopeStaff($query)

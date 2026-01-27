@@ -165,7 +165,8 @@ class BudgetManagement extends Component
 
     public function render()
     {
-        $budgets = Budget::with(['branch', 'creator', 'approver'])
+        $budgets = Budget::forUser()
+            ->with(['branch', 'creator', 'approver'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('category', 'like', '%' . $this->search . '%');
@@ -179,14 +180,14 @@ class BudgetManagement extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
-        $branches = Branch::active()->get();
-        $categories = Budget::distinct('category')->pluck('category')->filter();
+        $branches = Branch::forUser()->active()->get();
+        $categories = Budget::forUser()->distinct('category')->pluck('category')->filter();
 
-        // Statistics
-        $totalBudgets = Budget::count();
-        $approvedBudgets = Budget::where('status', 'approved')->count();
-        $totalAllocated = Budget::where('status', 'approved')->sum('allocated_amount');
-        $totalSpent = Budget::where('status', 'approved')->sum('spent_amount');
+        // Statistics - filtered by user role
+        $totalBudgets = Budget::forUser()->count();
+        $approvedBudgets = Budget::forUser()->where('status', 'approved')->count();
+        $totalAllocated = Budget::forUser()->where('status', 'approved')->sum('allocated_amount');
+        $totalSpent = Budget::forUser()->where('status', 'approved')->sum('spent_amount');
 
         return view('livewire.finance.budget-management', compact(
             'budgets', 
