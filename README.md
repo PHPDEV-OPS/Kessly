@@ -109,7 +109,7 @@ Experience the platform visually:
 |----------------|---------------|-----------|
 | ![](images/dashboard_admin_page.png) | ![](images/finance_page.png) | ![](images/hr_page.png) |
 
-| Inventory Management | Payroll Additions | Reporting |
+| Inventory Management | POS Additions | Reporting |
 |---------------------|------------------|-----------|
 | ![](images/inventory_page.png) | ![](images/pos_page.png) | ![](images/reports_page.png) |
 
