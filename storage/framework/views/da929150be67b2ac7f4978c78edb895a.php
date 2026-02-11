@@ -60,6 +60,11 @@
                 <?php echo csrf_field(); ?>
                 <input type="hidden" name="amount" value="<?php echo e($total); ?>">
                 <input type="hidden" name="customer_id" value="<?php echo e($customerId); ?>">
+                <!--[if BLOCK]><![endif]--><?php if($customer): ?>
+                    <input type="hidden" name="customer_name" value="<?php echo e($customer->name); ?>">
+                    <input type="hidden" name="customer_email" value="<?php echo e($customer->email); ?>">
+                    <input type="hidden" name="customer_phone" value="<?php echo e($customer->phone); ?>">
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <button type="submit" class="btn btn-success w-100">Checkout with Pesapal</button>
             </form>
         <?php else: ?>

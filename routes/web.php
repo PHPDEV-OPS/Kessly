@@ -11,7 +11,7 @@ require __DIR__.'/auth.php'; // login, register, reset-password
 // Email tracking routes (public)
 Route::get('/email/track/{trackingId}', [EmailTrackingController::class, 'track'])->name('email.track');
 Route::post('/pesapal/pay', [PesapalController::class, 'pay'])->name('pesapal.pay');
-Route::get('/pesapal/callback', [PesapalController::class, 'callback'])->name('pesapal.callback');
+Route::match(['get', 'post'], '/pesapal/callback', [PesapalController::class, 'callback'])->name('pesapal.callback');
 
 // Protected pages
 Route::middleware(['auth'])->group(function () {

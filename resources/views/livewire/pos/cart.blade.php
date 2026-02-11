@@ -60,6 +60,11 @@
                 @csrf
                 <input type="hidden" name="amount" value="{{ $total }}">
                 <input type="hidden" name="customer_id" value="{{ $customerId }}">
+                @if($customer)
+                    <input type="hidden" name="customer_name" value="{{ $customer->name }}">
+                    <input type="hidden" name="customer_email" value="{{ $customer->email }}">
+                    <input type="hidden" name="customer_phone" value="{{ $customer->phone }}">
+                @endif
                 <button type="submit" class="btn btn-success w-100">Checkout with Pesapal</button>
             </form>
         @else

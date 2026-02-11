@@ -83,7 +83,7 @@
                         </td>
                         <td><?php echo e($invoice->customer?->name ?? '—'); ?></td>
                         <td><?php echo e(optional($invoice->created_at)->format('M d, Y')); ?></td>
-                        <td><span class="fw-semibold">$<?php echo e(number_format($invoice->amount, 2)); ?></span></td>
+                        <td><span class="fw-semibold">Ksh <?php echo e(number_format($invoice->amount, 2)); ?></span></td>
                         <td>
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="view(<?php echo e($invoice->id); ?>)" title="View">

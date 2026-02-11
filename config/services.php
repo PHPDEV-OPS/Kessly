@@ -39,7 +39,15 @@ return [
         'consumer_key' => env('PESAPAL_CONSUMER_KEY'),
         'consumer_secret' => env('PESAPAL_CONSUMER_SECRET'),
         'callback_url' => env('PESAPAL_CALLBACK_URL'),
-        'base_url' => env('PESAPAL_BASE_URL', 'https://sandbox.pesapal.com'),
+        'base_url' => env('PESAPAL_BASE_URL'),
+        'ipn_url' => env('PESAPAL_IPN_URL'),
+        'ipn_id' => env('PESAPAL_IPN_ID'),
+        'currency' => env('PESAPAL_CURRENCY', 'KES'),
+        'environment' => env('PESAPAL_ENVIRONMENT'),
+        'ssl_verify' => env('PESAPAL_SSL_VERIFY', false),
+        'dynamic_config_path' => env('PESAPAL_DYNAMIC_CONFIG_PATH', storage_path('app/pesapal_dynamic.json')),
+        'timeout' => env('PESAPAL_TIMEOUT', 20),
+        'connect_timeout' => env('PESAPAL_CONNECT_TIMEOUT', 10),
     ],
 
 ];
