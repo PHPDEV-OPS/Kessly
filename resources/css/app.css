@@ -599,21 +599,23 @@ main,
 
     .table-stacked tbody tr {
         display: block;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
         border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 0.5rem 0.75rem;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+        border-radius: 16px;
+        padding: 0.75rem 0.9rem;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
+        background: #fff;
     }
 
     .table-stacked tbody tr td {
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
+        justify-content: flex-start;
+        align-items: center;
         gap: 0.75rem;
         width: 100%;
-        padding: 0.4rem 0;
+        padding: 0.45rem 0;
         border-top: 0;
+        line-height: 1.35;
     }
 
     .table-stacked tbody tr td::before {
@@ -623,6 +625,8 @@ main,
         letter-spacing: 0.03em;
         font-size: 0.75rem;
         text-transform: uppercase;
+        min-width: 120px;
+        flex-shrink: 0;
     }
 
     .table-stacked tbody tr td:last-child {
@@ -631,6 +635,25 @@ main,
 
     .table-stacked .btn-icon {
         padding: 0.35rem 0.55rem;
+    }
+
+    .table-stacked .badge,
+    .table-stacked .text-muted,
+    .table-stacked .fw-medium {
+        line-height: 1.35;
+    }
+
+    /* Soft separators inside stacked rows */
+    .table-stacked tbody tr td + td {
+        border-top: 1px dashed #e5e7eb;
+        padding-top: 0.55rem;
+        margin-top: 0.35rem;
+    }
+
+    .table-stacked tbody tr td:first-child {
+        border-top: none;
+        padding-top: 0.2rem;
+        margin-top: 0;
     }
 }
 

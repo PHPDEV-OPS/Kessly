@@ -9,26 +9,14 @@
         </div>
     @endif
 
-    <!-- Header / Actions -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-        <div class="d-flex align-items-center gap-2">
-            <div class="avatar avatar-sm">
-                <span class="avatar-initial rounded bg-label-info"><i class="ri-truck-line"></i></span>
-            </div>
-            <div>
-                <h5 class="mb-0">Suppliers</h5>
-                <small class="text-muted">Manage procurement partners</small>
-            </div>
+    <!-- Header -->
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="avatar avatar-sm">
+            <span class="avatar-initial rounded bg-label-info"><i class="ri-truck-line"></i></span>
         </div>
-        <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-label-secondary" wire:click="export">
-                <i class="ri-download-line me-1"></i>
-                Export
-            </button>
-            <button type="button" class="btn btn-primary" wire:click="create">
-                <i class="ri-add-line me-1"></i>
-                Add Supplier
-            </button>
+        <div>
+            <h5 class="mb-0">Suppliers</h5>
+            <small class="text-muted">Manage procurement partners</small>
         </div>
     </div>
 
@@ -49,9 +37,16 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-4">
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-label-info">{{ $suppliers->total() }} total</span>
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
+                            <i class="ri-download-line me-1"></i>
+                            Export
+                        </button>
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="create">
+                            <i class="ri-add-line me-1"></i>
+                            Add Supplier
+                        </button>
                     </div>
                 </div>
             </div>

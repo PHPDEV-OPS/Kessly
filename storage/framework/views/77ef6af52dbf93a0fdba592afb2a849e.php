@@ -9,7 +9,7 @@ use Livewire\Attributes\Layout;
     <!-- Tab Navigation Card -->
     <div class="card mb-4">
         <div class="card-header border-bottom">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+            <ul class="nav nav-tabs card-header-tabs flex-nowrap overflow-auto" role="tablist" style="gap: 0.25rem;">
                 <li class="nav-item">
                     <button 
                         wire:click="setActiveTab('products')"
@@ -58,8 +58,9 @@ use Livewire\Attributes\Layout;
         <!-- Tab Content -->
         <div class="card-body p-0">
             <div class="tab-content">
-                <!--[if BLOCK]><![endif]--><?php if($activeTab === 'products'): ?>
-                    <?php
+                <div class="p-3 p-md-4">
+                    <!--[if BLOCK]><![endif]--><?php if($activeTab === 'products'): ?>
+                        <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
@@ -75,8 +76,8 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php elseif($activeTab === 'categories'): ?>
-                    <?php
+                    <?php elseif($activeTab === 'categories'): ?>
+                        <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
@@ -92,8 +93,8 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php elseif($activeTab === 'suppliers'): ?>
-                    <?php
+                    <?php elseif($activeTab === 'suppliers'): ?>
+                        <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
@@ -109,7 +110,8 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                </div>
             </div>
         </div>
     </div>

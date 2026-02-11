@@ -14,11 +14,11 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3 align-items-end">
-                <div class="col-md-6">
+                <div class="col-12 col-md-6">
                     <label class="form-label small text-muted">Search</label>
                     <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search by order #, customer..." class="form-control">
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <label class="form-label small text-muted">Per Page</label>
                     <select wire:model.live="perPage" class="form-select">
                         <option value="10">10</option>
@@ -27,15 +27,17 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <div class="col-md-4 text-end">
-                    <button type="button" class="btn btn-label-secondary" wire:click="export">
-                        <i class="ri-download-line me-1"></i>
-                        Export
-                    </button>
-                    <button type="button" class="btn btn-primary" wire:click="create">
-                        <i class="ri-add-line me-1"></i>
-                        Add Order
-                    </button>
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
+                            <i class="ri-download-line me-1"></i>
+                            Export
+                        </button>
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="create">
+                            <i class="ri-add-line me-1"></i>
+                            Add Order
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +45,7 @@
 
     <!-- Orders Table -->
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 table-stacked">
             <thead>
                 <tr>
                     <th>
@@ -77,7 +79,7 @@
             <tbody>
                 <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td>
+                        <td data-label="Order #">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-sm">
                                     <span class="avatar-initial rounded bg-label-primary">
@@ -87,10 +89,10 @@
                                 <span class="fw-medium"><?php echo e($order->order_number); ?></span>
                             </div>
                         </td>
-                        <td><?php echo e($order->customer?->name ?? '—'); ?></td>
-                        <td><?php echo e(optional($order->order_date)->format('M d, Y')); ?></td>
-                        <td><span class="fw-semibold">Ksh <?php echo e(number_format($order->total_amount, 2)); ?></span></td>
-                        <td>
+                        <td data-label="Customer"><?php echo e($order->customer?->name ?? '—'); ?></td>
+                        <td data-label="Date"><?php echo e(optional($order->order_date)->format('M d, Y')); ?></td>
+                        <td data-label="Total"><span class="fw-semibold">Ksh <?php echo e(number_format($order->total_amount, 2)); ?></span></td>
+                        <td class="text-end" data-label="Actions">
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="view(<?php echo e($order->id); ?>)" title="View">
                                     <i class="ri-eye-line ri-20px"></i>

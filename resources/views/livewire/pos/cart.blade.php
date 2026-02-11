@@ -35,12 +35,12 @@
         </div>
 
         <div class="table-responsive mb-3">
-            <table class="table table-sm table-borderless align-middle mb-0">
+            <table class="table table-sm table-borderless align-middle mb-0 table-stacked">
                 <thead class="border-bottom">
                     <tr>
                         <th>Item</th>
                         <th class="text-end">Price</th>
-                        <th class="text-center" style="width: 120px;">Qty</th>
+                        <th class="text-center">Qty</th>
                         <th class="text-end">Subtotal</th>
                         <th></th>
                     </tr>
@@ -48,17 +48,17 @@
                 <tbody>
                     @foreach($cart as $item)
                         <tr>
-                            <td class="fw-semibold">{{ $item['name'] }}</td>
-                            <td class="text-end">Ksh {{ number_format($item['price'], 2) }}</td>
-                            <td class="text-center">
+                            <td data-label="Item" class="fw-semibold">{{ $item['name'] }}</td>
+                            <td data-label="Price" class="text-end">Ksh {{ number_format($item['price'], 2) }}</td>
+                            <td data-label="Qty" class="text-center">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <button class="btn btn-outline-secondary" wire:click="decrement({{ $item['id'] }})">-</button>
-                                    <span class="btn btn-outline-secondary disabled">{{ $item['quantity'] }}</span>
+                                    <span class="btn btn-outline-secondary disabled" style="min-width: 30px;">{{ $item['quantity'] }}</span>
                                     <button class="btn btn-outline-secondary" wire:click="increment({{ $item['id'] }})">+</button>
                                 </div>
                             </td>
-                            <td class="text-end">Ksh {{ number_format($item['price'] * $item['quantity'], 2) }}</td>
-                            <td class="text-end">
+                            <td data-label="Subtotal" class="text-end">Ksh {{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                            <td data-label="Actions" class="text-end">
                                 <button class="btn btn-link text-danger p-0" wire:click="removeFromCart({{ $item['id'] }})"><i class="ri-delete-bin-line"></i></button>
                             </td>
                         </tr>

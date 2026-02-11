@@ -16,7 +16,7 @@ new #[Layout('layouts.app')] class extends Component {
     <!-- Tab Navigation Card -->
     <div class="card mb-4">
         <div class="card-header border-bottom">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+            <ul class="nav nav-tabs card-header-tabs flex-nowrap overflow-auto" role="tablist" style="gap: 0.25rem;">
                 <li class="nav-item">
                     <button 
                         wire:click="setActiveTab('products')"
@@ -62,13 +62,15 @@ new #[Layout('layouts.app')] class extends Component {
         <!-- Tab Content -->
         <div class="card-body p-0">
             <div class="tab-content">
-                @if($activeTab === 'products')
-                    <livewire:inventory.products />
-                @elseif($activeTab === 'categories')
-                    <livewire:inventory.categories />
-                @elseif($activeTab === 'suppliers')
-                    <livewire:inventory.suppliers />
-                @endif
+                <div class="p-3 p-md-4">
+                    @if($activeTab === 'products')
+                        <livewire:inventory.products />
+                    @elseif($activeTab === 'categories')
+                        <livewire:inventory.categories />
+                    @elseif($activeTab === 'suppliers')
+                        <livewire:inventory.suppliers />
+                    @endif
+                </div>
             </div>
         </div>
     </div>

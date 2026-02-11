@@ -48,13 +48,13 @@
                     </select>
                 </div>
 
-                <div class="col-12 col-md-4">
-                    <div class="d-flex flex-wrap justify-content-between justify-content-md-end gap-2">
-                        <button type="button" class="btn btn-label-secondary" wire:click="export">
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
                             <i class="ri-download-line me-1"></i>
                             Export
                         </button>
-                        <button type="button" class="btn btn-primary" wire:click="showAddProductModal">
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="showAddProductModal">
                             <i class="ri-add-line me-1"></i>
                             Add Product
                         </button>
