@@ -3,75 +3,41 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('layouts.app')] class extends Component {
-    public string $activeTab = 'customers';
+new #[Layout('layouts.app')] class extends Component {};
+?>
 
-    public function setActiveTab(string $tab): void
-    {
-        $this->activeTab = $tab;
-    }
-}; ?>
-
-<div>
-    <!-- Tab Navigation Card for POS -->
-    <div class="card mb-4">
-        <div class="card-header border-bottom">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                <li class="nav-item">
-                    <button 
-                        wire:click="setActiveTab('customers')"
-                        class="nav-link {{ $activeTab === 'customers' ? 'active' : '' }}"
-                        type="button"
-                        role="tab">
-                        <i class="ri-user-line me-2"></i>
-                        Customer
-                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-primary ms-1">
-                            {{ \App\Models\Customer::count() }}
-                        </span>
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button 
-                        wire:click="setActiveTab('pos-products')"
-                        class="nav-link {{ $activeTab === 'pos-products' ? 'active' : '' }}"
-                        type="button"
-                        role="tab">
-                        <i class="ri-stack-line me-2"></i>
-                        Products
-                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-primary ms-1">
-                            {{ \App\Models\Product::count() }}
-                        </span>
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button 
-                        wire:click="setActiveTab('cart')"
-                        class="nav-link {{ $activeTab === 'cart' ? 'active' : '' }}"
-                        type="button"
-                        role="tab">
-                        <i class="ri-shopping-cart-line me-2"></i>
-                        Cart
-                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-primary ms-1">
-                            {{ is_array($cart ?? null) ? count($cart) : 0 }}
-                        </span>
-                    </button>
-                </li>
-            </ul>
+<div class="pos-page">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h4 class="mb-1">Point of Sale</h4>
+            <small class="text-muted">Process orders, add items, and checkout customers</small>
         </div>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-label-primary">Customers: {{ \App\Models\Customer::count() }}</span>
+            <span class="badge bg-label-primary">Products: {{ \App\Models\Product::count() }}</span>
+        </div>
+    </div>
 
-        <!-- Tab Content -->
-        <div class="card-body p-0">
-            <div class="tab-content">
-                @if($activeTab === 'customers')
-                    <!-- POS Customer Selection -->
-                    <livewire:pos.customers />
-                @elseif($activeTab === 'pos-products')
-                    <!-- POS Product Grid or List -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-body">
                     <livewire:pos.products />
-                @elseif($activeTab === 'cart')
-                    <!-- POS Cart View -->
-                    <livewire:pos.cart />
-                @endif
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="position-sticky" style="top: 88px;">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <livewire:pos.customers />
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <livewire:pos.cart />
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -5,66 +5,27 @@ use Livewire\Attributes\Layout;
 
 ?>
 
-<div>
-    <!-- Tab Navigation Card for POS -->
-    <div class="card mb-4">
-        <div class="card-header border-bottom">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                <li class="nav-item">
-                    <button 
-                        wire:click="setActiveTab('customers')"
-                        class="nav-link <?php echo e($activeTab === 'customers' ? 'active' : ''); ?>"
-                        type="button"
-                        role="tab">
-                        <i class="ri-user-line me-2"></i>
-                        Customer
-                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-primary ms-1">
-                            <?php echo e(\App\Models\Customer::count()); ?>
-
-                        </span>
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button 
-                        wire:click="setActiveTab('pos-products')"
-                        class="nav-link <?php echo e($activeTab === 'pos-products' ? 'active' : ''); ?>"
-                        type="button"
-                        role="tab">
-                        <i class="ri-stack-line me-2"></i>
-                        Products
-                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-primary ms-1">
-                            <?php echo e(\App\Models\Product::count()); ?>
-
-                        </span>
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button 
-                        wire:click="setActiveTab('cart')"
-                        class="nav-link <?php echo e($activeTab === 'cart' ? 'active' : ''); ?>"
-                        type="button"
-                        role="tab">
-                        <i class="ri-shopping-cart-line me-2"></i>
-                        Cart
-                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-primary ms-1">
-                            <?php echo e(is_array($cart ?? null) ? count($cart) : 0); ?>
-
-                        </span>
-                    </button>
-                </li>
-            </ul>
+<div class="pos-page">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h4 class="mb-1">Point of Sale</h4>
+            <small class="text-muted">Process orders, add items, and checkout customers</small>
         </div>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-label-primary">Customers: <?php echo e(\App\Models\Customer::count()); ?></span>
+            <span class="badge bg-label-primary">Products: <?php echo e(\App\Models\Product::count()); ?></span>
+        </div>
+    </div>
 
-        <!-- Tab Content -->
-        <div class="card-body p-0">
-            <div class="tab-content">
-                <!--[if BLOCK]><![endif]--><?php if($activeTab === 'customers'): ?>
-                    <!-- POS Customer Selection -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-body">
                     <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split('pos.customers', []);
+[$__name, $__params] = $__split('pos.products', []);
 
 $__html = app('livewire')->mount($__name, $__params, 'lw-1713630923-0', $__slots ?? [], get_defined_vars());
 
@@ -76,13 +37,18 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php elseif($activeTab === 'pos-products'): ?>
-                    <!-- POS Product Grid or List -->
-                    <?php
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="position-sticky" style="top: 88px;">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split('pos.products', []);
+[$__name, $__params] = $__split('pos.customers', []);
 
 $__html = app('livewire')->mount($__name, $__params, 'lw-1713630923-1', $__slots ?? [], get_defined_vars());
 
@@ -94,9 +60,11 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php elseif($activeTab === 'cart'): ?>
-                    <!-- POS Cart View -->
-                    <?php
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
@@ -112,7 +80,8 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                    </div>
+                </div>
             </div>
         </div>
     </div>

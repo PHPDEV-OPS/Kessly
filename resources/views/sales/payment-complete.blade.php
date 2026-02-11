@@ -14,6 +14,17 @@
         @else
             <div class="alert alert-secondary">Payment status could not be verified.</div>
         @endif
+
+        @if(!empty($details) && is_array($details))
+            <div class="mt-3 text-start d-inline-block">
+                <h6>Details</h6>
+                <ul class="list-unstyled mb-0">
+                    @foreach($details as $key => $value)
+                        <li><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ is_array($value) ? json_encode($value) : $value }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <a href="/pos" class="btn btn-primary mt-3">Back to POS</a>
     </div>
 @endsection
