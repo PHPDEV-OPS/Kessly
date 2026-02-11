@@ -4,10 +4,13 @@ namespace App\Livewire\Pos;
 
 use Livewire\Component;
 use App\Models\Product;
+use App\Models\Category;
 
 class Products extends Component
 {
     public $cart = [];
+    public $search = '';
+    public $categoryId = null;
 
     protected $listeners = [
         'cartUpdated' => 'updateCart',
@@ -45,7 +48,15 @@ class Products extends Component
 
     public function render()
     {
-        $products = Product::all();
-        return view('livewire.pos.products', compact('products'));
+        $products = Product::query()
+            ->with('category')
+            ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->categoryId, fn($q) => $q->where('category_id', $this->categoryId))
+            ->orderBy('name')
+            ->get();
+
+        $categories = Category::orderBy('name')->get();
+
+        return view('livewire.pos.products', compact('products', 'categories'));
     }
 }
