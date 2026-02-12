@@ -9,26 +9,14 @@
         </div>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-    <!-- Header / Actions -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-        <div class="d-flex align-items-center gap-2">
-            <div class="avatar avatar-sm">
-                <span class="avatar-initial rounded bg-label-info"><i class="ri-truck-line"></i></span>
-            </div>
-            <div>
-                <h5 class="mb-0">Suppliers</h5>
-                <small class="text-muted">Manage procurement partners</small>
-            </div>
+    <!-- Header -->
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="avatar avatar-sm">
+            <span class="avatar-initial rounded bg-label-info"><i class="ri-truck-line"></i></span>
         </div>
-        <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-label-secondary" wire:click="export">
-                <i class="ri-download-line me-1"></i>
-                Export
-            </button>
-            <button type="button" class="btn btn-primary" wire:click="create">
-                <i class="ri-add-line me-1"></i>
-                Add Supplier
-            </button>
+        <div>
+            <h5 class="mb-0">Suppliers</h5>
+            <small class="text-muted">Manage procurement partners</small>
         </div>
     </div>
 
@@ -49,9 +37,16 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-4">
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-label-info"><?php echo e($suppliers->total()); ?> total</span>
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
+                            <i class="ri-download-line me-1"></i>
+                            Export
+                        </button>
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="create">
+                            <i class="ri-add-line me-1"></i>
+                            Add Supplier
+                        </button>
                     </div>
                 </div>
             </div>
@@ -185,7 +180,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -204,7 +199,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control <?php $__errorArgs = ['contact_email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -223,7 +218,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Phone</label>
                                 <input type="text" class="form-control <?php $__errorArgs = ['phone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -242,7 +237,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Address</label>
                                 <input type="text" class="form-control <?php $__errorArgs = ['address'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -282,9 +277,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
-                        <button type="button" class="btn btn-primary" wire:click="save">
+                    <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                        <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary w-100 w-md-auto m-0" wire:click="save">
                             <i class="ri-save-line me-1"></i>
                             <?php echo e($supplierId ? 'Update' : 'Create'); ?>
 

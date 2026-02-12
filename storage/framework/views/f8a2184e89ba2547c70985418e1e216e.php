@@ -3,7 +3,7 @@
     <div class="card mb-4 no-print">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Filter By</label>
                     <select wire:model.live="filterBy" class="form-select">
                         <option value="all">All Products</option>
@@ -13,7 +13,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Category</label>
                     <select wire:model.live="selectedCategory" class="form-select">
                         <option value="">All Categories</option>
@@ -23,7 +23,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Sort By</label>
                     <select wire:model.live="sortBy" class="form-select">
                         <option value="name">Product Name</option>
@@ -33,7 +33,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Order</label>
                     <select wire:model.live="sortDirection" class="form-select">
                         <option value="asc">Ascending</option>
@@ -51,11 +51,11 @@
         </div>
         <p class="text-muted mt-2">Loading inventory data...</p>
     </div>
-
+    
     <div wire:loading.remove.delay id="stockReportContent">
         <!-- Summary Cards -->
         <div class="row g-4 mb-4">
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -91,7 +91,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -193,7 +193,7 @@
 
         <div class="row g-4 mb-4">
             <!-- Stock Movement Chart -->
-            <div class="col-md-8">
+            <div class="col-12 col-md-8">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-0">Stock Movement (Last 30 Days)</h5>
@@ -205,7 +205,7 @@
             </div>
 
             <!-- Category Distribution -->
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-0">Stock by Category</h5>
@@ -219,20 +219,20 @@
 
         <!-- Products Table -->
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h5 class="mb-0">Product Inventory</h5>
-                <div class="no-print">
-                    <button class="btn btn-sm btn-outline-secondary me-2" wire:click="exportReport">
-                        <i class='bx bx-printer me-1'></i>Print Report
+                <div class="no-print d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-secondary" wire:click="exportReport">
+                        <i class='bx bx-printer me-1'></i>Print
                     </button>
                     <button class="btn btn-sm btn-primary" wire:click="exportReport">
-                        <i class='bx bx-download me-1'></i>Export PDF
+                        <i class='bx bx-download me-1'></i>PDF
                     </button>
                 </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-stacked">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -246,7 +246,7 @@
                         <tbody>
                             <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <tr>
-                                    <td>
+                                    <td data-label="Product">
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avatar-sm bg-label-primary rounded me-2">
                                                 <i class='bx bx-package'></i>
@@ -254,17 +254,17 @@
                                             <span class="fw-medium"><?php echo e($product->name); ?></span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td data-label="Category">
                                         <span class="badge bg-label-info"><?php echo e($product->category?->name ?? 'Uncategorized'); ?></span>
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-end" data-label="Stock">
                                         <span class="fw-semibold"><?php echo e(number_format($product->stock)); ?></span>
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-end" data-label="Price">
                                         $<?php echo e(number_format($product->price, 2)); ?>
 
                                     </td>
-                                    <td>
+                                    <td data-label="Status">
                                         <!--[if BLOCK]><![endif]--><?php if($product->stock == 0): ?>
                                             <span class="badge bg-danger">Out of Stock</span>
                                         <?php elseif($product->stock < 10): ?>
@@ -273,7 +273,7 @@
                                             <span class="badge bg-success">In Stock</span>
                                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
-                                    <td><?php echo e($product->updated_at->diffForHumans()); ?></td>
+                                    <td data-label="Last Updated"><?php echo e($product->updated_at->diffForHumans()); ?></td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>

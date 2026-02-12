@@ -48,7 +48,7 @@
                     </div>
 
                     <!-- Users Table -->
-                    <div class="table-responsive">
+                    <div class="table-responsive text-nowrap">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
@@ -212,11 +212,11 @@
                                 <small class="text-muted">Minimum 8 characters</small>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" wire:click="cancel" class="btn btn-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click="cancel" class="btn btn-secondary w-100 w-md-auto m-0">
                                 <i class='bx bx-x me-1'></i>Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0" wire:loading.attr="disabled">
                                 <span wire:loading.remove wire:target="save">
                                     <i class='bx bx-save me-1'></i>{{ $userId ? 'Update' : 'Create' }} User
                                 </span>

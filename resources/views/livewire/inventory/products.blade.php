@@ -176,7 +176,7 @@
     <!-- MODAL -->
     @if ($showForm)
         <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <form wire:submit.prevent="save">
                         <div class="modal-header">
@@ -201,7 +201,7 @@
                                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <!-- Category and Supplier -->
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select
                                         id="category_id"
@@ -215,7 +215,7 @@
                                     </select>
                                     @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="supplier_id" class="form-label">Supplier</label>
                                     <select
                                         id="supplier_id"
@@ -230,7 +230,7 @@
                                     @error('supplier_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <!-- Stock and Price -->
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="stock" class="form-label">Stock Quantity <span class="text-danger">*</span></label>
                                     <input
                                         type="number"
@@ -242,7 +242,7 @@
                                     />
                                     @error('stock') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>

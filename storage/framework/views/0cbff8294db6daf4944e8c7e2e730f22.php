@@ -210,7 +210,7 @@
                     <form wire:submit="save">
                         <div class="modal-body">
                             <div class="row g-4">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Employee <span class="text-danger">*</span></label>
                                     <select wire:model="employee_id" class="form-select <?php $__errorArgs = ['employee_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -237,7 +237,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Basic Salary <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -262,7 +262,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Period Start <span class="text-danger">*</span></label>
                                     <input type="date" wire:model="period_start" class="form-control <?php $__errorArgs = ['period_start'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -284,7 +284,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Period End <span class="text-danger">*</span></label>
                                     <input type="date" wire:model="period_end" class="form-control <?php $__errorArgs = ['period_end'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -306,7 +306,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Overtime Hours</label>
                                     <input type="number" step="0.01" wire:model="overtime_hours" class="form-control <?php $__errorArgs = ['overtime_hours'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -328,7 +328,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Overtime Rate</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -353,7 +353,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Bonus</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -378,7 +378,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Deductions</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -403,7 +403,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Tax Deduction</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -428,7 +428,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Status <span class="text-danger">*</span></label>
                                     <select wire:model="payroll_status" class="form-select <?php $__errorArgs = ['payroll_status'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -477,12 +477,12 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" wire:click="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 <i class="ri-close-line me-1"></i>
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 <?php echo e($editing ? 'Update' : 'Create'); ?> Payroll
                             </button>

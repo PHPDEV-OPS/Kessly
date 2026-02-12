@@ -191,14 +191,14 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="order_number">Order Number</label>
                                     <input type="text" id="order_number" class="form-control @error('order_number') is-invalid @enderror" wire:model.defer="order_number">
                                     @error('order_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="customer_id">Customer</label>
                                     <select id="customer_id" class="form-select @error('customer_id') is-invalid @enderror" wire:model.defer="customer_id">
                                         <option value="">Select customer</option>
@@ -210,14 +210,14 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="order_date">Order Date</label>
                                     <input type="date" id="order_date" class="form-control @error('order_date') is-invalid @enderror" wire:model.defer="order_date">
                                     @error('order_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="total_amount">Total Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -229,9 +229,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="cancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 Save Order
                             </button>
@@ -273,28 +273,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Customer</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-user-line me-2 text-primary"></i>
                                     <span class="fw-medium">{{ $viewingOrder->customer?->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Order Date</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-calendar-line me-2 text-primary"></i>
                                     <span class="fw-medium">{{ optional($viewingOrder->order_date)->format('M d, Y') ?? 'N/A' }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Total Amount</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-money-dollar-circle-line me-2 text-success"></i>
                                     <span class="fw-bold text-success fs-5">${{ number_format($viewingOrder->total_amount, 2) }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Created</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-time-line me-2 text-primary"></i>
@@ -311,7 +311,7 @@
                                             </h6>
                                             <div class="row g-3">
                                                 @if($viewingOrder->customer->email)
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Email</small>
                                                         <a href="mailto:{{ $viewingOrder->customer->email }}" class="text-primary">
                                                             {{ $viewingOrder->customer->email }}
@@ -319,7 +319,7 @@
                                                     </div>
                                                 @endif
                                                 @if($viewingOrder->customer->phone)
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Phone</small>
                                                         <span>{{ $viewingOrder->customer->phone }}</span>
                                                     </div>
@@ -337,9 +337,9 @@
                             @endif
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" wire:click="closeView">Close</button>
-                        <button type="button" class="btn btn-info" onclick="printOrderReceipt({{ $viewingOrder->id }})">
+                    <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                        <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="closeView">Close</button>
+                        <button type="button" class="btn btn-info w-100 w-md-auto m-0" onclick="printOrderReceipt({{ $viewingOrder->id }})">
                             <i class="ri-printer-line me-1"></i>
                             Print
                         </button>

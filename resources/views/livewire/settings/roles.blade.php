@@ -40,7 +40,7 @@
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-3">
             <div class="row g-3 align-items-center">
-                <div class="col-md-5">
+                <div class="col-12 col-md-5">
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0">
                             <i class='bx bx-search text-muted'></i>
@@ -56,19 +56,19 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <select wire:model.live="sortField" class="form-select">
                         <option value="name">Sort by Name</option>
                         <option value="created_at">Sort by Date Created</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <select wire:model.live="sortDirection" class="form-select">
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <select wire:model.live="perPage" class="form-select">
                         <option value="10">10 / page</option>
                         <option value="25">25 / page</option>
@@ -224,7 +224,7 @@
                                     Basic Information
                                 </h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6">
+                                    <div class="col-12 col-md-6">
                                         <label class="form-label fw-semibold">
                                             Role Name <span class="text-danger">*</span>
                                         </label>
@@ -237,7 +237,7 @@
                                         @enderror
                                         <small class="text-muted">Choose a clear, descriptive name</small>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-12 col-md-6">
                                         <label class="form-label fw-semibold">Description</label>
                                         <input type="text" 
                                             wire:model="description" 
@@ -304,7 +304,7 @@
                                     @endphp
 
                                     @foreach($permissionGroups as $groupName => $perms)
-                                        <div class="col-lg-6">
+                                        <div class="col-12 col-md-6">
                                             <div class="card bg-light border-0">
                                                 <div class="card-body p-3">
                                                     <h6 class="fw-semibold mb-2 small">{{ $groupName }}</h6>
@@ -362,11 +362,11 @@
                             @endif
                         </div>
 
-                        <div class="modal-footer border-0 bg-light">
-                            <button type="button" wire:click="cancel" class="btn btn-secondary">
+                        <div class="modal-footer border-0 bg-light d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click="cancel" class="btn btn-secondary w-100 w-md-auto m-0">
                                 <i class='bx bx-x me-2'></i>Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="save">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0" wire:loading.attr="disabled" wire:target="save">
                                 <span wire:loading.remove wire:target="save">
                                     <i class='bx bx-{{ $roleId ? "save" : "plus-circle" }} me-2'></i>
                                     {{ $roleId ? 'Update Role' : 'Create Role' }}

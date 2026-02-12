@@ -130,13 +130,13 @@
                     <form wire:submit.prevent="save">
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Branch Name <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="name" class="form-control @error('name') is-invalid @enderror">
                                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Branch Code <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="code" class="form-control @error('code') is-invalid @enderror">
                                     @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -148,37 +148,37 @@
                                     @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">City <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="city" class="form-control @error('city') is-invalid @enderror">
                                     @error('city') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">State <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="state" class="form-control @error('state') is-invalid @enderror">
                                     @error('state') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Postal Code <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="postal_code" class="form-control @error('postal_code') is-invalid @enderror">
                                     @error('postal_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Phone <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="phone" class="form-control @error('phone') is-invalid @enderror">
                                     @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Email <span class="text-danger">*</span></label>
                                     <input type="email" wire:model="email" class="form-control @error('email') is-invalid @enderror">
                                     @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Manager</label>
                                     <select wire:model="manager_id" class="form-select @error('manager_id') is-invalid @enderror">
                                         <option value="">Select Manager (Optional)</option>
@@ -189,13 +189,13 @@
                                     @error('manager_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Established Date <span class="text-danger">*</span></label>
                                     <input type="date" wire:model="established_date" class="form-control @error('established_date') is-invalid @enderror">
                                     @error('established_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Status <span class="text-danger">*</span></label>
                                     <select wire:model="branch_status" class="form-select @error('branch_status') is-invalid @enderror">
                                         <option value="active">Active</option>
@@ -212,11 +212,11 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <span wire:loading.remove wire:target="save">
                                     {{ $editing ? 'Update' : 'Create' }} Branch
                                 </span>

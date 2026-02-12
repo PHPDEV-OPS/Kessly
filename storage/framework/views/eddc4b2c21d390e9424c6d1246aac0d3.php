@@ -48,13 +48,13 @@
                     </select>
                 </div>
 
-                <div class="col-12 col-md-4">
-                    <div class="d-flex flex-wrap justify-content-between justify-content-md-end gap-2">
-                        <button type="button" class="btn btn-label-secondary" wire:click="export">
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
                             <i class="ri-download-line me-1"></i>
                             Export
                         </button>
-                        <button type="button" class="btn btn-primary" wire:click="showAddProductModal">
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="showAddProductModal">
                             <i class="ri-add-line me-1"></i>
                             Add Product
                         </button>
@@ -178,7 +178,7 @@
     <!-- MODAL -->
     <!--[if BLOCK]><![endif]--><?php if($showForm): ?>
         <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <form wire:submit.prevent="save">
                         <div class="modal-header">
@@ -218,7 +218,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
                                 <!-- Category and Supplier -->
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select
                                         id="category_id"
@@ -246,7 +246,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="supplier_id" class="form-label">Supplier</label>
                                     <select
                                         id="supplier_id"
@@ -275,7 +275,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
                                 <!-- Stock and Price -->
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="stock" class="form-label">Stock Quantity <span class="text-danger">*</span></label>
                                     <input
                                         type="number"
@@ -301,7 +301,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>

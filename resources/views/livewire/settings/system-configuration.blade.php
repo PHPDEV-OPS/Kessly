@@ -90,14 +90,14 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Currency <span class="text-danger">*</span></label>
                                 <select wire:model="currency" class="form-select @error('currency') is-invalid @enderror">
                                     <option value="KES">Kenyan Shilling (KES)</option>
                                 </select>
                                 @error('currency') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Currency Position <span class="text-danger">*</span></label>
                                 <select wire:model="currency_position" class="form-select @error('currency_position') is-invalid @enderror">
                                     <option value="before">Before Amount ($100)</option>
@@ -105,7 +105,7 @@
                                 </select>
                                 @error('currency_position') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Date Format <span class="text-danger">*</span></label>
                                 <select wire:model="date_format" class="form-select @error('date_format') is-invalid @enderror">
                                     @foreach($this->getDateFormats() as $key => $value)
@@ -114,7 +114,7 @@
                                 </select>
                                 @error('date_format') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Time Format <span class="text-danger">*</span></label>
                                 <select wire:model="time_format" class="form-select @error('time_format') is-invalid @enderror">
                                     @foreach($this->getTimeFormats() as $key => $value)
@@ -123,12 +123,12 @@
                                 </select>
                                 @error('time_format') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Decimal Separator <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="decimal_separator" class="form-control @error('decimal_separator') is-invalid @enderror" maxlength="1" placeholder=".">
                                 @error('decimal_separator') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Thousands Separator <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="thousands_separator" class="form-control @error('thousands_separator') is-invalid @enderror" maxlength="1" placeholder=",">
                                 @error('thousands_separator') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -149,19 +149,19 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Session Lifetime (minutes) <span class="text-danger">*</span></label>
                                 <input type="number" wire:model="session_lifetime" class="form-control @error('session_lifetime') is-invalid @enderror" min="1" max="10080">
                                 @error('session_lifetime') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 <small class="text-muted">How long users stay logged in</small>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Max Login Attempts <span class="text-danger">*</span></label>
                                 <input type="number" wire:model="max_login_attempts" class="form-control @error('max_login_attempts') is-invalid @enderror" min="1" max="20">
                                 @error('max_login_attempts') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 <small class="text-muted">Before account lockout</small>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Lockout Duration (minutes) <span class="text-danger">*</span></label>
                                 <input type="number" wire:model="lockout_duration" class="form-control @error('lockout_duration') is-invalid @enderror" min="1" max="1440">
                                 @error('lockout_duration') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -192,12 +192,12 @@
 
             <!-- Action Buttons -->
             <div class="col-12">
-                <div class="d-flex gap-2 justify-content-end">
-                    <button type="button" wire:click="resetToDefaults" class="btn btn-outline-secondary" wire:loading.attr="disabled">
+                <div class="d-flex gap-2 justify-content-end flex-column flex-md-row">
+                    <button type="button" wire:click="resetToDefaults" class="btn btn-outline-secondary w-100 w-md-auto" wire:loading.attr="disabled">
                         <i class='bx bx-reset me-1'></i>
                         Reset to Defaults
                     </button>
-                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                    <button type="submit" class="btn btn-primary w-100 w-md-auto" wire:loading.attr="disabled">
                         <span wire:loading.remove wire:target="save">
                             <i class='bx bx-save me-1'></i>Save Configuration
                         </span>

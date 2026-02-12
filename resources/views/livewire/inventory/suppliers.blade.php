@@ -176,22 +176,22 @@
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.defer="name" placeholder="Supplier name">
                                 @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control @error('contact_email') is-invalid @enderror" wire:model.defer="contact_email" placeholder="email@example.com">
                                 @error('contact_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Phone</label>
                                 <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model.defer="phone" placeholder="+1 234 567 8900">
                                 @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Address</label>
                                 <input type="text" class="form-control @error('address') is-invalid @enderror" wire:model.defer="address" placeholder="123 Main St, City">
                                 @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -203,9 +203,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
-                        <button type="button" class="btn btn-primary" wire:click="save">
+                    <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                        <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary w-100 w-md-auto m-0" wire:click="save">
                             <i class="ri-save-line me-1"></i>
                             {{ $supplierId ? 'Update' : 'Create' }}
                         </button>

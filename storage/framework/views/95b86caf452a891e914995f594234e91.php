@@ -214,7 +214,7 @@
                     <form wire:submit="save">
                         <div class="modal-body">
                             <div class="row g-4">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Budget Name</label>
                                     <input type="text" wire:model="name" class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -234,7 +234,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Category</label>
                                     <input type="text" wire:model="budget_category" class="form-control <?php $__errorArgs = ['budget_category'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -254,7 +254,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Branch (Optional)</label>
                                     <select wire:model="branch_id" class="form-select <?php $__errorArgs = ['branch_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -279,7 +279,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Allocated Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -302,7 +302,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Period Start</label>
                                     <input type="date" wire:model="period_start" class="form-control <?php $__errorArgs = ['period_start'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -322,7 +322,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Period End</label>
                                     <input type="date" wire:model="period_end" class="form-control <?php $__errorArgs = ['period_end'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -342,7 +342,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Status</label>
                                     <select wire:model="budget_status" class="form-select <?php $__errorArgs = ['budget_status'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -389,12 +389,12 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" wire:click="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 <i class="ri-close-line me-1"></i>
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 <?php echo e($editing ? 'Update' : 'Create'); ?> Budget
                             </button>

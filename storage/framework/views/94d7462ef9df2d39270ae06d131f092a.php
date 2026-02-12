@@ -135,7 +135,7 @@
                     <form wire:submit.prevent="save">
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Branch Name <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="name" class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -155,7 +155,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Branch Code <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="code" class="form-control <?php $__errorArgs = ['code'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -195,7 +195,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">City <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="city" class="form-control <?php $__errorArgs = ['city'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -215,7 +215,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">State <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="state" class="form-control <?php $__errorArgs = ['state'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -235,7 +235,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Postal Code <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="postal_code" class="form-control <?php $__errorArgs = ['postal_code'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -255,7 +255,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Phone <span class="text-danger">*</span></label>
                                     <input type="text" wire:model="phone" class="form-control <?php $__errorArgs = ['phone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -275,7 +275,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label">Email <span class="text-danger">*</span></label>
                                     <input type="email" wire:model="email" class="form-control <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -295,7 +295,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Manager</label>
                                     <select wire:model="manager_id" class="form-select <?php $__errorArgs = ['manager_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -320,7 +320,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Established Date <span class="text-danger">*</span></label>
                                     <input type="date" wire:model="established_date" class="form-control <?php $__errorArgs = ['established_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -340,7 +340,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <label class="form-label">Status <span class="text-danger">*</span></label>
                                     <select wire:model="branch_status" class="form-select <?php $__errorArgs = ['branch_status'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -385,11 +385,11 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <span wire:loading.remove wire:target="save">
                                     <?php echo e($editing ? 'Update' : 'Create'); ?> Branch
                                 </span>

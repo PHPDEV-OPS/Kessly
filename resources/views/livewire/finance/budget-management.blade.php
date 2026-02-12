@@ -210,19 +210,19 @@
                     <form wire:submit="save">
                         <div class="modal-body">
                             <div class="row g-4">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Budget Name</label>
                                     <input type="text" wire:model="name" class="form-control @error('name') is-invalid @enderror">
                                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Category</label>
                                     <input type="text" wire:model="budget_category" class="form-control @error('budget_category') is-invalid @enderror">
                                     @error('budget_category') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Branch (Optional)</label>
                                     <select wire:model="branch_id" class="form-select @error('branch_id') is-invalid @enderror">
                                         <option value="">All Branches</option>
@@ -233,7 +233,7 @@
                                     @error('branch_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Allocated Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -242,19 +242,19 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Period Start</label>
                                     <input type="date" wire:model="period_start" class="form-control @error('period_start') is-invalid @enderror">
                                     @error('period_start') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Period End</label>
                                     <input type="date" wire:model="period_end" class="form-control @error('period_end') is-invalid @enderror">
                                     @error('period_end') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Status</label>
                                     <select wire:model="budget_status" class="form-select @error('budget_status') is-invalid @enderror">
                                         <option value="draft">Draft</option>
@@ -273,12 +273,12 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" wire:click="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 <i class="ri-close-line me-1"></i>
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 {{ $editing ? 'Update' : 'Create' }} Budget
                             </button>

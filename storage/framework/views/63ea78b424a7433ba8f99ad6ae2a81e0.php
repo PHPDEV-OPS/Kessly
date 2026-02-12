@@ -1,20 +1,22 @@
 <div>
     <!-- Success/Error Messages -->
-    @if (session()->has('message'))
+    <!--[if BLOCK]><![endif]--><?php if(session()->has('message')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class='bx bx-check-circle me-2'></i>
-            {{ session('message') }}
+            <?php echo e(session('message')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-    @if (session()->has('error'))
+    <?php if(session()->has('error')): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class='bx bx-error-circle me-2'></i>
-            {{ session('error') }}
+            <?php echo e(session('error')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
     <form wire:submit="save">
         <div class="row g-4">
@@ -30,8 +32,22 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Minimum Length <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="password_min_length" class="form-control @error('password_min_length') is-invalid @enderror" min="6" max="128">
-                            @error('password_min_length') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="password_min_length" class="form-control <?php $__errorArgs = ['password_min_length'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="6" max="128">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['password_min_length'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="mb-3">
                             <div class="form-check form-switch">
@@ -67,14 +83,42 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Password Expiry (days)</label>
-                            <input type="number" wire:model="password_expiry_days" class="form-control @error('password_expiry_days') is-invalid @enderror" placeholder="Leave empty for no expiry">
-                            @error('password_expiry_days') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="password_expiry_days" class="form-control <?php $__errorArgs = ['password_expiry_days'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" placeholder="Leave empty for no expiry">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['password_expiry_days'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <small class="text-muted">Force password change after this many days</small>
                         </div>
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Password History Limit</label>
-                            <input type="number" wire:model="password_history_limit" class="form-control @error('password_history_limit') is-invalid @enderror" min="0" max="24">
-                            @error('password_history_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="password_history_limit" class="form-control <?php $__errorArgs = ['password_history_limit'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="0" max="24">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['password_history_limit'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <small class="text-muted">Prevent reusing last N passwords</small>
                         </div>
                     </div>
@@ -93,14 +137,42 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Session Timeout (minutes) <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="session_timeout" class="form-control @error('session_timeout') is-invalid @enderror" min="5" max="1440">
-                            @error('session_timeout') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="session_timeout" class="form-control <?php $__errorArgs = ['session_timeout'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="5" max="1440">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['session_timeout'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <small class="text-muted">Auto logout after inactivity</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Concurrent Sessions <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="concurrent_sessions" class="form-control @error('concurrent_sessions') is-invalid @enderror" min="1" max="10">
-                            @error('concurrent_sessions') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="concurrent_sessions" class="form-control <?php $__errorArgs = ['concurrent_sessions'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="1" max="10">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['concurrent_sessions'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <small class="text-muted">Max active sessions per user</small>
                         </div>
                         <div class="mb-3">
@@ -113,8 +185,22 @@
                         </div>
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Remember Me Duration (days) <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="remember_me_duration" class="form-control @error('remember_me_duration') is-invalid @enderror" min="1" max="365">
-                            @error('remember_me_duration') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="remember_me_duration" class="form-control <?php $__errorArgs = ['remember_me_duration'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="1" max="365">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['remember_me_duration'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                     </div>
                 </div>
@@ -140,18 +226,60 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Max Failed Attempts <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="max_failed_attempts" class="form-control @error('max_failed_attempts') is-invalid @enderror" min="1" max="20">
-                            @error('max_failed_attempts') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="max_failed_attempts" class="form-control <?php $__errorArgs = ['max_failed_attempts'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="1" max="20">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['max_failed_attempts'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Lockout Duration (minutes) <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="lockout_duration_minutes" class="form-control @error('lockout_duration_minutes') is-invalid @enderror" min="1" max="1440">
-                            @error('lockout_duration_minutes') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="lockout_duration_minutes" class="form-control <?php $__errorArgs = ['lockout_duration_minutes'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="1" max="1440">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['lockout_duration_minutes'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Reset Counter After (minutes) <span class="text-danger">*</span></label>
-                            <input type="number" wire:model="reset_failed_attempts_after" class="form-control @error('reset_failed_attempts_after') is-invalid @enderror" min="1" max="1440">
-                            @error('reset_failed_attempts_after') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <input type="number" wire:model="reset_failed_attempts_after" class="form-control <?php $__errorArgs = ['reset_failed_attempts_after'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" min="1" max="1440">
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['reset_failed_attempts_after'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <small class="text-muted">Reset failed attempts counter</small>
                         </div>
                     </div>
@@ -208,12 +336,12 @@
                                     IP Whitelist
                                 </label>
                             </div>
-                            @if($ip_whitelist_enabled)
+                            <!--[if BLOCK]><![endif]--><?php if($ip_whitelist_enabled): ?>
                                 <div class="mt-2">
                                     <textarea wire:model="allowed_ips" class="form-control" rows="3" placeholder="Enter allowed IPs (one per line)"></textarea>
                                     <small class="text-muted">One IP address per line</small>
                                 </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                     </div>
                 </div>
@@ -236,3 +364,4 @@
         </div>
     </form>
 </div>
+<?php /**PATH D:\School-Projects\Software-dev\Kessly\resources\views/livewire/settings/security-settings.blade.php ENDPATH**/ ?>
