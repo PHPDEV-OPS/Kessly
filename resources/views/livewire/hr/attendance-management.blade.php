@@ -186,7 +186,7 @@
                     <form wire:submit.prevent="save">
                         <div class="modal-body">
                             <div class="row g-4">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Employee</label>
                                     <select wire:model="employee_id" class="form-select @error('employee_id') is-invalid @enderror">
                                         <option value="">Select Employee</option>
@@ -197,37 +197,37 @@
                                     @error('employee_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Date</label>
                                     <input type="date" wire:model="date" class="form-control @error('date') is-invalid @enderror">
                                     @error('date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Clock In</label>
                                     <input type="time" wire:model="clock_in" class="form-control @error('clock_in') is-invalid @enderror">
                                     @error('clock_in') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Clock Out</label>
                                     <input type="time" wire:model="clock_out" class="form-control @error('clock_out') is-invalid @enderror">
                                     @error('clock_out') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Break Start</label>
                                     <input type="time" wire:model="break_start" class="form-control @error('break_start') is-invalid @enderror">
                                     @error('break_start') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Break End</label>
                                     <input type="time" wire:model="break_end" class="form-control @error('break_end') is-invalid @enderror">
                                     @error('break_end') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Status</label>
                                     <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
                                         <option value="present">Present</option>
@@ -246,12 +246,12 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 <i class="ri-close-line me-1"></i>
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 {{ $editing ? 'Update' : 'Save' }} Attendance
                             </button>

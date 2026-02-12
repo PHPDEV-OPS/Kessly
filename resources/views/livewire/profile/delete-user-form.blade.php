@@ -58,7 +58,7 @@ new class extends Component
                     id="password"
                     name="password"
                     type="password"
-                    class="mt-1 block w-3/4"
+                    class="mt-1 block w-full md:w-3/4"
                     placeholder="{{ __('Password') }}"
                 />
 

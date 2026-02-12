@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="company_name" class="form-control <?php $__errorArgs = ['company_name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -50,7 +50,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Email Address</label>
                                 <input type="email" wire:model="company_email" class="form-control <?php $__errorArgs = ['company_email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -69,7 +69,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Phone Number</label>
                                 <input type="text" wire:model="company_phone" class="form-control <?php $__errorArgs = ['company_phone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -88,7 +88,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Website</label>
                                 <input type="url" wire:model="company_website" class="form-control <?php $__errorArgs = ['company_website'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -140,7 +140,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">City</label>
                                 <input type="text" wire:model="company_city" class="form-control <?php $__errorArgs = ['company_city'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -159,7 +159,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">State/Province</label>
                                 <input type="text" wire:model="company_state" class="form-control <?php $__errorArgs = ['company_state'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -178,7 +178,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Postal Code</label>
                                 <input type="text" wire:model="company_postal_code" class="form-control <?php $__errorArgs = ['company_postal_code'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -197,7 +197,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Country</label>
                                 <input type="text" wire:model="company_country" class="form-control <?php $__errorArgs = ['company_country'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -230,7 +230,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Tax Number</label>
                                 <input type="text" wire:model="tax_number" class="form-control <?php $__errorArgs = ['tax_number'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -249,7 +249,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Registration Number</label>
                                 <input type="text" wire:model="registration_number" class="form-control <?php $__errorArgs = ['registration_number'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -268,7 +268,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">VAT Number</label>
                                 <input type="text" wire:model="vat_number" class="form-control <?php $__errorArgs = ['vat_number'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -287,7 +287,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Industry</label>
                                 <select wire:model="industry" class="form-select <?php $__errorArgs = ['industry'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -311,7 +311,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Company Size</label>
                                 <select wire:model="company_size" class="form-select <?php $__errorArgs = ['company_size'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -335,7 +335,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Founded Year</label>
                                 <input type="number" wire:model="founded_year" class="form-control <?php $__errorArgs = ['founded_year'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

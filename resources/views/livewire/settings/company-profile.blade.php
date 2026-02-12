@@ -29,22 +29,22 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="company_name" class="form-control @error('company_name') is-invalid @enderror" placeholder="Enter company name">
                                 @error('company_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Email Address</label>
                                 <input type="email" wire:model="company_email" class="form-control @error('company_email') is-invalid @enderror" placeholder="company@example.com">
                                 @error('company_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Phone Number</label>
                                 <input type="text" wire:model="company_phone" class="form-control @error('company_phone') is-invalid @enderror" placeholder="+254 700 000 000">
                                 @error('company_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Website</label>
                                 <input type="url" wire:model="company_website" class="form-control @error('company_website') is-invalid @enderror" placeholder="https://example.com">
                                 @error('company_website') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -68,22 +68,22 @@
                                 <textarea wire:model="company_address" class="form-control @error('company_address') is-invalid @enderror" rows="2" placeholder="Enter street address"></textarea>
                                 @error('company_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">City</label>
                                 <input type="text" wire:model="company_city" class="form-control @error('company_city') is-invalid @enderror" placeholder="City">
                                 @error('company_city') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">State/Province</label>
                                 <input type="text" wire:model="company_state" class="form-control @error('company_state') is-invalid @enderror" placeholder="State">
                                 @error('company_state') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Postal Code</label>
                                 <input type="text" wire:model="company_postal_code" class="form-control @error('company_postal_code') is-invalid @enderror" placeholder="00100">
                                 @error('company_postal_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Country</label>
                                 <input type="text" wire:model="company_country" class="form-control @error('company_country') is-invalid @enderror" placeholder="Kenya">
                                 @error('company_country') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -102,22 +102,22 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Tax Number</label>
                                 <input type="text" wire:model="tax_number" class="form-control @error('tax_number') is-invalid @enderror" placeholder="Tax ID">
                                 @error('tax_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Registration Number</label>
                                 <input type="text" wire:model="registration_number" class="form-control @error('registration_number') is-invalid @enderror" placeholder="Registration No.">
                                 @error('registration_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">VAT Number</label>
                                 <input type="text" wire:model="vat_number" class="form-control @error('vat_number') is-invalid @enderror" placeholder="VAT No.">
                                 @error('vat_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Industry</label>
                                 <select wire:model="industry" class="form-select @error('industry') is-invalid @enderror">
                                     <option value="">Select Industry</option>
@@ -127,7 +127,7 @@
                                 </select>
                                 @error('industry') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Company Size</label>
                                 <select wire:model="company_size" class="form-select @error('company_size') is-invalid @enderror">
                                     <option value="">Select Size</option>
@@ -137,7 +137,7 @@
                                 </select>
                                 @error('company_size') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Founded Year</label>
                                 <input type="number" wire:model="founded_year" class="form-control @error('founded_year') is-invalid @enderror" placeholder="2020" min="1800" max="{{ date('Y') }}">
                                 @error('founded_year') <div class="invalid-feedback">{{ $message }}</div> @enderror

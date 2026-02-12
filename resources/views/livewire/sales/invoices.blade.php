@@ -14,11 +14,11 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3 align-items-end">
-                <div class="col-md-6">
+                <div class="col-12 col-md-6">
                     <label class="form-label small text-muted">Search</label>
                     <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search by invoice name, customer..." class="form-control">
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <label class="form-label small text-muted">Per Page</label>
                     <select wire:model.live="perPage" class="form-select">
                         <option value="10">10</option>
@@ -27,15 +27,17 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <div class="col-md-4 text-end">
-                    <button type="button" class="btn btn-label-secondary" wire:click="export">
-                        <i class="ri-download-line me-1"></i>
-                        Export
-                    </button>
-                    <button type="button" class="btn btn-primary" wire:click="create">
-                        <i class="ri-add-line me-1"></i>
-                        Add Invoice
-                    </button>
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
+                            <i class="ri-download-line me-1"></i>
+                            Export
+                        </button>
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="create">
+                            <i class="ri-add-line me-1"></i>
+                            Add Invoice
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,7 +46,7 @@
     <!-- Invoices Table -->
     <div class="card">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0 table-stacked">
             <thead>
                 <tr>
                     <th>Invoice Name</th>
@@ -71,7 +73,7 @@
             <tbody>
                 @forelse ($invoices as $invoice)
                     <tr>
-                        <td>
+                        <td data-label="Invoice Name">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-sm">
                                     <span class="avatar-initial rounded bg-label-info">
@@ -81,10 +83,10 @@
                                 <span class="fw-medium">{{ $invoice->name }}</span>
                             </div>
                         </td>
-                        <td>{{ $invoice->customer?->name ?? '—' }}</td>
-                        <td>{{ optional($invoice->created_at)->format('M d, Y') }}</td>
-                        <td><span class="fw-semibold">Ksh {{ number_format($invoice->amount, 2) }}</span></td>
-                        <td>
+                        <td data-label="Customer">{{ $invoice->customer?->name ?? '—' }}</td>
+                        <td data-label="Date">{{ optional($invoice->created_at)->format('M d, Y') }}</td>
+                        <td data-label="Amount"><span class="fw-semibold">Ksh {{ number_format($invoice->amount, 2) }}</span></td>
+                        <td class="text-end" data-label="Actions">
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="view({{ $invoice->id }})" title="View">
                                     <i class="ri-eye-line ri-20px"></i>
@@ -159,14 +161,14 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="invoice_name">Invoice Name</label>
                                     <input type="text" id="invoice_name" class="form-control @error('name') is-invalid @enderror" wire:model.defer="name">
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="invoice_customer_id">Customer</label>
                                     <select id="invoice_customer_id" class="form-select @error('customer_id') is-invalid @enderror" wire:model.defer="customer_id">
                                         <option value="">Select customer</option>
@@ -190,9 +192,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="cancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 Save Invoice
                             </button>
@@ -234,28 +236,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Customer</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-user-line me-2 text-primary"></i>
                                     <span class="fw-medium">{{ $viewingInvoice->customer?->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Amount</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-money-dollar-circle-line me-2 text-success"></i>
                                     <span class="fw-bold text-success fs-5">${{ number_format($viewingInvoice->amount, 2) }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Created Date</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-calendar-line me-2 text-primary"></i>
                                     <span class="fw-medium">{{ $viewingInvoice->created_at->format('M d, Y') }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Last Updated</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-time-line me-2 text-primary"></i>
@@ -272,7 +274,7 @@
                                             </h6>
                                             <div class="row g-3">
                                                 @if($viewingInvoice->customer->email)
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Email</small>
                                                         <a href="mailto:{{ $viewingInvoice->customer->email }}" class="text-primary">
                                                             {{ $viewingInvoice->customer->email }}
@@ -280,7 +282,7 @@
                                                     </div>
                                                 @endif
                                                 @if($viewingInvoice->customer->phone)
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Phone</small>
                                                         <span>{{ $viewingInvoice->customer->phone }}</span>
                                                     </div>
@@ -298,13 +300,13 @@
                             @endif
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" wire:click="closeView">Close</button>
-                        <button type="button" class="btn btn-info" onclick="printInvoiceDocument({{ $viewingInvoice->id }})">
+                    <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                        <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="closeView">Close</button>
+                        <button type="button" class="btn btn-info w-100 w-md-auto m-0" onclick="printInvoiceDocument({{ $viewingInvoice->id }})">
                             <i class="ri-printer-line me-1"></i>
                             Print
                         </button>
-                        <button type="button" class="btn btn-primary" wire:click="edit({{ $viewingInvoice->id }})">
+                        <button type="button" class="btn btn-primary w-100 w-md-auto m-0" wire:click="edit({{ $viewingInvoice->id }})">
                             <i class="ri-edit-line me-1"></i>
                             Edit Invoice
                         </button>

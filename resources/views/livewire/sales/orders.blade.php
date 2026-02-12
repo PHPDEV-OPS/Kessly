@@ -14,11 +14,11 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3 align-items-end">
-                <div class="col-md-6">
+                <div class="col-12 col-md-6">
                     <label class="form-label small text-muted">Search</label>
                     <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search by order #, customer..." class="form-control">
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <label class="form-label small text-muted">Per Page</label>
                     <select wire:model.live="perPage" class="form-select">
                         <option value="10">10</option>
@@ -27,15 +27,17 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <div class="col-md-4 text-end">
-                    <button type="button" class="btn btn-label-secondary" wire:click="export">
-                        <i class="ri-download-line me-1"></i>
-                        Export
-                    </button>
-                    <button type="button" class="btn btn-primary" wire:click="create">
-                        <i class="ri-add-line me-1"></i>
-                        Add Order
-                    </button>
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
+                            <i class="ri-download-line me-1"></i>
+                            Export
+                        </button>
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="create">
+                            <i class="ri-add-line me-1"></i>
+                            Add Order
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +45,7 @@
 
     <!-- Orders Table -->
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 table-stacked">
             <thead>
                 <tr>
                     <th>
@@ -77,7 +79,7 @@
             <tbody>
                 @forelse ($orders as $order)
                     <tr>
-                        <td>
+                        <td data-label="Order #">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-sm">
                                     <span class="avatar-initial rounded bg-label-primary">
@@ -87,10 +89,10 @@
                                 <span class="fw-medium">{{ $order->order_number }}</span>
                             </div>
                         </td>
-                        <td>{{ $order->customer?->name ?? '—' }}</td>
-                        <td>{{ optional($order->order_date)->format('M d, Y') }}</td>
-                        <td><span class="fw-semibold">Ksh {{ number_format($order->total_amount, 2) }}</span></td>
-                        <td>
+                        <td data-label="Customer">{{ $order->customer?->name ?? '—' }}</td>
+                        <td data-label="Date">{{ optional($order->order_date)->format('M d, Y') }}</td>
+                        <td data-label="Total"><span class="fw-semibold">Ksh {{ number_format($order->total_amount, 2) }}</span></td>
+                        <td class="text-end" data-label="Actions">
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" wire:click="view({{ $order->id }})" title="View">
                                     <i class="ri-eye-line ri-20px"></i>
@@ -189,14 +191,14 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="order_number">Order Number</label>
                                     <input type="text" id="order_number" class="form-control @error('order_number') is-invalid @enderror" wire:model.defer="order_number">
                                     @error('order_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="customer_id">Customer</label>
                                     <select id="customer_id" class="form-select @error('customer_id') is-invalid @enderror" wire:model.defer="customer_id">
                                         <option value="">Select customer</option>
@@ -208,14 +210,14 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="order_date">Order Date</label>
                                     <input type="date" id="order_date" class="form-control @error('order_date') is-invalid @enderror" wire:model.defer="order_date">
                                     @error('order_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="total_amount">Total Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -227,9 +229,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="cancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 Save Order
                             </button>
@@ -271,28 +273,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Customer</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-user-line me-2 text-primary"></i>
                                     <span class="fw-medium">{{ $viewingOrder->customer?->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Order Date</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-calendar-line me-2 text-primary"></i>
                                     <span class="fw-medium">{{ optional($viewingOrder->order_date)->format('M d, Y') ?? 'N/A' }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Total Amount</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-money-dollar-circle-line me-2 text-success"></i>
                                     <span class="fw-bold text-success fs-5">${{ number_format($viewingOrder->total_amount, 2) }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Created</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-time-line me-2 text-primary"></i>
@@ -309,7 +311,7 @@
                                             </h6>
                                             <div class="row g-3">
                                                 @if($viewingOrder->customer->email)
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Email</small>
                                                         <a href="mailto:{{ $viewingOrder->customer->email }}" class="text-primary">
                                                             {{ $viewingOrder->customer->email }}
@@ -317,7 +319,7 @@
                                                     </div>
                                                 @endif
                                                 @if($viewingOrder->customer->phone)
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Phone</small>
                                                         <span>{{ $viewingOrder->customer->phone }}</span>
                                                     </div>
@@ -335,9 +337,9 @@
                             @endif
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" wire:click="closeView">Close</button>
-                        <button type="button" class="btn btn-info" onclick="printOrderReceipt({{ $viewingOrder->id }})">
+                    <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                        <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="closeView">Close</button>
+                        <button type="button" class="btn btn-info w-100 w-md-auto m-0" onclick="printOrderReceipt({{ $viewingOrder->id }})">
                             <i class="ri-printer-line me-1"></i>
                             Print
                         </button>

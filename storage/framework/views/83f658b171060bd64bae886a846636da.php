@@ -163,12 +163,39 @@
         const searchContent = document.getElementById('searchContent');
         
         if (searchInput) {
-            // Position search results dynamically
+            const SEARCH_DROPDOWN_MIN = 360;
+            const SEARCH_DROPDOWN_MAX = 520;
+
+            // Position search results dynamically with mobile-first rules
             function positionSearchResults() {
-                if (searchInput && searchResults) {
-                    const rect = searchInput.getBoundingClientRect();
-                    searchResults.style.top = (rect.bottom + 8) + 'px';
-                    searchResults.style.left = (rect.right - 450) + 'px'; // Align right edge
+                if (!searchInput || !searchResults) return;
+
+                const rect = searchInput.getBoundingClientRect();
+                const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+                if (viewportWidth < 768) {
+                    searchResults.style.position = 'fixed';
+                    searchResults.style.top = `${rect.bottom + 10}px`;
+                    searchResults.style.left = '12px';
+                    searchResults.style.right = '12px';
+                    searchResults.style.width = 'auto';
+                    searchResults.style.minWidth = '0';
+                    searchResults.style.maxHeight = '70vh';
+                } else {
+                    const dropdownWidth = Math.min(
+                        SEARCH_DROPDOWN_MAX,
+                        Math.max(SEARCH_DROPDOWN_MIN, rect.width + 220)
+                    );
+                    const leftOffset = rect.right - dropdownWidth;
+
+                    searchResults.style.position = 'fixed';
+                    searchResults.style.top = `${rect.bottom + scrollTop + 8}px`;
+                    searchResults.style.left = `${leftOffset}px`;
+                    searchResults.style.right = 'auto';
+                    searchResults.style.width = `${dropdownWidth}px`;
+                    searchResults.style.minWidth = `${dropdownWidth}px`;
+                    searchResults.style.maxHeight = '60vh';
                 }
             }
             

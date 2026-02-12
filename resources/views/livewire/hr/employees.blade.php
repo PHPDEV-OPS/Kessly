@@ -146,13 +146,13 @@
                     <form wire:submit.prevent="save">
                         <div class="modal-body">
                             <div class="row g-4">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Employee ID</label>
                                     <input type="text" wire:model="employee_id" class="form-control @error('employee_id') is-invalid @enderror">
                                     @error('employee_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">User Account</label>
                                     <div class="mb-3">
                                         <div class="form-check">
@@ -172,12 +172,12 @@
                                                     <input type="text" wire:model="user_name" class="form-control @error('user_name') is-invalid @enderror" placeholder="Full Name">
                                                     @error('user_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-12 col-md-6">
                                                     <label class="form-label">Email <span class="text-danger">*</span></label>
                                                     <input type="email" wire:model="user_email" class="form-control @error('user_email') is-invalid @enderror" placeholder="user@example.com">
                                                     @error('user_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-12 col-md-6">
                                                     <label class="form-label">Role <span class="text-danger">*</span></label>
                                                     <select wire:model="user_role_id" class="form-select @error('user_role_id') is-invalid @enderror">
                                                         <option value="">Select Role</option>
@@ -206,7 +206,7 @@
                                     @endif
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Branch</label>
                                     <select wire:model="branch_id" class="form-select @error('branch_id') is-invalid @enderror">
                                         <option value="">Select Branch</option>
@@ -217,25 +217,25 @@
                                     @error('branch_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Department</label>
                                     <input type="text" wire:model="department_name" class="form-control @error('department_name') is-invalid @enderror">
                                     @error('department_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Position</label>
                                     <input type="text" wire:model="position" class="form-control @error('position') is-invalid @enderror">
                                     @error('position') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Hire Date</label>
                                     <input type="date" wire:model="hire_date" class="form-control @error('hire_date') is-invalid @enderror">
                                     @error('hire_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Salary</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -244,7 +244,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Status</label>
                                     <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
                                         <option value="active">Active</option>
@@ -265,19 +265,19 @@
                                     @error('manager_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Phone</label>
                                     <input type="text" wire:model="phone" class="form-control @error('phone') is-invalid @enderror">
                                     @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Emergency Contact</label>
                                     <input type="text" wire:model="emergency_contact" class="form-control @error('emergency_contact') is-invalid @enderror">
                                     @error('emergency_contact') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label fw-medium">Emergency Phone</label>
                                     <input type="text" wire:model="emergency_phone" class="form-control @error('emergency_phone') is-invalid @enderror">
                                     @error('emergency_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -297,12 +297,12 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" wire:click.prevent="closeModal" class="btn btn-label-secondary w-100 w-md-auto m-0">
                                 <i class="ri-close-line me-1"></i>
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 {{ $editing ? 'Update' : 'Create' }} Employee
                             </button>

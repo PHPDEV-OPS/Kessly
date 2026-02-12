@@ -40,7 +40,7 @@
             </div>
 
             <!-- Users Table -->
-            <div class="table-responsive">
+            <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
                     <thead class="table-light">
                         <tr>

@@ -446,3 +446,235 @@ main,
     transform: translateY(-2px);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
+
+/* Mobile-first global adjustments */
+:root {
+    --page-padding: 1rem;
+    --card-radius: 14px;
+    --card-padding: 1rem;
+}
+
+@media (max-width: 767px) {
+    .layout-page .content-wrapper {
+        padding-top: 0;
+    }
+
+    .layout-page .container-xxl,
+    .container,
+    .container-fluid {
+        padding-left: var(--page-padding);
+        padding-right: var(--page-padding);
+    }
+
+    .card {
+        border-radius: var(--card-radius);
+    }
+
+    .card-body {
+        padding: var(--card-padding);
+    }
+
+    .card-header,
+    .card-footer {
+        padding-left: var(--card-padding);
+        padding-right: var(--card-padding);
+    }
+
+    .btn,
+    .form-control,
+    .form-select,
+    .input-group-text {
+        min-height: 44px;
+        font-size: 0.95rem;
+    }
+
+    .btn-sm {
+        padding: 0.6rem 0.9rem;
+        min-height: 42px;
+    }
+
+    .table {
+        font-size: 0.95rem;
+    }
+
+    .table-responsive {
+        margin-bottom: 1rem;
+    }
+
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        gap: 0.25rem;
+    }
+
+    .nav-tabs .nav-link {
+        white-space: nowrap;
+    }
+
+    .breadcrumb {
+        flex-wrap: wrap;
+        row-gap: 0.35rem;
+    }
+
+    .layout-menu {
+        width: min(80vw, var(--flux-sidebar-width));
+    }
+}
+
+@media (min-width: 992px) {
+    .layout-page .container-xxl {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+/* Navbar: mobile-first responsive search */
+.layout-navbar {
+    padding-inline: 1rem;
+}
+
+.navbar-search {
+    width: 100%;
+}
+
+.navbar-search .nav-item {
+    width: 100%;
+}
+
+.global-search-input {
+    min-width: 0;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+.search-results-panel {
+    inset: auto 0 auto 0;
+    top: calc(var(--flux-header-height) + 0.75rem);
+    position: fixed;
+    width: auto;
+    min-width: 100%;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 0 0 1rem 1rem;
+    padding-block: 0;
+    z-index: 9999;
+}
+
+@media (max-width: 767px) {
+    .layout-navbar .navbar-nav-right {
+        width: 100%;
+    }
+
+    .layout-navbar .navbar-nav.align-items-center {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .layout-navbar .navbar-nav-right>.navbar-nav {
+        flex: 1 1 100%;
+    }
+
+    .layout-navbar .dropdown-menu.search-results-panel {
+        padding-inline: 0.75rem;
+    }
+
+    .content-wrapper .container-xxl {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .card {
+        border-radius: 16px;
+    }
+
+    .btn {
+        border-radius: 10px;
+    }
+
+    /* Stacked tables for small screens */
+    .table-stacked thead {
+        display: none;
+    }
+
+    .table-stacked tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 0.75rem 0.9rem;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
+        background: #fff;
+    }
+
+    .table-stacked tbody tr td {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.45rem 0;
+        border-top: 0;
+        line-height: 1.35;
+    }
+
+    .table-stacked tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6b7280;
+        letter-spacing: 0.03em;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        min-width: 120px;
+        flex-shrink: 0;
+    }
+
+    .table-stacked tbody tr td:last-child {
+        padding-bottom: 0.2rem;
+    }
+
+    .table-stacked .btn-icon {
+        padding: 0.35rem 0.55rem;
+    }
+
+    .table-stacked .badge,
+    .table-stacked .text-muted,
+    .table-stacked .fw-medium {
+        line-height: 1.35;
+    }
+
+    /* Soft separators inside stacked rows */
+    .table-stacked tbody tr td + td {
+        border-top: 1px dashed #e5e7eb;
+        padding-top: 0.55rem;
+        margin-top: 0.35rem;
+    }
+
+    .table-stacked tbody tr td:first-child {
+        border-top: none;
+        padding-top: 0.2rem;
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-search {
+        width: auto;
+    }
+
+    .navbar-search .nav-item {
+        width: auto;
+        min-width: 360px;
+    }
+
+    .search-results-panel {
+        position: fixed;
+        min-width: 420px;
+        max-width: 520px;
+        max-height: 60vh;
+        top: calc(100% + 0.5rem);
+        left: auto;
+        right: 0;
+        border-radius: 14px;
+    }
+}

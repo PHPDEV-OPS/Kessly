@@ -3,7 +3,7 @@
     <div class="card mb-4 no-print">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Date Range</label>
                     <select wire:model.live="dateRange" class="form-select">
                         <option value="today">Today</option>
@@ -15,7 +15,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Group By</label>
                     <select wire:model.live="groupBy" class="form-select">
                         <option value="day">Daily</option>
@@ -24,7 +24,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Customer</label>
                     <select wire:model.live="selectedCustomer" class="form-select">
                         <option value="">All Customers</option>
@@ -34,7 +34,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label small text-muted mb-1">Product</label>
                     <select wire:model.live="selectedProduct" class="form-select">
                         <option value="">All Products</option>
@@ -58,7 +58,7 @@
     <div wire:loading.remove.delay id="salesReportContent">
         <!-- Summary Cards -->
         <div class="row g-4 mb-4">
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -94,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -115,14 +115,14 @@
 
         <!-- Sales Trend Chart -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h5 class="mb-0">Sales Trend</h5>
-                <div class="no-print">
-                    <button class="btn btn-sm btn-outline-secondary me-2" wire:click="exportReport">
-                        <i class='bx bx-printer me-1'></i>Print Report
+                <div class="no-print d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-secondary" wire:click="exportReport">
+                        <i class='bx bx-printer me-1'></i>Print
                     </button>
                     <button class="btn btn-sm btn-primary" wire:click="exportReport">
-                        <i class='bx bx-download me-1'></i>Export PDF
+                        <i class='bx bx-download me-1'></i>PDF
                     </button>
                 </div>
             </div>
@@ -133,14 +133,14 @@
 
         <div class="row g-4 mb-4">
             <!-- Top Products -->
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-0">Top Products</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover table-stacked">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -151,7 +151,7 @@
                                 <tbody>
                                     @forelse($topProducts as $product)
                                         <tr>
-                                            <td>
+                                            <td data-label="Product">
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar avatar-sm bg-label-primary rounded me-2">
                                                         <i class='bx bx-package'></i>
@@ -159,8 +159,8 @@
                                                     <span>{{ $product->name }}</span>
                                                 </div>
                                             </td>
-                                            <td class="text-end">{{ number_format($product->total_orders) }}</td>
-                                            <td class="text-end fw-semibold">${{ number_format($product->total_revenue, 2) }}</td>
+                                            <td class="text-end" data-label="Orders">{{ number_format($product->total_orders) }}</td>
+                                            <td class="text-end fw-semibold" data-label="Revenue">${{ number_format($product->total_revenue, 2) }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -175,14 +175,14 @@
             </div>
 
             <!-- Top Customers -->
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-0">Top Customers</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover table-stacked">
                                 <thead>
                                     <tr>
                                         <th>Customer</th>
@@ -193,7 +193,7 @@
                                 <tbody>
                                     @forelse($topCustomers as $customer)
                                         <tr>
-                                            <td>
+                                            <td data-label="Customer">
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar avatar-sm bg-label-success rounded me-2">
                                                         <i class='bx bx-user'></i>
@@ -201,8 +201,8 @@
                                                     <span>{{ $customer->name }}</span>
                                                 </div>
                                             </td>
-                                            <td class="text-end">{{ number_format($customer->total_orders) }}</td>
-                                            <td class="text-end fw-semibold">${{ number_format($customer->total_spent, 2) }}</td>
+                                            <td class="text-end" data-label="Orders">{{ number_format($customer->total_orders) }}</td>
+                                            <td class="text-end fw-semibold" data-label="Total Spent">${{ number_format($customer->total_spent, 2) }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -224,7 +224,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-stacked">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -238,12 +238,12 @@
                         <tbody>
                             @forelse($recentOrders as $order)
                                 <tr>
-                                    <td><span class="badge bg-label-secondary">#{{ $order->id }}</span></td>
-                                    <td>{{ $order->customer?->name ?? 'Walk-in' }}</td>
-                                    <td>{{ $order->created_at->format('M d, Y') }}</td>
-                                    <td>{{ $order->order_items_count }} items</td>
-                                    <td class="text-end fw-semibold">${{ number_format($order->total_amount, 2) }}</td>}}</td>
-                                    <td>
+                                    <td data-label="Order ID"><span class="badge bg-label-secondary">#{{ $order->id }}</span></td>
+                                    <td data-label="Customer">{{ $order->customer?->name ?? 'Walk-in' }}</td>
+                                    <td data-label="Date">{{ $order->created_at->format('M d, Y') }}</td>
+                                    <td data-label="Items">{{ $order->order_items_count }} items</td>
+                                    <td class="text-end fw-semibold" data-label="Amount">${{ number_format($order->total_amount, 2) }}</td>}}</td>
+                                    <td data-label="Status">
                                         <span class="badge bg-success">
                                             Completed
                                         </span>

@@ -148,7 +148,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Currency <span class="text-danger">*</span></label>
                                 <select wire:model="currency" class="form-select <?php $__errorArgs = ['currency'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -169,7 +169,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Currency Position <span class="text-danger">*</span></label>
                                 <select wire:model="currency_position" class="form-select <?php $__errorArgs = ['currency_position'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -191,7 +191,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Date Format <span class="text-danger">*</span></label>
                                 <select wire:model="date_format" class="form-select <?php $__errorArgs = ['date_format'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -214,7 +214,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Time Format <span class="text-danger">*</span></label>
                                 <select wire:model="time_format" class="form-select <?php $__errorArgs = ['time_format'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -237,7 +237,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Decimal Separator <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="decimal_separator" class="form-control <?php $__errorArgs = ['decimal_separator'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -256,7 +256,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Thousands Separator <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="thousands_separator" class="form-control <?php $__errorArgs = ['thousands_separator'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -291,7 +291,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Session Lifetime (minutes) <span class="text-danger">*</span></label>
                                 <input type="number" wire:model="session_lifetime" class="form-control <?php $__errorArgs = ['session_lifetime'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -311,7 +311,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 <small class="text-muted">How long users stay logged in</small>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Max Login Attempts <span class="text-danger">*</span></label>
                                 <input type="number" wire:model="max_login_attempts" class="form-control <?php $__errorArgs = ['max_login_attempts'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -331,7 +331,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 <small class="text-muted">Before account lockout</small>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Lockout Duration (minutes) <span class="text-danger">*</span></label>
                                 <input type="number" wire:model="lockout_duration" class="form-control <?php $__errorArgs = ['lockout_duration'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -376,12 +376,12 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
             <!-- Action Buttons -->
             <div class="col-12">
-                <div class="d-flex gap-2 justify-content-end">
-                    <button type="button" wire:click="resetToDefaults" class="btn btn-outline-secondary" wire:loading.attr="disabled">
+                <div class="d-flex gap-2 justify-content-end flex-column flex-md-row">
+                    <button type="button" wire:click="resetToDefaults" class="btn btn-outline-secondary w-100 w-md-auto" wire:loading.attr="disabled">
                         <i class='bx bx-reset me-1'></i>
                         Reset to Defaults
                     </button>
-                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                    <button type="submit" class="btn btn-primary w-100 w-md-auto" wire:loading.attr="disabled">
                         <span wire:loading.remove wire:target="save">
                             <i class='bx bx-save me-1'></i>Save Configuration
                         </span>

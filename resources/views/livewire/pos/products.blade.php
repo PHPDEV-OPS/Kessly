@@ -4,8 +4,8 @@
             <h5 class="mb-1">Products</h5>
             <small class="text-muted">Browse and add items to the cart</small>
         </div>
-        <div class="d-flex flex-wrap gap-2">
-            <div class="input-group input-group-sm" style="min-width: 220px;">
+        <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+            <div class="input-group input-group-sm w-100" style="min-width: 220px;">
                 <span class="input-group-text bg-transparent border-end-0"><i class="ri-search-line"></i></span>
                 <input type="search" class="form-control border-start-0" placeholder="Search products" wire:model.debounce.300ms="search">
             </div>

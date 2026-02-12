@@ -22,28 +22,27 @@ use Illuminate\Support\Facades\Route;
 </div>
 @endif
 
-<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+<div class="navbar-nav-right d-flex align-items-center flex-wrap gap-3 gap-xl-0" id="navbar-collapse">
     <!-- Search -->
-    <div class="navbar-nav align-items-center">
-        <div class="nav-item d-flex align-items-center position-relative">
+    <div class="navbar-nav align-items-center navbar-search flex-grow-1 flex-xl-grow-0 w-100 w-xl-auto">
+        <div class="nav-item d-flex align-items-center position-relative w-100">
             <i class="icon-base ri ri-search-line icon-lg lh-0 me-2"></i>
             <input 
                 type="text" 
                 id="globalSearch" 
-                class="form-control border-0 shadow-none ps-0" 
+                class="form-control border-0 shadow-none ps-0 global-search-input" 
                 placeholder="Search products, customers, orders..." 
                 aria-label="Search..."
                 autocomplete="off"
-                style="min-width: 200px;"
             >
             <!-- Search Results Dropdown -->
-            <div id="searchResults" class="dropdown-menu shadow-lg border-0" style="display: none; position: fixed; min-width: 450px; max-height: 600px; overflow-y: auto; z-index: 9999; margin-top: 0.5rem;">
+            <div id="searchResults" class="dropdown-menu shadow-lg border-0 search-results-panel" style="display: none;">
                 <div id="searchContent"></div>
             </div>
         </div>
     </div>
     <!-- /Search -->
-    <ul class="navbar-nav flex-row align-items-center ms-auto">
+    <ul class="navbar-nav flex-row align-items-center ms-xl-auto">
         <!-- User -->
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

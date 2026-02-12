@@ -20,7 +20,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3 align-items-end">
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <label class="form-label small text-muted">Search</label>
                     <input type="text"
                         wire:model.live.debounce.300ms="search"
@@ -28,7 +28,7 @@
                         class="form-control">
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <label class="form-label small text-muted">Category</label>
                     <select wire:model.live="categoryFilter" class="form-select">
                         <option value="">All Categories</option>
@@ -38,7 +38,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <label class="form-label small text-muted">Per Page</label>
                     <select wire:model.live="perPage" class="form-select">
                         <option value="10">10</option>
@@ -48,15 +48,17 @@
                     </select>
                 </div>
 
-                <div class="col-md-4 text-end">
-                    <button type="button" class="btn btn-label-secondary" wire:click="export">
-                        <i class="ri-download-line me-1"></i>
-                        Export
-                    </button>
-                    <button type="button" class="btn btn-primary" wire:click="showAddProductModal">
-                        <i class="ri-add-line me-1"></i>
-                        Add Product
-                    </button>
+                <div class="col-12 col-md-4 text-md-end pt-2 pt-md-0">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-label-secondary flex-fill flex-md-grow-0" wire:click="export">
+                            <i class="ri-download-line me-1"></i>
+                            Export
+                        </button>
+                        <button type="button" class="btn btn-primary flex-fill flex-md-grow-0" wire:click="showAddProductModal">
+                            <i class="ri-add-line me-1"></i>
+                            Add Product
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,7 +66,7 @@
 
     <!-- Products Table -->
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover table-stacked mb-0">
             <thead>
                 <tr>
                     <th>
@@ -106,7 +108,7 @@
             <tbody>
                 @forelse ($products as $product)
                     <tr>
-                        <td>
+                        <td data-label="Product">
                             <div class="d-flex align-items-center">
                                 <div class="avatar avatar-sm me-3">
                                     @if($product->image)
@@ -127,9 +129,9 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{ $product->category?->name ?? '—' }}</td>
-                        <td>{{ $product->supplier?->name ?? '—' }}</td>
-                        <td>
+                        <td data-label="Category">{{ $product->category?->name ?? '—' }}</td>
+                        <td data-label="Supplier">{{ $product->supplier?->name ?? '—' }}</td>
+                        <td data-label="Stock">
                             @if($product->stock === 0)
                                 <span class="badge bg-label-danger">{{ $product->stock }}</span>
                             @elseif($product->stock <= 5)
@@ -138,9 +140,9 @@
                                 <span class="badge bg-label-success">{{ $product->stock }}</span>
                             @endif
                         </td>
-                        <td class="fw-medium">${{ number_format($product->price, 2) }}</td>
-                        <td class="text-end">
-                            <div class="d-flex justify-content-end gap-1">
+                        <td data-label="Price" class="fw-medium">${{ number_format($product->price, 2) }}</td>
+                        <td data-label="Actions" class="text-end">
+                            <div class="d-flex justify-content-end justify-content-md-end gap-1 flex-wrap">
                                 <button type="button"
                                     class="btn btn-sm btn-icon btn-text-secondary rounded-pill"
                                     wire:click="edit({{ $product->id }})">
@@ -174,7 +176,7 @@
     <!-- MODAL -->
     @if ($showForm)
         <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <form wire:submit.prevent="save">
                         <div class="modal-header">
@@ -199,7 +201,7 @@
                                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <!-- Category and Supplier -->
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select
                                         id="category_id"
@@ -213,7 +215,7 @@
                                     </select>
                                     @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="supplier_id" class="form-label">Supplier</label>
                                     <select
                                         id="supplier_id"
@@ -228,7 +230,7 @@
                                     @error('supplier_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <!-- Stock and Price -->
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="stock" class="form-label">Stock Quantity <span class="text-danger">*</span></label>
                                     <input
                                         type="number"
@@ -240,7 +242,7 @@
                                     />
                                     @error('stock') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
