@@ -21,6 +21,12 @@ class CheckRole
 
         $user = auth()->user();
 
+        // Always allow Administrator and Super Admin
+        // Also allow specific admin email as a fail-safe
+        if ($user->email === 'admin@kessly.com' || $user->hasRole('Administrator') || $user->hasRole('Super Admin')) {
+            return $next($request);
+        }
+
         if (!$user->is_verified) {
             abort(403, 'Your account is not verified yet. Please wait for admin approval.');
         }

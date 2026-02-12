@@ -23,7 +23,7 @@ class RoleMiddleware
         $user = Auth::user();
 
         // Allow administrators full access
-        if ($user->hasRole('Administrator') || $user->hasRole('Super Admin')) {
+        if ($user->email === 'admin@kessly.com' || $user->hasRole('Administrator') || $user->hasRole('Super Admin')) {
             return $next($request);
         }
 

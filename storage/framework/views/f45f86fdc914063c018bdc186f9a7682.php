@@ -193,7 +193,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="order_number">Order Number</label>
                                     <input type="text" id="order_number" class="form-control <?php $__errorArgs = ['order_number'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -214,7 +214,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="customer_id">Customer</label>
                                     <select id="customer_id" class="form-select <?php $__errorArgs = ['customer_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -240,7 +240,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="order_date">Order Date</label>
                                     <input type="date" id="order_date" class="form-control <?php $__errorArgs = ['order_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -261,7 +261,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label class="form-label" for="total_amount">Total Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -287,9 +287,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-label-secondary" wire:click="cancel">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
+                        <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                            <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="cancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto m-0">
                                 <i class="ri-save-line me-1"></i>
                                 Save Order
                             </button>
@@ -331,28 +331,28 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Customer</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-user-line me-2 text-primary"></i>
                                     <span class="fw-medium"><?php echo e($viewingOrder->customer?->name ?? 'N/A'); ?></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Order Date</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-calendar-line me-2 text-primary"></i>
                                     <span class="fw-medium"><?php echo e(optional($viewingOrder->order_date)->format('M d, Y') ?? 'N/A'); ?></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Total Amount</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-money-dollar-circle-line me-2 text-success"></i>
                                     <span class="fw-bold text-success fs-5">$<?php echo e(number_format($viewingOrder->total_amount, 2)); ?></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-muted small">Created</label>
                                 <div class="d-flex align-items-center">
                                     <i class="ri-time-line me-2 text-primary"></i>
@@ -369,7 +369,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                             </h6>
                                             <div class="row g-3">
                                                 <!--[if BLOCK]><![endif]--><?php if($viewingOrder->customer->email): ?>
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Email</small>
                                                         <a href="mailto:<?php echo e($viewingOrder->customer->email); ?>" class="text-primary">
                                                             <?php echo e($viewingOrder->customer->email); ?>
@@ -378,7 +378,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                                     </div>
                                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                 <!--[if BLOCK]><![endif]--><?php if($viewingOrder->customer->phone): ?>
-                                                    <div class="col-md-6">
+                                                    <div class="col-12 col-md-6">
                                                         <small class="text-muted d-block">Phone</small>
                                                         <span><?php echo e($viewingOrder->customer->phone); ?></span>
                                                     </div>
@@ -396,9 +396,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" wire:click="closeView">Close</button>
-                        <button type="button" class="btn btn-info" onclick="printOrderReceipt(<?php echo e($viewingOrder->id); ?>)">
+                    <div class="modal-footer d-flex flex-column flex-md-row gap-2">
+                        <button type="button" class="btn btn-label-secondary w-100 w-md-auto m-0" wire:click="closeView">Close</button>
+                        <button type="button" class="btn btn-info w-100 w-md-auto m-0" onclick="printOrderReceipt(<?php echo e($viewingOrder->id); ?>)">
                             <i class="ri-printer-line me-1"></i>
                             Print
                         </button>

@@ -152,6 +152,10 @@ trait RoleBasedAccess
             return $query;
         }
 
+        if ($this instanceof \App\Models\Product) {
+             return $query;
+        }
+
         // For other models, restrict access
         return $query->whereRaw('1 = 0');
     }
@@ -182,8 +186,23 @@ trait RoleBasedAccess
      */
     protected function scopeForSalesRepresentative(Builder $query, $user): Builder
     {
+        if ($this instanceof \App\Models\Product) {
+            return $query; // Can see products to sell them
+        }
+        
+        if ($this instanceof \App\Models\Category) {
+            return $query;
+        }
+
         if ($this instanceof \App\Models\Order) {
-            return $query->where('created_by', $user->id);
+            // Can see orders they created OR orders assigned to their branch
+            $branch = $user->getBranch();
+            return $query->where(function($q) use ($user, $branch) {
+                $q->where('created_by', $user->id);
+                if ($branch) {
+                    $q->orWhere('branch_id', $branch->id);
+                }
+            });
         }
 
         if ($this instanceof \App\Models\Customer) {

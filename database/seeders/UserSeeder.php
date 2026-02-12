@@ -69,14 +69,39 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $userData) {
-            User::firstOrCreate(
+            $user = User::firstOrCreate(
                 ['email' => $userData['email']],
                 $userData
             );
+
+            // Create Employee record if not exists (for RoleBasedAccess)
+            if ($userData['name'] !== 'System Administrator' && !$user->employee) {
+                $branch = \App\Models\Branch::inRandomOrder()->first();
+                if ($branch) {
+                    \App\Models\Employee::create([
+                        'user_id' => $user->id,
+                        'branch_id' => $branch->id,
+                        'employee_id' => 'EMP-' . str_pad((string)$user->id, 5, '0', STR_PAD_LEFT),
+                        'department' => $this->getDepartmentForRole($user->role?->name),
+                        'position' => $user->role?->name ?? 'Staff',
+                        'hire_date' => now(),
+                        'employment_status' => 'active',
+                        'salary' => 50000.00, // Default salary for seeded users
+                    ]);
+                }
+            }
         }
 
         $this->command->info('✅ Test users created successfully!');
-        $this->command->info('📧 Verified users can login immediately');
-        $this->command->info('⏳ Unverified user needs admin approval');
+    }
+
+    private function getDepartmentForRole($roleName) {
+        return match($roleName) {
+            'Sales Manager', 'Sales Representative' => 'Sales',
+            'Branch Manager' => 'Operations',
+            'HR Manager' => 'Human Resources',
+            'Accountant' => 'Finance',
+            default => 'General'
+        };
     }
 }
