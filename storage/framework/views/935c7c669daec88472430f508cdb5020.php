@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" 
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" 
       class="layout-menu-fixed layout-compact" 
-      data-assets-path="{{ asset('/assets') . '/' }}" 
+      data-assets-path="<?php echo e(asset('/assets') . '/'); ?>" 
       dir="ltr" 
       data-skin="default" 
-      data-base-url="{{ url('/') }}" 
+      data-base-url="<?php echo e(url('/')); ?>" 
       data-framework="laravel" 
       data-bs-theme="light" 
       data-template="vertical-menu-template">
@@ -14,26 +14,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
     <title>
-        {{ $title ?? config('app.name') }} | {{ config('variables.templateName', config('app.name')) }}
+        <?php echo e($title ?? config('app.name')); ?> | <?php echo e(config('variables.templateName', config('app.name'))); ?>
+
     </title>
     
-    <meta name="description" content="{{ config('variables.templateDescription', config('app.name')) }}" />
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="description" content="<?php echo e(config('variables.templateDescription', config('app.name'))); ?>" />
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>" />
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="<?php echo e(asset('assets/img/favicon/favicon.ico')); ?>" />
 
     <!-- Include Styles -->
-    @include('layouts/sections/styles')
+    <?php echo $__env->make('layouts/sections/styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <!-- Include Scripts for customizer, helper, analytics, config -->
-    @include('layouts/sections/scriptsIncludes')
+    <?php echo $__env->make('layouts/sections/scriptsIncludes', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     
-    @livewireStyles
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
 </head>
 
 <body>
-    @php
+    <?php
     /* Display elements */
     $contentNavbar = $contentNavbar ?? true;
     $containerNav = $containerNav ?? 'container-xxl';
@@ -51,21 +53,21 @@
 
     /* Content classes */
     $container = ($container ?? 'container-xxl');
-    @endphp
+    ?>
 
     <!-- Layout Wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
 
             <!-- Menu -->
-            @include('layouts/sections/menu/verticalMenu')
+            <?php echo $__env->make('layouts/sections/menu/verticalMenu', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             <!-- / Menu -->
 
             <!-- Layout Page -->
             <div class="layout-page">
 
                 <!-- Navbar -->
-                @include('layouts/sections/navbar/navbar')
+                <?php echo $__env->make('layouts/sections/navbar/navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 <!-- / Navbar -->
 
                 <!-- Content Wrapper -->
@@ -73,12 +75,13 @@
 
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
-                        {{ $slot }}
+                        <?php echo e($slot); ?>
+
                     </div>
                     <!-- / Content -->
 
                     <!-- Footer -->
-                    @include('layouts/sections/footer/footer')
+                    <?php echo $__env->make('layouts/sections/footer/footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     <!-- / Footer -->
 
                     <div class="content-backdrop fade"></div>
@@ -97,8 +100,10 @@
     <!-- / Layout Wrapper -->
 
     <!-- Include Scripts -->
-    @include('layouts/sections/scripts')
+    <?php echo $__env->make('layouts/sections/scripts', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     
-    @livewireScripts
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
 </body>
 </html>
+<?php /**PATH D:\School-Projects\Software-dev\Kessly\resources\views/components/layouts/app/sidebar.blade.php ENDPATH**/ ?>

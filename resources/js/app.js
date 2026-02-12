@@ -10,6 +10,8 @@ import.meta.glob([
 
 // Import helpers globally
 import '../assets/vendor/js/helpers.js';
+import '../assets/vendor/js/menu.js';
+import '../assets/js/main.js';
 
 // Materio Template JS (will be loaded via Vite)
 // Core scripts loaded via layout blade templates

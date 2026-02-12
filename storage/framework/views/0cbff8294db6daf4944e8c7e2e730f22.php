@@ -114,7 +114,7 @@
 
     <!-- Payroll Table -->
     <div class="card">
-        <div class="table-responsive">
+        <div class="table-responsive text-nowrap">
             <table class="table table-hover mb-0">
                 <thead>
                     <tr>

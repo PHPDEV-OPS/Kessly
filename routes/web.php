@@ -15,24 +15,35 @@ Route::match(['get', 'post'], '/pesapal/callback', [PesapalController::class, 'c
 
 // Protected pages
 Route::middleware(['auth'])->group(function () {
+    // Basic Access (Business Management) - Accessible to all authenticated users
     Volt::route('/', 'pages/dashboard')->name('dashboard');
     Volt::route('/inventory', 'pages/inventory')->name('inventory');
     Volt::route('/sales', 'pages/sales')->name('sales');
     Volt::route('/reports', 'pages/reports')->name('reports');
-    Volt::route('/settings', 'pages/settings')->name('settings');
+    Volt::route('/customers', 'pages/customers')->name('customers');
+    Volt::route('/orders', 'pages/sales')->name('orders');
+    Volt::route('/invoices', 'pages/sales')->name('invoices');
+    Volt::route('/pos', 'pages/pos')->name('pos');
     Volt::route('/profile', 'pages/profile')->name('profile');
 
     // Global Search
     Route::get('/search', [\App\Http\Controllers\SearchController::class, 'globalSearch'])->name('search');
 
-    // HR, Branches, Finance, Customers, Orders, Invoices, Employees, Analytics, POS
-    Volt::route('/hr', 'pages/hr')->name('hr');
-    Volt::route('/branches', 'pages/branches')->name('branches');
-    Volt::route('/finance', 'pages/finance')->name('finance');
-    Volt::route('/customers', 'pages/customers')->name('customers');
-    Volt::route('/orders', 'pages/sales')->name('orders');
-    Volt::route('/invoices', 'pages/sales')->name('invoices');
-    Volt::route('/employees', 'pages/hr')->name('employees');
-    Volt::route('/analytics', 'pages/analytics')->name('analytics');
-    Volt::route('/pos', 'pages/pos')->name('pos');
+    // HR & Operations (HR Manager, Branch Manager, Accountant, Admin)
+    Route::middleware(['check_role:HR Manager,Branch Manager,Accountant'])->group(function () {
+        Volt::route('/hr', 'pages/hr')->name('hr');
+        Volt::route('/employees', 'pages/hr')->name('employees');
+        Volt::route('/branches', 'pages/branches')->name('branches');
+    });
+
+    // Finance & Analytics (Accountant, Branch Manager, Admin)
+    Route::middleware(['check_role:Accountant,Branch Manager'])->group(function () {
+        Volt::route('/finance', 'pages/finance')->name('finance');
+        Volt::route('/analytics', 'pages/analytics')->name('analytics');
+    });
+
+    // Settings (Admin only)
+    Route::middleware(['check_role:Administrator,Super Admin'])->group(function () {
+        Volt::route('/settings', 'pages/settings')->name('settings');
+    });
 });
